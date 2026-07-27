@@ -1,0 +1,39 @@
+import { useState } from 'preact/hooks'
+import Header from './components/Header'
+import Hero from './components/Hero'
+import EventDetails from './components/EventDetails'
+import StaffSection from './components/StaffSection'
+import Categories from './components/Categories'
+import RulesSection from './components/RulesSection'
+import FinalCTA from './components/FinalCTA'
+import Footer from './components/Footer'
+import RegistrationModal from './components/RegistrationModal'
+
+export function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen)
+    if (!isModalOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  }
+
+  return (
+    <div className="min-h-screen">
+      <Header onOpenModal={toggleModal} />
+      <main>
+        <Hero onOpenModal={toggleModal} />
+        <EventDetails />
+        <StaffSection />
+        <Categories />
+        <RulesSection />
+        <FinalCTA onOpenModal={toggleModal} />
+      </main>
+      <Footer />
+      <RegistrationModal isOpen={isModalOpen} onClose={toggleModal} />
+    </div>
+  )
+}
