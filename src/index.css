@@ -4,13 +4,107 @@
 
 @layer base {
   body {
-    @apply bg-surface text-on-surface font-body dark:bg-inverse-surface dark:text-inverse-on-surface;
+    @apply bg-surface text-on-surface font-body transition-colors duration-300;
     background-image: url("https://www.transparenttextures.com/patterns/linen.png");
+    background-blend-mode: overlay;
+  }
+  
+  /* Dark mode color overrides using Tailwind's approach */
+  .dark {
+    color-scheme: dark;
   }
   
   .dark body {
-    background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png");
+    background-color: #0c1030;
+    color: #dfe0ff;
   }
+  
+  /* Override surface colors in dark mode */
+  .dark .bg-surface { background-color: #0c1030 !important; }
+  .dark .bg-surface\/90 { background-color: rgba(12, 16, 48, 0.9) !important; }
+  .dark .bg-surface-bright { background-color: #333758 !important; }
+  .dark .bg-surface-dim { background-color: #0c1030 !important; }
+  .dark .bg-surface-container-lowest { background-color: #070a2b !important; }
+  .dark .bg-surface-container-low { background-color: #151939 !important; }
+  .dark .bg-surface-container { background-color: #191d3d !important; }
+  .dark .bg-surface-container-high { background-color: #232748 !important; }
+  .dark .bg-surface-container-highest { background-color: #2e3253 !important; }
+  .dark .bg-surface-variant { background-color: #2e3253 !important; }
+  
+  /* Override primary colors in dark mode */
+  .dark .bg-primary { background-color: #ffb4ac !important; }
+  .dark .bg-primary-container { background-color: #c62828 !important; }
+  .dark .text-primary { color: #ffb4ac !important; }
+  .dark .text-on-primary { color: #690007 !important; }
+  .dark .text-on-primary-container { color: #ffe0dd !important; }
+  .dark .border-primary { border-color: #ffb4ac !important; }
+  
+  /* Override secondary colors in dark mode */
+  .dark .bg-secondary { background-color: #e9c349 !important; }
+  .dark .bg-secondary-container { background-color: #af8d11 !important; }
+  .dark .text-secondary { color: #e9c349 !important; }
+  .dark .text-on-secondary { color: #3c2f00 !important; }
+  .dark .border-secondary { border-color: #e9c349 !important; }
+  
+  /* Override tertiary colors in dark mode */
+  .dark .bg-tertiary { background-color: #c7c6c6 !important; }
+  .dark .bg-tertiary-container { background-color: #676767 !important; }
+  .dark .text-tertiary { color: #c7c6c6 !important; }
+  .dark .text-on-tertiary { color: #303031 !important; }
+  .dark .text-on-tertiary-container { color: #e8e6e6 !important; }
+  
+  /* Override text colors in dark mode */
+  .dark .text-on-surface { color: #dfe0ff !important; }
+  .dark .text-on-surface-variant { color: #e4beba !important; }
+  .dark .text-on-background { color: #dfe0ff !important; }
+  
+  /* Hero title transformations for dark mode to match provided HTML */
+  .dark .text-on-secondary { color: #dfe0ff !important; }
+  .dark .text-primary-fixed { color: #e4beba !important; }
+  .dark .text-secondary-fixed { color: #e9c349 !important; }
+  
+  /* Override outline colors in dark mode */
+  .dark .border-outline { border-color: #ab8985 !important; }
+  .dark .border-outline-variant { border-color: #5b403d !important; }
+  .dark .text-outline { color: #ab8985 !important; }
+  .dark .text-outline-variant { color: #5b403d !important; }
+  
+  /* Override error colors in dark mode */
+  .dark .bg-error { background-color: #ffb4ab !important; }
+  .dark .bg-error-container { background-color: #93000a !important; }
+  .dark .text-error { color: #ffb4ab !important; }
+  .dark .text-on-error { color: #690005 !important; }
+  .dark .text-on-error-container { color: #ffdad6 !important; }
+  
+  /* Override fixed variant colors in dark mode */
+  .dark .bg-primary-fixed { background-color: #ffdad6 !important; }
+  .dark .bg-primary-fixed-dim { background-color: #ffb4ac !important; }
+  .dark .text-on-primary-fixed { color: #410003 !important; }
+  .dark .text-on-primary-fixed-variant { color: #93000e !important; }
+  
+  .dark .bg-secondary-fixed { background-color: #ffe088 !important; }
+  .dark .bg-secondary-fixed-dim { background-color: #e9c349 !important; }
+  .dark .text-on-secondary-fixed { color: #241a00 !important; }
+  .dark .text-on-secondary-fixed-variant { color: #574500 !important; }
+  
+  .dark .bg-tertiary-fixed { background-color: #e3e2e2 !important; }
+  .dark .bg-tertiary-fixed-dim { background-color: #c7c6c6 !important; }
+  .dark .text-on-tertiary-fixed { color: #1b1c1c !important; }
+  .dark .text-on-tertiary-fixed-variant { color: #464747 !important; }
+  
+  /* Override inverse colors in dark mode */
+  .dark .bg-inverse-surface { background-color: #dfe0ff !important; }
+  .dark .text-inverse-on-surface { color: #2a2e4f !important; }
+  .dark .text-inverse-primary { color: #b91d20 !important; }
+  .dark .border-inverse-primary { border-color: #b91d20 !important; }
+  
+  /* Override surface tint in dark mode */
+  .dark .text-surface-tint { color: #ffb4ac !important; }
+  
+  /* Hero background transformations for dark mode */
+  .dark section.bg-primary { background-color: #070a2b !important; }
+  .dark .from-primary\/80 { --tw-gradient-from: rgb(7 10 43 / 0.9) !important; }
+  .dark .to-primary\/40 { --tw-gradient-to: rgb(7 10 43 / 0.6) !important; }
 }
 
 @layer components {
@@ -30,18 +124,23 @@
     opacity: 0.05;
     pointer-events: none;
   }
+  
+  .dark .grain-overlay::after {
+    opacity: 0.1;
+  }
 
   .card-hover {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 ease-in-out;
   }
 
   .card-hover:hover {
     box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.08);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
   }
   
   .dark .card-hover:hover {
-    box-shadow: 0px 4px 20px rgba(189, 194, 255, 0.15);
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-4px);
   }
 
   /* Custom scrollbar */
@@ -50,14 +149,20 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-surface-container-low dark:bg-tertiary-container;
+    @apply bg-surface-container-low;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 dark:bg-inverse-primary/30 rounded-full;
+    @apply bg-primary/30 rounded-full;
+    @apply transition-colors duration-300;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/50 dark:bg-inverse-primary/50;
+    @apply bg-primary/50;
+  }
+  
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
   }
 }
