@@ -15,8 +15,8 @@ export default function Header() {
 
   return (
     <header 
-      className={`fixed top-0 w-full z-50 bg-surface/90 dark:bg-inverse-surface/90 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline/30 transition-shadow ${
-        scrolled ? 'shadow-md' : ''
+      className={`fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 shadow-sm dark:shadow-lg transition-shadow ${
+        scrolled ? 'shadow-md dark:shadow-2xl' : ''
       }`}
     >
       <div className="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
@@ -26,26 +26,26 @@ export default function Header() {
             className="h-12 w-auto" 
             src={logo}
           />
-          <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-inverse-primary">
+          <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
             ELITE WAY SCHOOL
           </span>
         </div>
 
         <nav className="hidden md:flex gap-8">
           <a 
-            className="font-label-lg text-label-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors" 
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
             href="#event"
           >
             EVENTO
           </a>
           <a 
-            className="font-label-lg text-label-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors" 
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
             href="#categories"
           >
             CATEGORÍAS
           </a>
           <a 
-            className="font-label-lg text-label-lg text-on-surface-variant dark:text-inverse-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors" 
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
             href="#rules"
           >
             REGLAMENTO
