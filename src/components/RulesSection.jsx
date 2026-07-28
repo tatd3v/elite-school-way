@@ -49,7 +49,7 @@ export default function RulesSection() {
                   <span className={`font-label-lg text-label-lg ${dress.color === 'bg-white' ? 'text-outline' : `text-${dress.color.replace('bg-', '')}`}`}>
                     {dress.name}
                   </span>
-                  <p className="text-label-sm text-on-surface-variant dark:text-inverse-on-surface">
+                  <p className="text-label-sm text-on-surface-variant">
                     {dress.meaning}
                   </p>
                 </div>
@@ -59,8 +59,8 @@ export default function RulesSection() {
         </div>
 
         {/* Rules Card */}
-        <div className="p-10 border border-primary/20 dark:border-inverse-primary/30 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm">
-          <h3 className="font-headline-lg text-headline-lg text-primary dark:text-inverse-primary uppercase mb-8">
+        <div className="p-10 border border-primary-container/30 bg-surface-container-lowest shadow-xl rounded-2xl">
+          <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-8">
             REGLAMENTO DEL CLAUSTRO
           </h3>
           
@@ -70,8 +70,8 @@ export default function RulesSection() {
                 <span className="material-symbols-outlined text-secondary">
                   priority_high
                 </span>
-                <p className="font-body-md text-body-md text-on-surface-variant dark:text-inverse-on-surface">
-                  <strong className="text-on-surface dark:text-inverse-on-surface">{rule.title}</strong> {rule.description}
+                <p className="font-body-md text-body-md text-on-surface-variant">
+                  <strong className="text-on-surface">{rule.title}</strong> {rule.description}
                 </p>
               </li>
             ))}

@@ -65,13 +65,13 @@ export default function RegistrationModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div 
-        className="absolute inset-0 bg-primary/80 dark:bg-inverse-surface/80 backdrop-blur-sm" 
+        className="absolute inset-0 bg-surface-container-lowest/80 backdrop-blur-md" 
         onClick={onClose}
       ></div>
       
-      <div className="relative bg-surface dark:bg-inverse-surface w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-primary/20 dark:border-inverse-primary/30 shadow-2xl p-8 md:p-12">
+      <div className="relative bg-surface w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-outline-variant/20 shadow-2xl p-8 md:p-12 rounded-2xl">
         <button 
-          className="absolute top-4 right-4 text-outline dark:text-inverse-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors"
+          className="absolute top-4 right-4 text-outline hover:text-primary transition-colors"
           onClick={onClose}
         >
           <span className="material-symbols-outlined text-3xl">close</span>
@@ -81,7 +81,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
           <span className="font-label-sm text-label-sm text-secondary uppercase tracking-[0.3em]">
             Formulario de Admisión
           </span>
-          <h2 className="font-headline-lg text-headline-lg text-primary dark:text-inverse-primary uppercase mt-2">
+          <h2 className="font-headline-lg text-headline-lg text-on-surface uppercase mt-2">
             CONFIRMAR INSCRIPCIÓN
           </h2>
         </div>
