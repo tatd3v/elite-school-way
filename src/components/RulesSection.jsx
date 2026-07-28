@@ -1,9 +1,9 @@
 export default function RulesSection() {
   const dressCodes = [
-    { color: 'bg-primary', name: 'NAVY BLUE', hex: '#000666', meaning: 'Autoridad y Tradición' },
-    { color: 'bg-secondary', name: 'CRIMSON RED', hex: '#b52617', meaning: 'Pasión y Audacia' },
-    { color: 'bg-sky-blue', name: 'SKY BLUE', hex: '#87CEEB', meaning: 'Claridad y Visión' },
-    { color: 'bg-white', name: 'PURE WHITE', hex: '#ffffff', meaning: 'Pureza y Excelencia' },
+    { hex: '#000080', name: 'NAVY BLUE', meaning: 'Autoridad y Tradición' },
+    { hex: '#990000', name: 'CRIMSON RED', meaning: 'Pasión y Audacia' },
+    { hex: '#87CEEB', name: 'SKY BLUE', meaning: 'Claridad y Visión' },
+    { hex: '#FFFFFF', name: 'PURE WHITE', meaning: 'Pureza y Excelencia' },
   ]
 
   const rules = [
@@ -30,23 +30,26 @@ export default function RulesSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         
         {/* Dress Code Card */}
-        <div className="p-10 border border-secondary/20 bg-surface-container-lowest shadow-sm relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 -mr-16 -mt-16 rounded-full"></div>
+        <div className="p-10 border border-primary-container/30 bg-surface-container-lowest shadow-xl relative overflow-hidden rounded-2xl">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 -mr-16 -mt-16 rounded-full"></div>
           
           <h3 className="font-headline-lg text-headline-lg text-secondary uppercase mb-8">
-            REGLAMENTO DEL CLAUSTRO
+            DRESS CODE ACADÉMICO
           </h3>
           
-          <p className="font-body-lg text-body-lg text-on-surface mb-8">
-            Inspiración Académica Prestigiosa. La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
+          <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">
+            La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
           </p>
           
           <div className="space-y-6">
             {dressCodes.map((dress) => (
               <div key={dress.name} className="flex items-center gap-4">
-                <div className={`w-12 h-12 ${dress.color} rounded shadow-inner border border-outline`}></div>
+                <div 
+                  className="w-12 h-12 rounded shadow-inner border border-outline-variant"
+                  style={{ backgroundColor: dress.hex }}
+                ></div>
                 <div>
-                  <span className={`font-label-lg text-label-lg ${dress.color === 'bg-white' ? 'text-outline' : `text-${dress.color.replace('bg-', '')}`}`}>
+                  <span className="font-label-lg text-label-lg text-on-surface">
                     {dress.name}
                   </span>
                   <p className="text-label-sm text-on-surface-variant">
@@ -59,7 +62,7 @@ export default function RulesSection() {
         </div>
 
         {/* Rules Card */}
-        <div className="p-10 border border-primary-container/30 bg-surface-container-lowest shadow-xl rounded-2xl">
+        <div className="p-10 border border-secondary/20 dark:border-secondary/30 bg-surface-container-lowest shadow-xl rounded-2xl">
           <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-8">
             REGLAMENTO DEL CLAUSTRO
           </h3>
