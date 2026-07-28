@@ -15,13 +15,13 @@ export default function Categories() {
   ]
 
   return (
-    <section className="py-section-gap-desktop bg-surface-container-high dark:bg-tertiary-container" id="categories">
+    <section className="py-section-gap-desktop bg-surface-container-high" id="categories">
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
         <div className="mb-16">
-          <h2 className="font-headline-lg text-headline-lg text-primary dark:text-inverse-primary uppercase text-left border-l-8 border-secondary pl-6">
+          <h2 className="font-headline-lg text-headline-lg text-on-surface uppercase text-left border-l-8 border-secondary pl-6">
             CURRÍCULO DE CATEGORIAS
           </h2>
-          <p className="text-on-surface-variant dark:text-inverse-on-surface mt-4 pl-8 max-w-2xl">
+          <p className="text-on-surface-variant mt-4 pl-8 max-w-2xl">
             Doce categorias para demostrar el linaje y el talento. Solo los más aptos alcanzarán la excelencia académica en la pasarela.
           </p>
         </div>
@@ -30,15 +30,15 @@ export default function Categories() {
           {categories.map((category) => (
             <div 
               key={category.name}
-              className="bg-surface-container-lowest dark:bg-inverse-surface border border-outline-variant dark:border-outline p-8 flex flex-col items-center text-center card-hover"
+              className="bg-surface-container-lowest border border-outline-variant/20 p-8 flex flex-col items-center text-center card-hover rounded-xl"
             >
               <span className={`material-symbols-outlined text-4xl text-${category.color} mb-4`}>
                 {category.icon}
               </span>
-              <h4 className="font-headline text-headline-md text-primary dark:text-inverse-primary mb-2">
+              <h4 className="font-headline text-headline-md text-on-surface mb-2">
                 {category.name}
               </h4>
-              <p className="font-body text-body-md text-on-surface-variant dark:text-inverse-on-surface">
+              <p className="font-body text-body-md text-on-surface-variant">
                 {category.description}
               </p>
             </div>
