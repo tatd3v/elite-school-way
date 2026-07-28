@@ -23,7 +23,7 @@ export function App() {
 
   return (
     <div className="min-h-screen">
-      <Header onOpenModal={toggleModal} />
+      <Header />
       <main>
         <Hero onOpenModal={toggleModal} />
         <EventDetails />

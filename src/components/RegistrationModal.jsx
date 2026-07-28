@@ -65,23 +65,23 @@ export default function RegistrationModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div 
-        className="absolute inset-0 bg-primary/80 backdrop-blur-sm" 
+        className="absolute inset-0 bg-primary/80 dark:bg-inverse-surface/80 backdrop-blur-sm" 
         onClick={onClose}
       ></div>
       
-      <div className="relative bg-surface w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-primary/20 shadow-2xl p-8 md:p-12 rounded">
+      <div className="relative bg-surface dark:bg-inverse-surface w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-primary/20 dark:border-inverse-primary/30 shadow-2xl p-8 md:p-12">
         <button 
-          className="absolute top-4 right-4 text-outline hover:text-primary transition-colors"
+          className="absolute top-4 right-4 text-outline dark:text-inverse-on-surface hover:text-primary dark:hover:text-inverse-primary transition-colors"
           onClick={onClose}
         >
           <span className="material-symbols-outlined text-3xl">close</span>
         </button>
 
         <div className="text-center mb-10">
-          <span className="font-headline text-label-sm text-secondary uppercase tracking-[0.3em]">
+          <span className="font-label-sm text-label-sm text-secondary uppercase tracking-[0.3em]">
             Formulario de Admisión
           </span>
-          <h2 className="font-headline text-headline-lg text-primary uppercase mt-2">
+          <h2 className="font-headline-lg text-headline-lg text-primary dark:text-inverse-primary uppercase mt-2">
             CONFIRMAR INSCRIPCIÓN
           </h2>
         </div>
@@ -89,11 +89,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 Nombre artístico *
               </label>
               <input 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 placeholder="Ej: Legendarix Elite"
                 required
                 type="text"
@@ -104,11 +104,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 Email *
               </label>
               <input 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 placeholder="correo@ejemplo.com"
                 required
                 type="email"
@@ -121,11 +121,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 Teléfono *
               </label>
               <input 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 placeholder="300 000 0000"
                 required
                 type="tel"
@@ -136,11 +136,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="flex flex-col">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 House / 007
               </label>
               <input 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 placeholder="Casa de..."
                 type="text"
                 name="house"
@@ -151,17 +151,17 @@ export default function RegistrationModal({ isOpen, onClose }) {
           </div>
 
           <div className="flex flex-col">
-            <label className="font-headline text-label-sm text-on-surface-variant mb-2">
+            <label className="font-label-sm text-label-sm text-on-surface-variant mb-2">
               Categorías de Competencia
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 border border-outline-variant bg-surface-container-low rounded">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 border border-outline-variant bg-surface-container-low">
               {categories.map((category) => (
                 <label 
                   key={category}
-                  className="flex items-center gap-2 font-headline text-label-sm text-on-surface-variant cursor-pointer"
+                  className="flex items-center gap-2 font-label-sm text-on-surface-variant cursor-pointer"
                 >
                   <input 
-                    className="text-secondary focus:ring-secondary rounded"
+                    className="text-secondary focus:ring-secondary"
                     type="checkbox"
                     checked={formData.categories.includes(category)}
                     onChange={() => handleCategoryChange(category)}
@@ -174,11 +174,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="flex flex-col md:col-span-1">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 Edad
               </label>
               <input 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 type="number"
                 name="age"
                 value={formData.age}
@@ -187,11 +187,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="flex flex-col md:col-span-3">
-              <label className="font-headline text-label-sm text-on-surface-variant mb-1">
+              <label className="font-label-sm text-label-sm text-on-surface-variant mb-1">
                 Comentarios / Requerimientos
               </label>
               <textarea 
-                className="border border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low rounded"
+                className="border-silver focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low"
                 rows="2"
                 name="comments"
                 value={formData.comments}
@@ -201,19 +201,19 @@ export default function RegistrationModal({ isOpen, onClose }) {
           </div>
 
           {submitStatus === 'success' && (
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3">
               ¡Inscripción enviada exitosamente al Claustro!
             </div>
           )}
 
           {submitStatus === 'error' && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3">
               Error al enviar la inscripción. Por favor, inténtalo de nuevo.
             </div>
           )}
 
           <button 
-            className="w-full bg-primary text-on-primary py-4 font-headline text-label-lg uppercase tracking-widest hover:bg-primary/90 transition-all mt-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-on-primary py-4 font-label-lg text-label-lg uppercase tracking-widest hover:bg-primary/90 transition-all mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
             type="submit"
             disabled={isSubmitting}
           >

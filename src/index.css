@@ -4,8 +4,12 @@
 
 @layer base {
   body {
-    @apply bg-surface text-on-surface font-body;
+    @apply bg-surface text-on-surface font-body dark:bg-inverse-surface dark:text-inverse-on-surface;
     background-image: url("https://www.transparenttextures.com/patterns/linen.png");
+  }
+  
+  .dark body {
+    background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png");
   }
 }
 
@@ -35,6 +39,10 @@
     box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.08);
     transform: translateY(-2px);
   }
+  
+  .dark .card-hover:hover {
+    box-shadow: 0px 4px 20px rgba(189, 194, 255, 0.15);
+  }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar {
@@ -42,14 +50,14 @@
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-surface-container-low;
+    @apply bg-surface-container-low dark:bg-tertiary-container;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-primary/30 rounded-full;
+    @apply bg-primary/30 dark:bg-inverse-primary/30 rounded-full;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/50;
+    @apply bg-primary/50 dark:bg-inverse-primary/50;
   }
 }

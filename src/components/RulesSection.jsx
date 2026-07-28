@@ -30,14 +30,14 @@ export default function RulesSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         
         {/* Dress Code Card */}
-        <div className="p-10 border border-secondary/20 bg-surface-container-lowest shadow-sm relative overflow-hidden rounded">
+        <div className="p-10 border border-secondary/20 dark:border-secondary/30 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 -mr-16 -mt-16 rounded-full"></div>
           
-          <h3 className="font-headline text-headline-lg text-secondary uppercase mb-8">
-            CÓDIGO DE VESTIMENTA
+          <h3 className="font-headline-lg text-headline-lg text-secondary uppercase mb-8">
+            REGLAMENTO DEL CLAUSTRO
           </h3>
           
-          <p className="font-body text-body-lg text-on-surface mb-8">
+          <p className="font-body-lg text-body-lg text-on-surface dark:text-inverse-on-surface mb-8">
             Inspiración Académica Prestigiosa. La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
           </p>
           
@@ -46,10 +46,10 @@ export default function RulesSection() {
               <div key={dress.name} className="flex items-center gap-4">
                 <div className={`w-12 h-12 ${dress.color} rounded shadow-inner border border-outline`}></div>
                 <div>
-                  <span className={`font-headline text-label-lg ${dress.color === 'bg-white' ? 'text-outline' : `text-${dress.color.replace('bg-', '')}`}`}>
+                  <span className={`font-label-lg text-label-lg ${dress.color === 'bg-white' ? 'text-outline' : `text-${dress.color.replace('bg-', '')}`}`}>
                     {dress.name}
                   </span>
-                  <p className="font-headline text-label-sm text-on-surface-variant">
+                  <p className="text-label-sm text-on-surface-variant dark:text-inverse-on-surface">
                     {dress.meaning}
                   </p>
                 </div>
@@ -59,8 +59,8 @@ export default function RulesSection() {
         </div>
 
         {/* Rules Card */}
-        <div className="p-10 border border-primary/20 bg-surface-container-lowest shadow-sm rounded">
-          <h3 className="font-headline text-headline-lg text-primary uppercase mb-8">
+        <div className="p-10 border border-primary/20 dark:border-inverse-primary/30 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm">
+          <h3 className="font-headline-lg text-headline-lg text-primary dark:text-inverse-primary uppercase mb-8">
             REGLAMENTO DEL CLAUSTRO
           </h3>
           
@@ -70,8 +70,8 @@ export default function RulesSection() {
                 <span className="material-symbols-outlined text-secondary">
                   priority_high
                 </span>
-                <p className="font-body text-body-md text-on-surface-variant">
-                  <strong className="text-on-surface">{rule.title}</strong> {rule.description}
+                <p className="font-body-md text-body-md text-on-surface-variant dark:text-inverse-on-surface">
+                  <strong className="text-on-surface dark:text-inverse-on-surface">{rule.title}</strong> {rule.description}
                 </p>
               </li>
             ))}

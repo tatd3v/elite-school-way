@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -72,20 +73,18 @@ export default {
         'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
       },
       spacing: {
-        'base': '8px',
-        'section-gap-desktop': '80px',
         'section-gap-mobile': '48px',
         'gutter': '24px',
+        'section-gap-desktop': '80px',
         'margin-desktop': '64px',
+        'base': '8px',
         'margin-mobile': '20px',
       },
       borderRadius: {
-        'sm': '0.125rem',
-        'DEFAULT': '0.25rem',
-        'md': '0.375rem',
-        'lg': '0.5rem',
-        'xl': '0.75rem',
-        'full': '9999px',
+        'DEFAULT': '0.125rem',
+        'lg': '0.25rem',
+        'xl': '0.5rem',
+        'full': '0.75rem',
       },
     },
   },
