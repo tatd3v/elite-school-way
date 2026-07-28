@@ -30,14 +30,14 @@ export default function RulesSection() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         
         {/* Dress Code Card */}
-        <div className="p-10 border border-secondary/20 dark:border-secondary/30 bg-surface-container-lowest dark:bg-inverse-surface shadow-sm relative overflow-hidden">
+        <div className="p-10 border border-secondary/20 bg-surface-container-lowest shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 -mr-16 -mt-16 rounded-full"></div>
           
           <h3 className="font-headline-lg text-headline-lg text-secondary uppercase mb-8">
             REGLAMENTO DEL CLAUSTRO
           </h3>
           
-          <p className="font-body-lg text-body-lg text-on-surface dark:text-inverse-on-surface mb-8">
+          <p className="font-body-lg text-body-lg text-on-surface mb-8">
             Inspiración Académica Prestigiosa. La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
           </p>
           
