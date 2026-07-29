@@ -101,97 +101,101 @@ export default function RulesSection() {
         </div>
 
         {/* Rules Card */}
-        <div className="p-10 border border-secondary/20 dark:border-secondary/30 bg-surface-container-lowest shadow-xl rounded-2xl">
-          <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-2">
-            KIKI BALL — CODE OF CONDUCT
-          </h3>
-          <p className="font-label-lg text-label-lg text-secondary uppercase tracking-widest mb-8">
-            DISCIPLINE • CULTURE • RESPECT • LEGACY
-          </p>
+        <div className="bg-surface-container-low rounded-3xl p-12 md:p-20 border border-outline-variant/20 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 -mr-48 -mt-48 rounded-full blur-3xl"></div>
+          
+          <div className="max-w-3xl mx-auto">
+            <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-10 text-center">
+              KIKI BALL — CODE OF CONDUCT
+            </h3>
+            <p className="font-label-lg text-label-lg text-secondary uppercase tracking-widest mb-8 text-center">
+              DISCIPLINE • CULTURE • RESPECT • LEGACY
+            </p>
 
-          <div className="space-y-6">
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                01. RESPECT
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Respeta a participantes, Houses, judges, commentators, staff y
-                público. Cero tolerancia frente a racismo, homofobia,
-                transfobia, misoginia, xenofobia, clasismo, bullying o cualquier
-                forma de discriminación.
-              </p>
-            </div>
+            <ul className="conduct-list">
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">RESPECT</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Respeta a participantes, Houses, judges, commentators, staff y
+                    público. Cero tolerancia frente a racismo, homofobia,
+                    transfobia, misoginia, xenofobia, clasismo, bullying o cualquier
+                    forma de discriminación.
+                  </p>
+                </div>
+              </li>
 
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                02. BATTLE WITH RESPECT
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                El shade, reading y actitud hacen parte del Ball. La violencia
-                física, amenazas o intimidación NO.
-              </p>
-            </div>
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">BATTLE WITH RESPECT</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    El shade, reading y actitud hacen parte del Ball. La violencia
+                    física, amenazas o intimidación NO.
+                  </p>
+                </div>
+              </li>
 
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                03. ZERO SUBSTANCE POLICY 🚫
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Está prohibido portar, consumir, distribuir o comercializar
-                sustancias psicoactivas dentro del establecimiento, sus
-                inmediaciones y durante el desarrollo del evento.
-              </p>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                También se podrá solicitar el retiro de personas que lleguen o
-                permanezcan bajo efectos evidentes de sustancias cuando esto
-                comprometa la seguridad o convivencia.
-              </p>
-            </div>
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">ZERO SUBSTANCE POLICY 🚫</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Está prohibido portar, consumir, distribuir o comercializar
+                    sustancias psicoactivas dentro del establecimiento, sus
+                    inmediaciones y durante el desarrollo del evento.
+                  </p>
+                  <p className="text-on-surface-variant leading-relaxed mt-2">
+                    También se podrá solicitar el retiro de personas que lleguen o
+                    permanezcan bajo efectos evidentes de sustancias cuando esto
+                    comprometa la seguridad o convivencia.
+                  </p>
+                </div>
+              </li>
 
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                04. PROTECT THE SPACE
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Cuida las instalaciones, respeta las zonas de seguridad y sigue
-                las instrucciones del staff.
-              </p>
-            </div>
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">PROTECT THE SPACE</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Cuida las instalaciones, respeta las zonas de seguridad y sigue
+                    las instrucciones del staff.
+                  </p>
+                </div>
+              </li>
 
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                05. HONOR YOUR HOUSE
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                Representa tu House con orgullo, disciplina y respeto. Tu
-                comportamiento también representa tu legado.
-              </p>
-            </div>
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">HONOR YOUR HOUSE</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    Representa tu House con orgullo, disciplina y respeto. Tu
+                    comportamiento también representa tu legado.
+                  </p>
+                </div>
+              </li>
 
-            <div>
-              <h4 className="font-headline text-headline-md text-on-surface mb-2">
-                06. CONSEQUENCES
-              </h4>
-              <p className="font-body-md text-body-md text-on-surface-variant">
-                El incumplimiento puede resultar en:
-              </p>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                WARNING → REMOVAL → DISQUALIFICATION → SUSPENSION / BAN
-              </p>
-              <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-                La organización podrá tomar medidas inmediatas ante situaciones
-                que comprometan la seguridad de la comunidad.
-              </p>
-            </div>
+              <li>
+                <div>
+                  <h5 className="font-headline-md text-on-surface mb-2">CONSEQUENCES</h5>
+                  <p className="text-on-surface-variant leading-relaxed">
+                    El incumplimiento puede resultar en:
+                  </p>
+                  <p className="text-on-surface-variant leading-relaxed mt-2">
+                    WARNING → REMOVAL → DISQUALIFICATION → SUSPENSION / BAN
+                  </p>
+                  <p className="text-on-surface-variant leading-relaxed mt-2">
+                    La organización podrá tomar medidas inmediatas ante situaciones
+                    que comprometan la seguridad de la comunidad.
+                  </p>
+                </div>
+              </li>
+            </ul>
           </div>
 
           <hr className="my-8 border-outline-variant/30" />
 
-          <div className="space-y-4">
+          <div className="space-y-4 text-center">
             <h4 className="font-headline-lg text-headline-lg text-secondary uppercase">
               THE ELITE PLEDGE
             </h4>
-            <ul className="space-y-2 font-body-md text-body-md text-on-surface-variant list-disc pl-5">
+            <ul className="inline-block text-left space-y-2 font-body-md text-body-md text-on-surface-variant list-disc list-inside">
               <li>RESPECT THE CULTURE.</li>
               <li>PROTECT THE COMMUNITY.</li>
               <li>HONOR THE LEGACY.</li>

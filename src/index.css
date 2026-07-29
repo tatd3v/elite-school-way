@@ -165,4 +165,44 @@
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Gradient numbered list for code of conduct */
+  .conduct-list {
+    counter-reset: index;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .conduct-list li {
+    counter-increment: index;
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    box-sizing: border-box;
+  }
+  
+  .conduct-list li::before {
+    content: counter(index, decimal-leading-zero);
+    font-size: 3.5rem;
+    line-height: 1;
+    text-align: right;
+    font-weight: bold;
+    min-width: 80px;
+    padding-right: 32px;
+    font-variant-numeric: tabular-nums;
+    align-self: flex-start;
+    background-image: linear-gradient(to bottom, #e9c349, #ffb4ac);
+    background-attachment: fixed;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .conduct-list li + li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .dark .conduct-list li + li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
