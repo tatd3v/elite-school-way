@@ -1,51 +1,51 @@
-import { useEffect, useState } from 'preact/hooks'
-import ThemeToggle from './ThemeToggle'
-import logo from '../assets/logo.png'
+import { useEffect, useState } from 'preact/hooks';
+import ThemeToggle from './ThemeToggle';
+import longLogo from '../assets/long_logo.png';
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header 
+    <header
       className={`fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 shadow-sm dark:shadow-lg transition-shadow ${
         scrolled ? 'shadow-md dark:shadow-2xl' : ''
       }`}
     >
-      <div className="flex justify-between items-center h-20 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+      <div className="flex justify-between items-center h-20 px-margin-mobile md:px-8 max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
-          <img 
-            alt="Elite Way School Logo" 
-            className="h-12 w-auto" 
-            src={logo}
+          <img
+            alt="Elite Way School Logo"
+            className="h-12 w-auto"
+            src={longLogo}
           />
-          <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
+          {/* <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
             ELITE WAY SCHOOL
-          </span>
+          </span> */}
         </div>
 
         <nav className="hidden md:flex gap-8">
-          <a 
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
+          <a
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
             href="#event"
           >
             EVENTO
           </a>
-          <a 
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
+          <a
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
             href="#categories"
           >
             CATEGORÍAS
           </a>
-          <a 
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors" 
+          <a
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
             href="#rules"
           >
             REGLAMENTO
@@ -57,5 +57,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
