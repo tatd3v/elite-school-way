@@ -191,11 +191,16 @@
     padding-right: 32px;
     font-variant-numeric: tabular-nums;
     align-self: flex-start;
+    flex-shrink: 0;
     background-image: linear-gradient(to bottom, #e9c349, #ffb4ac);
     background-attachment: fixed;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  .conduct-list h5 {
+    font-weight: 600;
   }
   
   .conduct-list li + li {
