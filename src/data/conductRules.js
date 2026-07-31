@@ -35,8 +35,8 @@ export const conductRules = [
 ]
 
 export const elitePledge = [
-  'RESPECT THE CULTURE.',
-  'PROTECT THE COMMUNITY.',
-  'HONOR THE LEGACY.',
-  'WALK WITH EXCELLENCE.'
+  'RESPETA LA CULTURA.',
+  'PROTEGE A LA COMUNIDAD.',
+  'HONRA EL LEGADO.',
+  'COMINA CON EXCELENCIA.'
 ]
