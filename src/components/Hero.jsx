@@ -33,7 +33,7 @@ export default function Hero({ onOpenModal }) {
         </h1>
         
         <p className="font-body-lg text-base md:text-body-lg text-primary-fixed mb-6 md:mb-12 max-w-2xl mx-auto">
-          No pierdas la oportunidad de ser parte de la historia. Las admisiones están abiertas por tiempo limitado.
+          No pierdas la oportunidad de ser parte de la historia de Ballroom Colombia. Las admisiones están abiertas por tiempo limitado.
         </p>
         
         <div className="flex flex-col md:flex-row gap-4 justify-center">
