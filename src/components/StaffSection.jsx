@@ -10,10 +10,10 @@ export default function StaffSection() {
       <div className="flex flex-col items-center mb-16">
         <div className="w-12 h-1 bg-secondary mb-4"></div>
         <h2 className="font-headline-lg text-headline-lg text-on-surface uppercase text-center">
-          EL CLAUSTRO DOCENTE
+          EQUIPO INSTITUCIONAL
         </h2>
         <p className="text-on-surface-variant mt-2 text-center">
-          Docentes por confirmar
+          Personal por confirmar
         </p>
         <p className="text-label-sm text-secondary mt-4 animate-pulse">
           La lista final se anunciará pronto

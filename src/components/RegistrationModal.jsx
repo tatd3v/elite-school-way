@@ -202,7 +202,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
           {submitStatus === 'success' && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3">
-              ¡Inscripción enviada exitosamente al Claustro!
+              ¡Inscripción enviada exitosamente a la institución Elite Way!
             </div>
           )}
 
