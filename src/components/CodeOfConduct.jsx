@@ -19,7 +19,7 @@ export default function CodeOfConduct({ rules, pledge }) {
         <ul className="conduct-list">
           {rules.map((rule) => (
             <li key={rule.id}>
-              <div>
+              <div className="flex-1 text-justify">
                 <h5 className="font-headline-md text-on-surface mb-2">{rule.title}</h5>
                 <p className="text-on-surface-variant leading-relaxed">
                   {rule.content}
