@@ -13,7 +13,10 @@ Modern SPA landing page for Elite Way School Ballroom event with integrated regi
 - 📱 **Fully Responsive** - Mobile-first approach
 - 📊 **Google Sheets Integration** - Zero-cost form backend
 - 🚀 **Easy Deployment** - Netlify-ready
-- ♿ **Accessible** - WCAG compliant
+- ♿ **Accessible** - WCAG compliant with ARIA labels
+- 🧪 **Tested** - Vitest for unit and component tests
+- ✨ **Code Quality** - ESLint + Prettier + CI/CD
+- 🔒 **Type Safety** - PropTypes validation
 
 ## 🏗️ Tech Stack
 
@@ -37,7 +40,38 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+Visit `http://localhost:5173`
+
+## 🧪 Development Tools
+
+### Testing
+
+```bash
+# Run tests once
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with UI
+npm run test:ui
+```
+
+### Linting & Formatting
+
+```bash
+# Run ESLint
+npm run lint
+
+# Fix ESLint issues
+npm run lint:fix
+
+# Format code with Prettier
+npm run format
+
+# Check formatting
+npm run format:check
+```
 
 ## 🔧 Configuration
 
@@ -46,6 +80,7 @@ Visit `http://localhost:3000`
 Follow the complete guide in [`SETUP.md`](./SETUP.md) to configure Google Sheets integration.
 
 Quick steps:
+
 1. Create Google Sheet
 2. Deploy Apps Script (from `google-apps-script.js`)
 3. Copy Web App URL
@@ -76,6 +111,7 @@ npm run preview
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
 
 **Manual deployment:**
+
 1. Run `npm run build`
 2. Drag `dist` folder to [Netlify Drop](https://app.netlify.com/drop)
 3. Add environment variable `VITE_GOOGLE_SCRIPT_URL`
@@ -84,22 +120,40 @@ npm run preview
 
 ```
 elite-school-way/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 # GitHub Actions CI
 ├── src/
 │   ├── components/
-│   │   ├── Header.jsx
-│   │   ├── Hero.jsx
+│   │   ├── __tests__/             # Component tests
+│   │   │   └── ThemeToggle.test.jsx
+│   │   ├── CategoryCard.jsx       # Single category card
+│   │   ├── Categories.jsx         # Categories section
+│   │   ├── CodeOfConduct.jsx      # Code of conduct rules
+│   │   ├── DressCode.jsx          # Dress code display
 │   │   ├── EventDetails.jsx
-│   │   ├── StaffSection.jsx
-│   │   ├── Categories.jsx
-│   │   ├── RulesSection.jsx
 │   │   ├── FinalCTA.jsx
 │   │   ├── Footer.jsx
-│   │   └── RegistrationModal.jsx
+│   │   ├── Header.jsx
+│   │   ├── Hero.jsx
+│   │   ├── RegistrationModal.jsx
+│   │   ├── RulesSection.jsx       # Rules container
+│   │   ├── StaffSection.jsx
+│   │   └── ThemeToggle.jsx
+│   ├── data/                      # Data/content configs
+│   │   ├── categories.js
+│   │   ├── conductRules.js
+│   │   └── dressCodes.js
+│   ├── test/
+│   │   └── setup.js               # Test configuration
 │   ├── utils/
 │   │   └── formSubmit.js
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
+├── .eslintrc.cjs                  # ESLint config
+├── .prettierrc.json               # Prettier config
+├── vitest.config.js               # Vitest config
 ├── google-apps-script.js
 ├── SETUP.md
 ├── package.json
@@ -111,22 +165,26 @@ elite-school-way/
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary (Navy):** #000666, #1a237e
 - **Secondary (Crimson):** #b52617, #ff5c45
 - **Accent (Silver):** #c6c5d4
 - **Surface:** #fbf9f8, #ffffff
 
 ### Typography
+
 - **Headlines:** Hanken Grotesk (600-700)
 - **Body:** Libre Franklin (400-600)
 
 ### Spacing
+
 - Desktop: 64px margins, 80px section gaps
 - Mobile: 20px margins, 48px section gaps
 
 ## 📊 Form Data
 
 Registrations are saved to Google Sheets with:
+
 - Timestamp
 - Nombre Artístico
 - Email
@@ -165,4 +223,4 @@ This is a private event registration site. For issues or questions, contact the 
 
 ---
 
-**Built with ❤️ for the Ballroom Community**
+### Built with ❤️ for the Colombian Ballroom Community

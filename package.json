@@ -6,10 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "eslint . --ext .js,.jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext .js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,json,css,md}\""
   },
   "dependencies": {
     "preact": "^10.19.3",
+    "prop-types": "^15.8.1",
     "@tailwindcss/forms": "^0.5.7",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
@@ -17,7 +25,20 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.8.1",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/preact": "^3.2.3",
+    "@testing-library/user-event": "^14.5.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "jsdom": "^23.0.1",
+    "prettier": "^3.1.1",
     "vite": "^8.1.5",
+    "vitest": "^1.1.0",
     "vercel": "^58.0.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.0": true
   }
 }
