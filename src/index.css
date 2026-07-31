@@ -58,8 +58,7 @@
   .dark .text-on-surface-variant { color: #e4beba !important; }
   .dark .text-on-background { color: #dfe0ff !important; }
   
-  /* Hero title transformations for dark mode to match provided HTML */
-  .dark .text-on-secondary { color: #dfe0ff !important; }
+  /* Fixed text colors in dark mode */
   .dark .text-primary-fixed { color: #e4beba !important; }
   .dark .text-secondary-fixed { color: #e9c349 !important; }
   
