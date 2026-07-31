@@ -58,7 +58,7 @@ export default function DressCode({ dressCodes }) {
               className="group bg-surface-container border border-outline-variant/20 p-8 rounded-2xl transition-all hover:bg-surface-bright flex flex-col items-center text-center"
             >
               <div 
-                className="w-24 h-24 rounded-full shadow-2xl mb-6 ring-4 ring-white/5 group-hover:scale-110 transition-transform"
+                className="w-24 h-24 rounded-full shadow-2xl mb-6 group-hover:scale-110 transition-transform"
                 style={{ backgroundColor: dress.hex }}
                 role="img"
                 aria-label={`${dress.name} color swatch`}
