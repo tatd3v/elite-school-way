@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import ThemeToggle from './ThemeToggle';
 import longLogo from '../assets/long_logo.png';
+import longLogoDark from '../assets/long_logo_dark_bg.png';
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,8 +24,13 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <img
             alt="Elite Way School Logo"
-            className="h-12 w-auto"
+            className="h-12 w-auto block dark:hidden"
             src={longLogo}
+          />
+          <img
+            alt="Elite Way School Logo"
+            className="h-12 w-auto hidden dark:block"
+            src={longLogoDark}
           />
           {/* <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
             ELITE WAY SCHOOL

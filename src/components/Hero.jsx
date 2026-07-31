@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import logo from '../assets/logo.png'
+import logoDark from '../assets/logo_dark_bg.png'
 
 export default function Hero({ onOpenModal }) {
   return (
@@ -20,8 +21,13 @@ export default function Hero({ onOpenModal }) {
       <div className="relative z-20 text-center px-4 md:px-margin-mobile max-w-4xl">
         <img 
           alt="Elite Way School Logo" 
-          className="w-20 h-20 md:w-32 md:h-32 mx-auto mb-4 md:mb-8 drop-shadow-xl dark:drop-shadow-2xl animate-pulse" 
+          className="w-20 h-20 md:w-32 md:h-32 mx-auto mb-4 md:mb-8 drop-shadow-xl animate-pulse block dark:hidden" 
           src={logo}
+        />
+        <img 
+          alt="Elite Way School Logo" 
+          className="w-20 h-20 md:w-32 md:h-32 mx-auto mb-4 md:mb-8 drop-shadow-2xl animate-pulse hidden dark:block" 
+          src={logoDark}
         />
         
         <h1 
