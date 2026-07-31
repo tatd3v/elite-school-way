@@ -50,7 +50,7 @@ export default function Footer() {
             src={logo}
           /> */}
           <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
-            © 2026 ELITE WAY SCHOOL Ballroom Culture. All Rights Reserved.
+            © 2026 ELITE WAY SCHOOL KIKI BALL. All Rights Reserved.
           </p>
         </div>
       </div>

@@ -1,4 +1,4 @@
-# 🎓 Elite Way School - Ballroom Culture 2026
+# 🎓 Elite Way School - Ballroom Colombia 2026
 
 Modern SPA landing page for Elite Way School Ballroom event with integrated registration form and Google Sheets backend.
 
@@ -202,7 +202,7 @@ See [`SETUP.md`](./SETUP.md#-troubleshooting) for common issues.
 
 ## 📝 Event Information
 
-**Event:** Elite Way School Ballroom Culture 2026  
+**Event:** Elite Way School Kiki Ball 2026  
 **Date:** October 17, 2026  
 **Time:** 6:00 PM  
 **Venue:** The Game Dance Studio  
