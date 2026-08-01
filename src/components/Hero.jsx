@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types'
 import logo from '../assets/logo_dark_bg.png'
+import heroBackground from '../assets/hero_background.png'
 
 export default function Hero({ onOpenModal }) {
   return (
     <section 
-      className="relative min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-primary py-20"
+      className="relative min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-[#000666] py-20"
       aria-labelledby="hero-heading"
       role="region"
     >
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/80 to-primary/40 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000666]/80 to-[#000666]/40 z-10"></div>
         <img 
-          className="w-full h-full object-cover grayscale-[0.3] dark:opacity-40 dark:grayscale" 
-          alt="Elite Way School Grand Library" 
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrYe4YI04TTeB2TUw4ubf-03dlsgfdlbrR8YRpfdS1uA-OqbW0VahESdECCYs_K89QwY0n1B4Vx0yhYlL7N-8hTCqJ2kv8QcOwiLX0kofdXAX7ocAJxeGjAHgW6Nr07tNHbUrccyBWxCn_jhN-P4AKPFPMsujT-Yak6HMwYPsbzvmRn7OfNuEGhu-8Wz68rWtctJGQgjl8otStVt_PbJ3t-RecGMRQWLi2IBFUf45XAmQ-So3tQ9BtdVZaQV-W-GyodXL8tB7Co6kl"
+          className="w-full h-full object-cover grayscale-[0.3] brightness-[0.4]" 
+          alt="Elite Way School Hero Background" 
+          src={heroBackground}
         />
       </div>
       
