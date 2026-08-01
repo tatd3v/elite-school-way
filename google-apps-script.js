@@ -13,11 +13,39 @@
  * 9. Add the URL to your .env file as VITE_GOOGLE_SCRIPT_URL
  */
 
-// Name of the sheet where data will be stored
+// Name of the sheets
 const SHEET_NAME = 'Registrations';
+const ADMINS_SHEET_NAME = 'Admins';
 
 /**
- * Initialize the sheet with headers if it doesn't exist
+ * Initialize the Admins sheet with headers if it doesn't exist
+ */
+function initializeAdminsSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(ADMINS_SHEET_NAME);
+  
+  if (!sheet) {
+    sheet = ss.insertSheet(ADMINS_SHEET_NAME);
+    const headers = ['Email', 'Password Hash', 'Role', 'Name'];
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    
+    // Add sample admin (password: 'admin123')
+    const sampleHash = Utilities.base64Encode(
+      Utilities.computeDigest(
+        Utilities.DigestAlgorithm.SHA_256,
+        'admin123'
+      )
+    );
+    sheet.appendRow(['admin@elite.com', sampleHash, 'admin', 'Admin User']);
+  }
+  
+  return sheet;
+}
+
+/**
+ * Initialize the registrations sheet with headers if it doesn't exist
  */
 function initializeSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -44,14 +72,66 @@ function initializeSheet() {
 }
 
 /**
+ * Hash a password using SHA-256
+ */
+function hashPassword(password) {
+  return Utilities.base64Encode(
+    Utilities.computeDigest(
+      Utilities.DigestAlgorithm.SHA_256,
+      password
+    )
+  );
+}
+
+/**
+ * Verify admin credentials
+ */
+function verifyAdmin(email, password) {
+  try {
+    const sheet = initializeAdminsSheet();
+    const data = sheet.getDataRange().getValues();
+    
+    // Skip header row, iterate through admin records
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0] === email) {
+        const storedHash = data[i][1];
+        const inputHash = hashPassword(password);
+        
+        if (storedHash === inputHash) {
+          return {
+            success: true,
+            role: data[i][2],
+            name: data[i][3],
+            email: email
+          };
+        }
+      }
+    }
+    
+    return { success: false, message: 'Invalid credentials' };
+  } catch (error) {
+    return { success: false, message: error.toString() };
+  }
+}
+
+/**
  * Handle POST requests from the form
  */
 function doPost(e) {
   try {
-    const sheet = initializeSheet();
-    
     // Parse the incoming data
     const data = JSON.parse(e.postData.contents);
+    
+    // Handle admin login request
+    if (data.action === 'login') {
+      const result = verifyAdmin(data.email, data.password);
+      return ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Handle registration submission
+    const sheet = initializeSheet();
     
     // Prepare row data
     const rowData = [
