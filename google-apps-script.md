@@ -134,12 +134,14 @@ function doPost(e) {
     const sheet = initializeSheet();
     
     // Prepare row data
+    // House/007 is prefixed with an apostrophe so Google Sheets treats it as text
+    // and preserves leading zeros (e.g., 007 instead of 7).
     const rowData = [
       new Date(data.timestamp),
       data.artistName,
       data.email,
       data.phone,
-      data.house,
+      data.house ? "'" + data.house : 'N/A',
       data.categories,
       data.age,
       data.comments
