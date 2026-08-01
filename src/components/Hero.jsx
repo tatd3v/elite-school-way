@@ -28,7 +28,7 @@ export default function Hero({ onOpenModal }) {
           id="hero-heading"
           className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-white mb-3 md:mb-4 uppercase leading-tight"
         >
-          BIENVENIDOS A LA LEGENDARIA<br />
+          BIENVENIDXS A LA LEGENDARIA<br />
           <span className="text-secondary-fixed">ELITE WAY SCHOOL</span>
         </h1>
         

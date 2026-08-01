@@ -47,7 +47,7 @@ export default function DressCode({ dressCodes }) {
             DRESS CODE ACADÉMICO
           </h3>
           <p className="text-on-surface-variant mt-4 max-w-2xl mx-auto text-lg">
-            La paleta oficial es obligatoria para todos los estudiantes. Garantiza la excelencia estética y la cohesión visual de la institución.
+            La paleta oficial es obligatoria para todxs lxs estudiantxs. Garantiza la excelencia estética y la cohesión visual de la institución.
           </p>
         </div>
         

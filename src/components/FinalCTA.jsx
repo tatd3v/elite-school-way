@@ -12,7 +12,7 @@ export default function FinalCTA({ onOpenModal }) {
           className="bg-secondary text-on-secondary px-12 py-5 font-label-lg text-label-lg uppercase tracking-widest hover:scale-105 transition-transform duration-300 shadow-xl"
           onClick={onOpenModal}
         >
-          ¡Únete a nosotros!
+          ¡Únete a nosotrxs!
         </button>
       </div>
     </section>
