@@ -1,5 +1,7 @@
 import { useState } from 'preact/hooks'
+import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
+import { categories as categoryData } from '../data/categories'
 
 export default function RegistrationModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
@@ -14,7 +16,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
 
-  const categories = ['Realness', 'Face', 'Runway', 'Best Outfit', 'Performance', 'Commentator']
+  const categories = categoryData.map((category) => category.title)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -223,4 +225,9 @@ export default function RegistrationModal({ isOpen, onClose }) {
       </div>
     </div>
   )
+}
+
+RegistrationModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 }
