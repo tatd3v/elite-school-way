@@ -12,7 +12,8 @@ Modern SPA landing page for Elite Way School Ballroom event with integrated regi
 - 🎨 **Beautiful Design** - Academic Prestige & Ballroom Grandeur theme
 - 📱 **Fully Responsive** - Mobile-first approach
 - 📊 **Google Sheets Integration** - Zero-cost form backend
-- 🚀 **Easy Deployment** - Netlify-ready
+- � **Admin Authentication** - Google Sheets-based admin panel
+- � **Easy Deployment** - Netlify-ready
 - ♿ **Accessible** - WCAG compliant with ARIA labels
 - 🧪 **Tested** - Vitest for unit and component tests
 - ✨ **Code Quality** - ESLint + Prettier + CI/CD
@@ -85,6 +86,16 @@ Quick steps:
 2. Deploy Apps Script (from `google-apps-script.js`)
 3. Copy Web App URL
 4. Add to `.env` file
+
+### 2. Admin Panel Setup (Optional)
+
+For admin-only access to manage registrations, see [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
+
+The admin panel provides:
+- Secure login using Google Sheets as authentication database
+- Dashboard with registration statistics
+- Direct access to Google Sheets data
+- Zero-cost admin authentication solution
 
 ### 2. Environment Variables
 
