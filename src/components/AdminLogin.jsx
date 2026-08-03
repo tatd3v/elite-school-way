@@ -76,7 +76,7 @@ function AdminLogin({ onLoginSuccess }) {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="border border-outline-variant dark:border-outline-variant/30 focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low dark:bg-surface-container text-on-surface dark:text-on-surface rounded transition-colors"
+                  className="w-full bg-surface-container-low dark:bg-surface-container border border-outline-variant dark:border-outline-variant/30 focus:ring-primary focus:border-primary px-4 py-3 pl-12 pr-4 font-body-md text-on-surface dark:text-on-surface rounded transition-colors placeholder:text-on-surface-variant placeholder:opacity-60"
                   placeholder="ejemplo@eliteway.edu"
                   required
                   disabled={isLoading}
