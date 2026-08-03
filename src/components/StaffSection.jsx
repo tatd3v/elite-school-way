@@ -1,43 +1,29 @@
-export default function StaffSection() {
-  const staffMembers = [
-    { title: 'Director', icon: 'person' },
-    { title: 'Maestro de Ceremonia', icon: 'mic' },
-    { title: 'Curador Musical', icon: 'album' },
-  ]
+import { staffMembers } from '../data/staff'
+import StaffMemberCard from './StaffMemberCard'
 
+export default function StaffSection() {
   return (
-    <section className="hidden py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
-      <div className="flex flex-col items-center mb-16">
-        <div className="w-12 h-1 bg-secondary mb-4"></div>
-        <h2 className="font-headline-lg text-headline-lg text-on-surface uppercase text-center">
-          EQUIPO INSTITUCIONAL
+    <section
+      className="py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto"
+      id="staff"
+      aria-labelledby="staff-heading"
+    >
+      <div className="text-center mb-20">
+        <h2
+          id="staff-heading"
+          className="font-headline-lg text-headline-lg text-primary uppercase inline-block relative pb-4"
+        >
+          EL CLAUSTRO DOCENTE
+          <span className="absolute bottom-0 left-1/4 right-1/4 h-1 bg-secondary"></span>
         </h2>
-        <p className="text-on-surface-variant mt-2 text-center">
-          Personal por confirmar
-        </p>
-        <p className="text-label-sm text-secondary mt-4 animate-pulse">
-          La lista final se anunciará pronto
+        <p className="text-on-surface-variant mt-6 max-w-xl mx-auto">
+          Seleccionados por su excelencia y trayectoria académica en la escena Ballroom.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {staffMembers.map((member) => (
-          <div 
-            key={member.title}
-            className="group border border-outline-variant/30 hover:border-secondary transition-colors overflow-hidden bg-surface-container-lowest p-6 rounded-xl"
-          >
-            <div className="relative h-96 mb-6 overflow-hidden border border-outline-variant/10 bg-surface-container-low flex items-center justify-center rounded-lg">
-              <span className="material-symbols-outlined text-6xl text-outline-variant opacity-50">
-                {member.icon}
-              </span>
-            </div>
-            <h3 className="font-headline text-headline-md text-outline text-center">
-              PRÓXIMAMENTE
-            </h3>
-            <p className="font-headline text-label-lg text-outline-variant text-center uppercase mb-2">
-              {member.title}
-            </p>
-          </div>
+          <StaffMemberCard key={member.id} member={member} />
         ))}
       </div>
     </section>
