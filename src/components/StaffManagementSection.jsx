@@ -29,21 +29,21 @@ function StaffManagementSection({ onUpdate }) {
       id: 1,
       role: 'Director de Gala',
       name: 'Prof. Enrique Madrigal',
-      icon: 'star_rate',
+      photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDWU46qmVq2SfRzbea-dALxTLfoMkNgmRegWMbf1oaVPMBIyob3RCWE-woPgneMTgPAN2n4CQjMf79lc-5aUlZfHkJLKW6YvwZaY7w9bTFRcb7mBjMag7EhS7P8-cygo6VGf_eb95Dgm4mXxm2yUYkk2KJhuVuvF1KKlEymRWnr8eKVCP-Z2xERa42u9qCY8ghVrePJMy1ffwozuuyspSbqEzvEzrkFde0VRhpKs6m62VuJOeN_sM11',
       color: 'secondary',
     },
     {
       id: 2,
       role: 'Maestro de Ceremonia',
       name: 'Sebastian de la Fuente',
-      icon: 'campaign',
+      photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAoU21leSPDgDVRJ4FiTRFmmuLPg0pwlm4bxsQAH3LlkzkrFqqjb1pEY7inOEV617_m0CwxV1vjFDXKEqqbkb0SaoOtlArSlkjAieiAiV79QSBRz799AXM2iHdgl61vwKZtw8UtZJLx2raMm9JCF3N1Fr6DoNTB-NvEbex8Iv4b8eGrO9dJW93EN17DHlt6w0retsHc6VOxBB_t-he4-s_sZRoDyj4hmYyLcOpO5P_LSIOFGG9tsWV7',
       color: 'primary',
     },
     {
       id: 3,
       role: 'Curador Musical',
       name: 'DJ Alpha Prestige',
-      icon: 'library_music',
+      photo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDtIgOIiZRxVtCbD81LtdX53nJZtkD6S05KtTyulzJ9nxdqb6Wcew5on-4tcCqfeanwjKF045jePxaI-uO7K_5N3NR2s-OTIT8GnPl84EigaiEsVoEHrV2YO3MXvQKE2h4iSZAybLv7xjDxukhUvMytF2Fc6V5DYYRUAQYal1iD50WXGdqxpKfycVepBsOx07vTNg8U1ibY9JGA0bP61xjR6tCOyVHpSJGjNTaStiTFALfOi8_kSOXQ',
       color: 'primary',
     },
   ];
@@ -86,10 +86,15 @@ function StaffManagementSection({ onUpdate }) {
             ) : (
               staff.map((member) => (
               <div key={member.id} className="flex items-center gap-4 py-2">
-                <div className={`h-10 w-10 rounded-full bg-${member.color}/10 flex items-center justify-center border border-${member.color}/20`}>
-                  <span className={`material-symbols-outlined text-${member.color}`}>
-                    {member.icon}
-                  </span>
+                <div className="h-12 w-12 rounded-full overflow-hidden border-2 border-outline-variant/30 bg-surface-container-high flex-shrink-0">
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/48/191d3d/dfe0ff?text=' + member.name.charAt(0);
+                    }}
+                  />
                 </div>
                 <div className="flex-1">
                   <p className={`text-[10px] font-bold text-${member.color} uppercase tracking-widest`}>
