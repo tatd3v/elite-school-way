@@ -71,6 +71,27 @@ function AdminDashboard({ user: _user, onLogout }) {
       <DashboardHeader onProfileClick={handleLogout} />
 
       <main className="pt-20 pb-24 px-4 md:px-8 min-h-screen bg-background transition-colors duration-300" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/pinstripe.png")', backgroundRepeat: 'repeat' }}>
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 bg-error-container border border-error rounded-xl p-4 text-center">
+            <p className="text-on-error-container font-label-md">{error}</p>
+            <button
+              onClick={loadDashboardData}
+              className="mt-2 px-4 py-2 bg-error text-on-error rounded font-label-sm uppercase"
+            >
+              Reintentar
+            </button>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+            <p className="text-on-surface-variant font-label-md">Cargando datos...</p>
+          </div>
+        ) : (
+          <>
         {/* Summary Section */}
         <section className="mb-8">
           <div className="flex flex-col gap-4">
@@ -110,6 +131,8 @@ function AdminDashboard({ user: _user, onLogout }) {
 
         {/* Stats Grid */}
         <StatsSummary students={stats.students} houses={stats.houses} />
+          </>
+        )}
       </main>
 
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
