@@ -15,7 +15,7 @@ function BottomNavigation({ activeTab = 'dashboard', onTabChange }) {
   };
 
   return (
-    <nav className="md:hidden fixed bottom-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-md border-t border-outline-variant/10 rounded-t-xl h-20 shadow-lg flex justify-around items-center px-4">
+    <nav className="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-high/95 backdrop-blur-xl border-t border-outline-variant/10 flex justify-around items-center py-2 pb-safe px-4 z-50 shadow-lg rounded-t-xl">
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const iconFill = isActive && tab.filled ? 1 : 0;
@@ -24,10 +24,10 @@ function BottomNavigation({ activeTab = 'dashboard', onTabChange }) {
           <button
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
-            className={`flex flex-col items-center justify-center px-4 py-2 rounded-lg transition-all ${
+            className={`flex flex-col items-center justify-center px-4 py-1 rounded-full active:scale-90 transition-transform duration-200 ${
               isActive
-                ? 'text-primary font-bold active:bg-surface-variant/30 scale-110'
-                : 'text-on-tertiary-fixed-variant active:bg-surface-variant/30'
+                ? 'bg-primary-container text-on-primary-container'
+                : 'text-on-surface-variant hover:text-primary'
             }`}
           >
             <span
@@ -36,7 +36,7 @@ function BottomNavigation({ activeTab = 'dashboard', onTabChange }) {
             >
               {tab.icon}
             </span>
-            <span className="font-label-sm text-label-sm mt-1">{tab.label}</span>
+            <span className="font-label-sm text-[10px]">{tab.label}</span>
           </button>
         );
       })}

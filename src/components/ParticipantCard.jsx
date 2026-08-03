@@ -18,11 +18,11 @@ function ParticipantCard({ participant }) {
   const borderColor = status === 'confirmed' ? 'border-t-secondary' : 'border-t-primary/40';
 
   return (
-    <div className={`glass-card rounded-xl p-5 border-t-4 ${borderColor} relative overflow-hidden transition-all duration-300`}>
+    <div className={`luxury-card rounded-xl p-5 border-t-4 ${borderColor} relative overflow-hidden transition-all duration-300`}>
       <div className="flex justify-between items-start mb-3">
         <div>
-          <h3 className="font-headline-md text-lg text-on-surface font-bold">{name}</h3>
-          <p className="text-label-sm text-on-surface-variant font-label-sm tracking-wide uppercase">
+          <h3 className="font-headline-md text-lg text-primary font-bold">{name}</h3>
+          <p className="text-label-sm text-outline font-label-sm tracking-wide uppercase">
             {house || 'Sin Casa'}
           </p>
         </div>

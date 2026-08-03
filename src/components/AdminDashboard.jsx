@@ -78,14 +78,14 @@ function AdminDashboard({ user: _user, onLogout }) {
       />
 
       <main 
-        className="pt-20 pb-24 px-4 md:px-8 lg:px-12 min-h-screen transition-colors duration-300"
+        className="pt-20 pb-24 px-margin-mobile min-h-screen linen-texture"
         style={{ marginLeft: window.innerWidth >= 768 ? `${sidebarWidth}px` : '0' }}
       >
         <div className="max-w-7xl mx-auto space-y-10">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 glass-card rounded-xl p-6 text-center border-l-4 border-l-error">
-              <p className="text-on-surface font-label-md mb-2">{error}</p>
+            <div className="mb-6 luxury-card rounded-xl p-6 text-center border-l-4 border-l-error">
+              <p className="text-on-surface font-body-md mb-2">{error}</p>
               <button
                 onClick={loadDashboardData}
                 className="academic-red-btn px-6 py-3 rounded-xl font-label-md uppercase tracking-wider"
@@ -105,29 +105,23 @@ function AdminDashboard({ user: _user, onLogout }) {
             <>
               {/* Header Section */}
               <section className="mb-8">
-                <div className="space-y-2 mb-6">
-                  <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded-full font-label-sm uppercase tracking-wider">
-                    PANEL DE CONTROL
-                  </span>
-                  <h2 className="font-display-lg-mobile text-display-lg-mobile text-on-surface tracking-tight">
+                <div className="flex flex-col gap-4">
+                  <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-primary flex items-center gap-2">
                     Participantes Registrados
                   </h2>
-                  <p className="font-body-md text-on-surface-variant">
-                    Gestione la nómina académica de la gala. Verifique los estados de confirmación y pertenencia a las casas reales.
-                  </p>
+                  <SearchBar onSearch={handleSearch} />
                 </div>
-                <SearchBar onSearch={handleSearch} />
               </section>
 
               {/* Participants Cards */}
-              <section className="mb-8">
+              <section className="mb-section-gap-mobile">
                 <div className="space-y-4">
                   {visibleParticipants.length > 0 ? (
                     visibleParticipants.map((participant) => (
                       <ParticipantCard key={participant.id} participant={participant} />
                     ))
                   ) : (
-                    <div className="glass-card rounded-xl p-8 text-center">
+                    <div className="luxury-card rounded-xl p-8 text-center">
                       <p className="text-on-surface-variant font-body-md">No se encontraron participantes</p>
                     </div>
                   )}
@@ -137,7 +131,7 @@ function AdminDashboard({ user: _user, onLogout }) {
                 {visibleCount < filteredParticipants.length && (
                   <button
                     onClick={handleLoadMore}
-                    className="w-full mt-6 py-4 font-label-md text-secondary border border-secondary/30 rounded-xl hover:bg-secondary/5 active:scale-95 transition-all uppercase tracking-wider"
+                    className="w-full mt-6 py-4 font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/5 active:scale-95 transition-all rounded-lg uppercase tracking-widest"
                   >
                     Cargar Más Participantes
                   </button>

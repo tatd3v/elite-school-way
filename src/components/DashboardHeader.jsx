@@ -1,22 +1,8 @@
-import { useState, useEffect } from 'preact/hooks';
 import PropTypes from 'prop-types';
-import { getTheme, setTheme } from '../utils/theme';
 
 function DashboardHeader({ onProfileClick }) {
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    setIsDark(getTheme());
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    setTheme(newTheme);
-  };
-
   return (
-    <header className="bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-8 h-16 transition-colors duration-300">
+    <header className="bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/20 fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16">
       <div className="flex items-center gap-3">
         <img
           alt="Elite Way School Crest"
@@ -27,24 +13,13 @@ function DashboardHeader({ onProfileClick }) {
           Elite Way School
         </h1>
       </div>
-      <div className="flex items-center gap-3">
-        <button
-          onClick={toggleTheme}
-          className="flex items-center justify-center p-2 rounded-lg hover:bg-surface-container-high transition-colors"
-          aria-label="Toggle theme"
-        >
-          <span className="material-symbols-outlined text-primary text-xl">
-            {isDark ? 'light_mode' : 'dark_mode'}
-          </span>
-        </button>
-        <button
-          onClick={onProfileClick}
-          className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform"
-          aria-label="User profile"
-        >
-          <span className="material-symbols-outlined text-primary text-2xl">account_circle</span>
-        </button>
-      </div>
+      <button
+        onClick={onProfileClick}
+        className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform"
+        aria-label="User profile"
+      >
+        <span className="material-symbols-outlined text-primary text-2xl">account_circle</span>
+      </button>
     </header>
   );
 }
