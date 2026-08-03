@@ -98,7 +98,7 @@ function AdminLogin({ onLoginSuccess }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full bg-transparent border border-outline-variant px-4 py-3 pl-12 pr-12 font-body-md text-on-surface focus:border-primary focus:outline-none focus:shadow-[0_0_0_1px] focus:shadow-primary transition-all placeholder:text-on-surface-variant placeholder:opacity-60"
-                  placeholder="+57 300 000 0000"
+                  placeholder="Ingresa tu contraseña"
                   required
                   disabled={isLoading}
                 />
