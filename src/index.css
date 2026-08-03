@@ -123,8 +123,28 @@
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   }
 
-  /* Glass card effect for dark mode */
+  /* Linen texture background */
+  .linen-texture {
+    background-color: #fbf9f8;
+    background-image: url("https://www.transparenttextures.com/patterns/pinstripe.png");
+    background-repeat: repeat;
+  }
+
+  .dark .linen-texture {
+    background-color: #0c1030;
+    background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
+  }
+
+  /* Luxury card - light admin theme */
+  .luxury-card,
   .glass-card {
+    background: #ffffff;
+    border: 1px solid rgba(192, 192, 192, 0.3);
+    box-shadow: 0px 4px 20px rgba(26, 35, 126, 0.04);
+  }
+
+  .dark .luxury-card,
+  .dark .glass-card {
     background: rgba(25, 29, 61, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(171, 137, 133, 0.15);
@@ -135,11 +155,11 @@
     box-shadow: inset 0 1px 0 0 rgba(233, 195, 73, 0.1);
   }
 
-  /* Academic red button */
+  /* Academic red button - light admin theme */
   .academic-red-btn {
-    background-color: #c62828;
+    background-color: #b52617;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #ffe0dd;
+    color: #ffffff;
   }
 
   .academic-red-btn:active {
@@ -148,6 +168,15 @@
   }
 
   .academic-red-btn:hover {
+    box-shadow: 0 0 15px rgba(26, 35, 126, 0.15);
+  }
+
+  .dark .academic-red-btn {
+    background-color: #c62828;
+    color: #ffe0dd;
+  }
+
+  .dark .academic-red-btn:hover {
     box-shadow: 0 0 15px rgba(198, 40, 40, 0.4);
   }
 

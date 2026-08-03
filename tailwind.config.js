@@ -70,6 +70,14 @@ export default {
       fontFamily: {
         'headline': ['Hanken Grotesk', 'sans-serif'],
         'body': ['Libre Franklin', 'sans-serif'],
+        'display-lg': ['Hanken Grotesk', 'sans-serif'],
+        'headline-lg': ['Hanken Grotesk', 'sans-serif'],
+        'headline-lg-mobile': ['Hanken Grotesk', 'sans-serif'],
+        'headline-md': ['Hanken Grotesk', 'sans-serif'],
+        'body-lg': ['Libre Franklin', 'sans-serif'],
+        'body-md': ['Libre Franklin', 'sans-serif'],
+        'label-lg': ['Hanken Grotesk', 'sans-serif'],
+        'label-sm': ['Hanken Grotesk', 'sans-serif'],
       },
       fontSize: {
         'display-lg': ['48px', { lineHeight: '56px', letterSpacing: '-0.02em', fontWeight: '700' }],
