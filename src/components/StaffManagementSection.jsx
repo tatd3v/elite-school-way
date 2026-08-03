@@ -52,91 +52,74 @@ function StaffManagementSection({ onUpdate }) {
   ];
 
   return (
-    <section className="mb-section-gap-mobile">
-      <div className="bg-surface-container-lowest border border-outline-variant/10 shadow-md rounded-xl overflow-hidden transition-colors duration-300">
-        <div className="bg-primary-container p-4 flex justify-between items-center">
-          <h2 className="font-headline-md text-on-primary-container text-md">Gestión de Claustro</h2>
-          <span className="material-symbols-outlined text-on-primary-container/70">event</span>
+    <section className="mb-12">
+      {/* Date Selector */}
+      <div className="mb-8">
+        <label className="block font-label-sm text-on-surface-variant mb-2 ml-1 uppercase tracking-wider">EVENTO PROGRAMADO</label>
+        <div className="glass-card rounded-xl p-4 flex items-center justify-between gold-border-glow">
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-secondary">calendar_today</span>
+            <span className="font-body-md font-medium text-on-surface">Sábado, 12 de Octubre, 2024</span>
+          </div>
+          <span className="material-symbols-outlined text-outline">expand_more</span>
+        </div>
+      </div>
+
+      {/* Faculty Section */}
+      <div>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-headline-md text-on-surface">Facultad Asignada</h2>
+          <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
         </div>
 
-        <div className="p-5">
-          <div className="mb-6">
-            <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-tighter">
-              Seleccionar Fecha de Gala
-            </label>
-            <div className="relative">
-              <select className="w-full p-3 rounded border border-outline-variant bg-surface-container-low text-on-surface appearance-none focus:ring-1 focus:ring-primary outline-none font-body-md transition-colors">
-                <option>Sábado, 12 de Octubre, 2024</option>
-                <option>Sábado, 19 de Octubre, 2024</option>
-                <option>Sábado, 26 de Octubre, 2024</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
-                expand_more
-              </span>
+        {/* Faculty Cards */}
+        <div className="space-y-4">
+          {isLoading ? (
+            <div className="glass-card rounded-xl p-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
+              <p className="text-on-surface-variant text-label-sm">Cargando...</p>
             </div>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-label-lg text-label-lg text-secondary uppercase border-b border-outline-variant/20 pb-2">
-              Facultad Asignada
-            </h4>
-
-            {isLoading ? (
-              <div className="py-8 text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
-                <p className="text-on-surface-variant text-label-sm">Cargando...</p>
-              </div>
-            ) : (
-              staff.map((member, index) => (
-              <div key={index} className="border-b border-outline-variant/10 last:border-0 py-4">
-                <div className="flex items-start gap-4">
-                  <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-secondary/30 bg-surface-container-high flex-shrink-0">
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/64/191d3d/dfe0ff?text=' + member.name.charAt(0);
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-headline-md text-base font-bold text-on-surface">{member.name}</p>
-                        <p className="text-[11px] font-bold text-secondary uppercase tracking-widest mt-0.5">
-                          {member.role}
-                        </p>
-                      </div>
-                      <button className="text-on-surface-variant hover:text-primary transition-colors">
-                        <span className="material-symbols-outlined text-sm">edit</span>
-                      </button>
-                    </div>
-                    <p className="text-xs text-on-surface-variant mt-2 italic">{member.bio}</p>
-                    {member.socialLinks && (
-                      <a
-                        href={`https://${member.socialLinks}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 mt-2 text-[10px] text-primary hover:text-secondary transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-xs">link</span>
-                        {member.socialLinks}
-                      </a>
-                    )}
-                  </div>
+          ) : (
+            staff.map((member, index) => (
+              <div key={index} className="glass-card rounded-xl p-4 flex items-center gap-4 relative group overflow-hidden">
+                <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-outline/20">
+                  <img
+                    src={member.photo}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/64/191d3d/dfe0ff?text=' + member.name.charAt(0);
+                    }}
+                  />
                 </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className="font-label-sm px-2 py-0.5 bg-secondary/10 text-secondary rounded-full border border-secondary/20">
+                      {member.role}
+                    </span>
+                  </div>
+                  <h3 className="font-body-lg font-bold text-on-surface">{member.name}</h3>
+                  <p className="text-on-surface-variant text-label-md">{member.bio}</p>
+                </div>
+                <button className="text-outline hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined">edit</span>
+                </button>
+                <div className="absolute right-0 top-0 h-full w-1 bg-secondary opacity-0 group-hover:opacity-100 transition-opacity"></div>
               </div>
-              ))
-            )}
-          </div>
+            ))
+          )}
+        </div>
 
+        {/* Primary Action */}
+        <div className="mt-8">
           <button
             onClick={onUpdate}
-            className="w-full mt-6 bg-secondary text-on-secondary py-4 font-label-lg text-label-lg rounded active:scale-[0.98] transition-all uppercase tracking-widest hover:shadow-lg"
+            className="academic-red-btn w-full py-4 rounded-xl font-bold tracking-wider flex items-center justify-center gap-2 shadow-xl"
           >
-            Actualizar Claustro
+            <span className="material-symbols-outlined">save</span>
+            GUARDAR CAMBIOS
           </button>
+          <p className="text-center text-label-sm text-outline mt-4 opacity-70">Última modificación hace 2 horas</p>
         </div>
       </div>
     </section>
@@ -144,15 +127,6 @@ function StaffManagementSection({ onUpdate }) {
 }
 
 StaffManagementSection.propTypes = {
-  staff: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      role: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-    })
-  ),
   onUpdate: PropTypes.func,
 };
 
