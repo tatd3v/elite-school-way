@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'preact/hooks';
-import ThemeToggle from './ThemeToggle';
-import longLogo from '../assets/long_logo.png';
-import longLogoDark from '../assets/long_logo_dark_bg.png';
+import { useEffect, useState } from 'preact/hooks'
+import ThemeToggle from './ThemeToggle'
+import longLogo from '../assets/long_logo.png'
+import longLogoDark from '../assets/long_logo_dark_bg.png'
 
 export default function Header() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      setScrolled(window.scrollY > 50)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <header
@@ -20,7 +20,7 @@ export default function Header() {
         scrolled ? 'shadow-md dark:shadow-2xl' : ''
       }`}
     >
-      <div className="flex justify-between items-center h-20 px-margin-mobile md:px-8 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center h-20 px-margin-mobile md:px-8 mx-auto">
         <div className="flex items-center gap-3">
           <img
             alt="Elite Way School Logo"
@@ -63,5 +63,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }
