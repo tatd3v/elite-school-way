@@ -69,9 +69,9 @@ export function App() {
   }, [])
 
   const routes = [
-    { path: '/', component: <HomePage /> },
-    { path: '/login', component: <LoginPage /> },
-    { path: '*', component: <HomePage /> },
+    { path: '/', component: HomePage },
+    { path: '/login', component: LoginPage },
+    { path: '*', component: HomePage },
   ]
 
   return <Router routes={routes} />
