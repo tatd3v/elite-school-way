@@ -1,118 +1,118 @@
+import { useState, useEffect } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { logoutAdmin } from '../utils/auth';
-import { CATEGORIES_COUNT } from '../config/constants';
-import StatCard from './StatCard';
-import InstructionItem from './InstructionItem';
+import { dashboardService } from '../services/dashboardService';
+import DashboardHeader from './DashboardHeader';
+import SearchBar from './SearchBar';
+import ParticipantCard from './ParticipantCard';
+import StaffManagementSection from './StaffManagementSection';
+import StatsSummary from './StatsSummary';
+import BottomNavigation from './BottomNavigation';
 
-function AdminDashboard({ user, onLogout }) {
-  const registrations = [];
+function AdminDashboard({ user: _user, onLogout }) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [participants, setParticipants] = useState([]);
+  const [stats, setStats] = useState({ students: 0, houses: 0 });
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      const [registrationsData, statsData] = await Promise.all([
+        dashboardService.fetchRegistrations(),
+        dashboardService.fetchStats(),
+      ]);
+      
+      setParticipants(registrationsData);
+      setStats(statsData);
+    } catch (err) {
+      setError('Error al cargar los datos del dashboard');
+      console.error('Dashboard load error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     logoutAdmin();
     onLogout();
   };
 
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const handleStaffUpdate = () => {
+    console.log('Updating staff...');
+  };
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 3);
+  };
+
+  const filteredParticipants = participants.filter((p) =>
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.house.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const visibleParticipants = filteredParticipants.slice(0, visibleCount);
+
   return (
-    <div className="min-h-screen bg-surface">
-      <header className="bg-primary text-on-primary shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 flex justify-between items-center">
-          <div>
-            <h1 className="font-headline-lg text-headline-lg uppercase">
-              Panel de Administración
-            </h1>
-            <p className="text-on-primary/80 text-label-md mt-1">
-              Elite Way School - Bienvenido, {user.name}
-            </p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="bg-secondary text-on-secondary px-6 py-3 rounded font-label-md uppercase hover:bg-secondary/90 transition-colors flex items-center gap-2"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            Cerrar Sesión
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-background">
+      <DashboardHeader onProfileClick={handleLogout} />
 
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-12">
-        <div className="bg-surface-container-low border border-outline-variant/20 shadow-xl p-8 rounded-2xl">
-          <div className="flex items-center gap-4 mb-8">
-            <span className="material-symbols-outlined text-secondary text-4xl">
-              dashboard
-            </span>
-            <div>
-              <h2 className="font-headline-md text-headline-md text-on-surface uppercase">
-                Dashboard
-              </h2>
-              <p className="text-on-surface-variant text-label-md">
-                Gestión de registros y categorías
-              </p>
-            </div>
+      <main className="pt-20 pb-24 px-4 md:px-8 min-h-screen bg-background transition-colors duration-300" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/pinstripe.png")', backgroundRepeat: 'repeat' }}>
+        {/* Summary Section */}
+        <section className="mb-8">
+          <div className="flex flex-col gap-4">
+            <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-primary flex items-center gap-2">
+              Participantes Registrados
+            </h2>
+            <SearchBar onSearch={handleSearch} />
+          </div>
+        </section>
+
+        {/* Participants List */}
+        <section className="mb-8">
+          <div className="flex flex-col gap-4">
+            {visibleParticipants.length > 0 ? (
+              visibleParticipants.map((participant) => (
+                <ParticipantCard key={participant.id} participant={participant} />
+              ))
+            ) : (
+              <div className="bg-surface-container-lowest border border-outline-variant/10 shadow-md rounded-xl p-8 text-center transition-colors duration-300">
+                <p className="text-on-surface-variant">No se encontraron participantes</p>
+              </div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            <StatCard
-              label="Total Registros"
-              value={registrations.length}
-              icon="group"
-              borderColor="border-primary/20"
-              iconColor="text-primary"
-            />
-            <StatCard
-              label="Categorías Activas"
-              value={CATEGORIES_COUNT}
-              icon="category"
-              borderColor="border-secondary/20"
-              iconColor="text-secondary"
-            />
-            <StatCard
-              label="Tu Rol"
-              value={user.role.toUpperCase()}
-              icon="badge"
-              borderColor="border-outline-variant/20"
-              iconColor="text-outline"
-            />
-          </div>
+          {visibleCount < filteredParticipants.length && (
+            <button
+              onClick={handleLoadMore}
+              className="w-full mt-6 py-4 font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/5 active:scale-95 transition-all rounded-lg uppercase tracking-widest"
+            >
+              Cargar Más Participantes
+            </button>
+          )}
+        </section>
 
-          <div className="bg-surface-container-high border border-outline-variant/20 p-8 rounded-xl">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="material-symbols-outlined text-on-surface text-3xl">
-                description
-              </span>
-              <h3 className="font-headline-md text-headline-md text-on-surface uppercase">
-                Instrucciones
-              </h3>
-            </div>
-            
-            <div className="space-y-4 text-on-surface-variant">
-              <InstructionItem
-                title="Ver Registros"
-                description="Abre tu Google Sheet para ver todos los registros en tiempo real"
-              />
-              <InstructionItem
-                title="Gestionar Admins"
-                description='Edita la pestaña &quot;Admins&quot; en Google Sheets para agregar/remover administradores'
-              />
-              <InstructionItem
-                title="Exportar Datos"
-                description="Descarga el Google Sheet como Excel desde File → Download → Microsoft Excel"
-              />
-            </div>
+        {/* Staff Management Section */}
+        <StaffManagementSection onUpdate={handleStaffUpdate} />
 
-            <div className="mt-8 pt-6 border-t border-outline-variant">
-              <a
-                href={`https://docs.google.com/spreadsheets/d/${import.meta.env.VITE_GOOGLE_SCRIPT_URL?.match(/\/d\/([^/]+)/)?.[1] || ''}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded font-label-md uppercase hover:bg-primary/90 transition-colors"
-              >
-                <span className="material-symbols-outlined">table_chart</span>
-                Abrir Google Sheet
-              </a>
-            </div>
-          </div>
-        </div>
+        {/* Stats Grid */}
+        <StatsSummary students={stats.students} houses={stats.houses} />
       </main>
+
+      <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   );
 }
