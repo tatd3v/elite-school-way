@@ -23,7 +23,7 @@ export async function submitForm(formData) {
   }
 
   try {
-    const response = await fetch(scriptURL, {
+    await fetch(scriptURL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
