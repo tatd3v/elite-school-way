@@ -173,45 +173,43 @@ function doPost(e) {
   try {
     // Parse the incoming data
     const data = JSON.parse(e.postData.contents);
+    let result;
     
     // Handle admin login request
     if (data.action === 'login') {
-      const result = verifyAdmin(data.email, data.password);
-      return ContentService
-        .createTextOutput(JSON.stringify(result))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // Handle registration submission
-    const sheet = initializeSheet();
-    
-    // Prepare row data
-    // House/007 is prefixed with an apostrophe so Google Sheets treats it as text
-    // and preserves leading zeros (e.g., 007 instead of 7).
-    const rowData = [
-      new Date(data.timestamp),
-      data.artistName,
-      data.email,
-      data.phone,
-      data.house ? "'" + data.house : 'N/A',
-      data.categories,
-      data.age,
-      data.comments
-    ];
-    
-    // Append the data to the sheet
-    sheet.appendRow(rowData);
-    
-    // Return success response
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
+      result = verifyAdmin(data.email, data.password);
+    } else {
+      // Handle registration submission
+      const sheet = initializeSheet();
+      
+      // Prepare row data
+      // House/007 is prefixed with an apostrophe so Google Sheets treats it as text
+      // and preserves leading zeros (e.g., 007 instead of 7).
+      const rowData = [
+        new Date(data.timestamp),
+        data.artistName,
+        data.email,
+        data.phone,
+        data.house ? "'" + data.house : 'N/A',
+        data.categories,
+        data.age,
+        data.comments
+      ];
+      
+      // Append the data to the sheet
+      sheet.appendRow(rowData);
+      
+      result = { 
         status: 'success', 
         message: 'Registration received successfully' 
-      }))
+      };
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(result))
       .setMimeType(ContentService.MimeType.JSON);
       
   } catch (error) {
-    // Return error response
     return ContentService
       .createTextOutput(JSON.stringify({ 
         status: 'error', 
@@ -297,29 +295,25 @@ function getStaff() {
 function doGet(e) {
   try {
     const action = e.parameter.action;
+    let result;
     
     if (action === 'getRegistrations') {
-      const result = getRegistrations();
-      return ContentService
-        .createTextOutput(JSON.stringify(result))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    if (action === 'getStaff') {
-      const result = getStaff();
-      return ContentService
-        .createTextOutput(JSON.stringify(result))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    // Default response
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
+      result = getRegistrations();
+    } else if (action === 'getStaff') {
+      result = getStaff();
+    } else {
+      // Default response
+      result = { 
         status: 'online',
         message: 'Elite Way School Registration API is running',
         availableActions: ['getRegistrations', 'getStaff']
-      }))
+      };
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(result))
       .setMimeType(ContentService.MimeType.JSON);
+      
   } catch (error) {
     return ContentService
       .createTextOutput(JSON.stringify({ 
