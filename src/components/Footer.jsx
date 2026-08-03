@@ -1,5 +1,3 @@
-import logo from '../assets/logo.png'
-
 export default function Footer() {
   return (
     <footer className="bg-surface-container-lowest py-16 border-t border-outline-variant/10">
