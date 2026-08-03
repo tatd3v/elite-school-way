@@ -103,46 +103,59 @@ function AdminDashboard({ user: _user, onLogout }) {
             </div>
           ) : (
             <>
-              {/* Header Section */}
-              <section className="mb-8">
-                <div className="flex flex-col gap-4">
-                  <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-primary flex items-center gap-2">
-                    Participantes Registrados
-                  </h2>
-                  <SearchBar onSearch={handleSearch} />
-                </div>
-              </section>
+              {activeTab === 'dashboard' && (
+                <StatsSummary students={stats.students} houses={stats.houses} />
+              )}
 
-              {/* Participants Cards */}
-              <section className="mb-section-gap-mobile">
-                <div className="space-y-4">
-                  {visibleParticipants.length > 0 ? (
-                    visibleParticipants.map((participant) => (
-                      <ParticipantCard key={participant.id} participant={participant} />
-                    ))
-                  ) : (
-                    <div className="luxury-card rounded-xl p-8 text-center">
-                      <p className="text-on-surface-variant font-body-md">No se encontraron participantes</p>
+              {(activeTab === 'participants' || activeTab === 'students') && (
+                <>
+                  {/* Header Section */}
+                  <section className="mb-8">
+                    <div className="flex flex-col gap-4">
+                      <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-primary flex items-center gap-2">
+                        Participantes Registrados
+                      </h2>
+                      <SearchBar onSearch={handleSearch} />
                     </div>
-                  )}
-                </div>
+                  </section>
 
-                {/* Load More Button */}
-                {visibleCount < filteredParticipants.length && (
-                  <button
-                    onClick={handleLoadMore}
-                    className="w-full mt-6 py-4 font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/5 active:scale-95 transition-all rounded-lg uppercase tracking-widest"
-                  >
-                    Cargar Más Participantes
-                  </button>
-                )}
-              </section>
+                  {/* Participants Cards */}
+                  <section className="mb-section-gap-mobile">
+                    <div className="space-y-4">
+                      {visibleParticipants.length > 0 ? (
+                        visibleParticipants.map((participant) => (
+                          <ParticipantCard key={participant.id} participant={participant} />
+                        ))
+                      ) : (
+                        <div className="luxury-card rounded-xl p-8 text-center">
+                          <p className="text-on-surface-variant font-body-md">No se encontraron participantes</p>
+                        </div>
+                      )}
+                    </div>
 
-              {/* Staff Management Section */}
-              <StaffManagementSection onUpdate={handleStaffUpdate} />
+                    {/* Load More Button */}
+                    {visibleCount < filteredParticipants.length && (
+                      <button
+                        onClick={handleLoadMore}
+                        className="w-full mt-6 py-4 font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/5 active:scale-95 transition-all rounded-lg uppercase tracking-widest"
+                      >
+                        Cargar Más Participantes
+                      </button>
+                    )}
+                  </section>
+                </>
+              )}
 
-              {/* Stats Grid */}
-              <StatsSummary students={stats.students} houses={stats.houses} />
+              {activeTab === 'faculty' && (
+                <StaffManagementSection onUpdate={handleStaffUpdate} />
+              )}
+
+              {['competitions', 'settings'].includes(activeTab) && (
+                <section className="luxury-card rounded-xl p-8 text-center">
+                  <span className="material-symbols-outlined text-4xl text-outline mb-3">construction</span>
+                  <p className="text-on-surface-variant font-body-md">Próximamente</p>
+                </section>
+              )}
             </>
           )}
         </div>
