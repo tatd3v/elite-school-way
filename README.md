@@ -226,7 +226,7 @@ See [`SETUP.md`](./SETUP.md#-troubleshooting) for common issues.
 
 ## 📄 License
 
-© 2026 Elite Way School Ballroom Culture. All Rights Reserved.
+© 2026 Elite Way School Ballroom Bogotrans. All Rights Reserved.
 
 ## 🤝 Contributing
 

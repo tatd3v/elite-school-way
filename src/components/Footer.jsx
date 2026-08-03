@@ -8,7 +8,7 @@ export default function Footer() {
             ELITE WAY SCHOOL
           </span>
           <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
-            Ballroom Culture & Academic Excellence. Bogotá 2026.
+            Ballroom Bogotrans & Academic Excellence. 2026.
           </p>
         </div>
 
