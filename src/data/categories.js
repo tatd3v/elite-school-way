@@ -60,7 +60,7 @@ export const categories = [
     icon: 'stars',
     iconColor: 'secondary',
     title: 'Triple Threat',
-    description: 'Canto, baile y presencia. La triple amenaza de la institución Elite Way.'
+    description: 'Pop, spin and dip, exaclibur, y posing. La triple amenaza de la institución Elite Way.'
   },
   {
     id: 'femme-queen',
