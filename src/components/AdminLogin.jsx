@@ -33,7 +33,7 @@ function AdminLogin({ onLoginSuccess }) {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-surface dark:bg-background flex items-center justify-center px-4 transition-colors duration-300 relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]"></div>
         <div className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-secondary/5 blur-[150px]"></div>
@@ -53,7 +53,7 @@ function AdminLogin({ onLoginSuccess }) {
               src={logoDark}
             />
           </div>
-          <h1 className="font-headline-md text-headline-md text-on-surface uppercase tracking-widest font-bold">
+          <h1 className="font-headline-lg text-headline-lg text-on-surface dark:text-on-surface uppercase mb-2 tracking-widest font-bold">
             ELITE WAY SCHOOL
           </h1>
           <p className="font-label-sm text-label-sm text-on-surface-variant/70 mt-2 tracking-widest uppercase">
@@ -76,7 +76,7 @@ function AdminLogin({ onLoginSuccess }) {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent border border-outline-variant px-4 py-3 pl-12 font-body-md text-on-surface focus:border-primary focus:outline-none focus:shadow-[0_0_0_1px] focus:shadow-primary transition-all placeholder:text-on-surface-variant placeholder:opacity-60"
+                  className="border border-outline-variant dark:border-outline-variant/30 focus:ring-primary focus:border-primary px-4 py-3 bg-surface-container-low dark:bg-surface-container text-on-surface dark:text-on-surface rounded transition-colors"
                   placeholder="ejemplo@eliteway.edu"
                   required
                   disabled={isLoading}
@@ -115,7 +115,7 @@ function AdminLogin({ onLoginSuccess }) {
             </div>
 
             {error && (
-              <div className="bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
+              <div className="bg-red-100 dark:bg-error-container/20 border border-red-400 dark:border-error text-red-700 dark:text-error px-4 py-3 rounded transition-colors">
                 {error}
               </div>
             )}
@@ -123,7 +123,7 @@ function AdminLogin({ onLoginSuccess }) {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-secondary text-on-secondary py-5 font-label-lg text-label-lg font-extrabold tracking-[0.25em] uppercase hover:bg-primary transition-all duration-500 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-primary dark:bg-primary text-on-primary dark:text-on-primary py-4 font-label-lg text-label-lg uppercase tracking-widest hover:bg-primary/90 dark:hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded"
                 disabled={isLoading}
               >
                 {isLoading ? 'VERIFICANDO...' : 'INICIAR SESIÓN'}
@@ -140,13 +140,13 @@ function AdminLogin({ onLoginSuccess }) {
             Prestigio • Excelencia • Tradición
           </p>
           <p className="font-label-sm text-label-sm mt-2">
-            © 2026 Elite Way School - Ballroom Bogotrans
+            2026 Elite Way School - Ballroom Bogotrans
           </p>
         </footer>
 
         {import.meta.env.DEV && (
-          <div className="mt-8 text-center bg-surface-container-low/50 border border-outline-variant/20 rounded-lg p-4">
-            <p className="text-on-surface-variant text-label-sm">
+          <div className="max-w-md w-full bg-surface-container-low dark:bg-surface-container border border-outline-variant/20 dark:border-outline-variant/10 shadow-2xl p-8 md:p-12 rounded-2xl transition-colors duration-300">
+            <p className="text-on-surface-variant dark:text-on-surface-variant text-label-md">
               <strong>Credenciales de prueba:</strong><br />
               Email: <code className="bg-surface-container px-2 py-1 rounded text-secondary">{DEFAULT_ADMIN.EMAIL}</code><br />
               Password: <code className="bg-surface-container px-2 py-1 rounded text-secondary">{DEFAULT_ADMIN.PASSWORD}</code>
