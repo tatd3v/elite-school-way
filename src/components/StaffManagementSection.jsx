@@ -2,29 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
 
-function StaffManagementSection({ onUpdate }) {
-  const [selectedDate, setSelectedDate] = useState('Sábado, 12 de Octubre, 2024');
-  const [staff, setStaff] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    loadStaff();
-  }, []);
-
-  const loadStaff = async () => {
-    try {
-      setIsLoading(true);
-      const staffData = await dashboardService.fetchStaff();
-      setStaff(staffData.length > 0 ? staffData : defaultStaff);
-    } catch (error) {
-      console.error('Error loading staff:', error);
-      setStaff(defaultStaff);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const defaultStaff = [
+const defaultStaff = [
     {
       name: 'DJ Fierce',
       role: 'Official DJ',
@@ -50,6 +28,27 @@ function StaffManagementSection({ onUpdate }) {
       displayOrder: 3,
     },
   ];
+
+function StaffManagementSection({ onUpdate }) {
+  const [staff, setStaff] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStaff = async () => {
+      try {
+        setIsLoading(true);
+        const staffData = await dashboardService.fetchStaff();
+        setStaff(staffData.length > 0 ? staffData : defaultStaff);
+      } catch (error) {
+        console.error('Error loading staff:', error);
+        setStaff(defaultStaff);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadStaff();
+  }, []);
 
   return (
     <section className="mb-12">
