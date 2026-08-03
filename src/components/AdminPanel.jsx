@@ -36,5 +36,9 @@ export default function AdminPanel() {
     return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
   }
 
-  return <AdminDashboard user={user} onLogout={handleLogout} />;
+  return (
+    <div className="min-h-screen bg-background text-on-background">
+      <AdminDashboard user={user} onLogout={handleLogout} />
+    </div>
+  );
 }
