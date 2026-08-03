@@ -15,14 +15,17 @@ export function Router({ routes }) {
 
   const route = routes.find(r => r.path === currentPath) || routes.find(r => r.path === '*')
   
-  return route ? route.component : null
+  if (!route) return null
+  
+  const Component = route.component
+  return typeof Component === 'function' ? <Component /> : Component
 }
 
 Router.propTypes = {
   routes: PropTypes.arrayOf(
     PropTypes.shape({
       path: PropTypes.string.isRequired,
-      component: PropTypes.element.isRequired,
+      component: PropTypes.oneOfType([PropTypes.func, PropTypes.node]).isRequired,
     })
   ).isRequired,
 }
