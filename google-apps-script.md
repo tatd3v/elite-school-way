@@ -67,6 +67,10 @@ function initializeSheet() {
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
+
+  // Always force the House/007 column (column E) to TEXT format so values
+  // like "007" are preserved instead of being converted to the number 7.
+  sheet.getRange('E:E').setNumberFormat('@');
   
   return sheet;
 }
