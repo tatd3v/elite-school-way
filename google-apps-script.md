@@ -16,6 +16,7 @@
 // Name of the sheets
 const SHEET_NAME = 'Registrations';
 const ADMINS_SHEET_NAME = 'Admins';
+const STAFF_SHEET_NAME = 'Staff';
 
 /**
  * Initialize the Admins sheet with headers if it doesn't exist
@@ -39,6 +40,29 @@ function initializeAdminsSheet() {
       )
     );
     sheet.appendRow(['admin@elite.com', sampleHash, 'admin', 'Admin User']);
+  }
+  
+  return sheet;
+}
+
+/**
+ * Initialize the Staff sheet with headers if it doesn't exist
+ */
+function initializeStaffSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(STAFF_SHEET_NAME);
+  
+  if (!sheet) {
+    sheet = ss.insertSheet(STAFF_SHEET_NAME);
+    const headers = ['ID', 'Role', 'Name', 'Icon', 'Color', 'Visible'];
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    
+    // Add default staff members
+    sheet.appendRow([1, 'Director de Gala', 'Prof. Enrique Madrigal', 'star_rate', 'secondary', 'TRUE']);
+    sheet.appendRow([2, 'Maestro de Ceremonia', 'Sebastian de la Fuente', 'campaign', 'primary', 'TRUE']);
+    sheet.appendRow([3, 'Curador Musical', 'DJ Alpha Prestige', 'library_music', 'primary', 'TRUE']);
   }
   
   return sheet;
@@ -174,15 +198,106 @@ function doPost(e) {
 }
 
 /**
- * Handle GET requests (for testing)
+ * Get all registrations from the sheet
+ */
+function getRegistrations() {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+    if (!sheet) {
+      return { registrations: [] };
+    }
+    
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const registrations = [];
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      registrations.push({
+        id: i,
+        timestamp: row[0],
+        name: row[1],
+        email: row[2],
+        phone: row[3],
+        house: row[4],
+        categories: row[5],
+        age: row[6],
+        comments: row[7],
+        status: 'confirmed' // Default status, can be customized
+      });
+    }
+    
+    return { registrations };
+  } catch (error) {
+    return { registrations: [], error: error.toString() };
+  }
+}
+
+/**
+ * Get all staff members from the sheet
+ */
+function getStaff() {
+  try {
+    const sheet = initializeStaffSheet();
+    const data = sheet.getDataRange().getValues();
+    const staff = [];
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      if (row[5] === 'TRUE' || row[5] === true) { // Check if visible
+        staff.push({
+          id: row[0],
+          role: row[1],
+          name: row[2],
+          icon: row[3],
+          color: row[4]
+        });
+      }
+    }
+    
+    return { staff };
+  } catch (error) {
+    return { staff: [], error: error.toString() };
+  }
+}
+
+/**
+ * Handle GET requests
  */
 function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ 
-      status: 'online',
-      message: 'Elite Way School Registration API is running' 
-    }))
-    .setMimeType(ContentService.MimeType.JSON);
+  try {
+    const action = e.parameter.action;
+    
+    if (action === 'getRegistrations') {
+      const result = getRegistrations();
+      return ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    if (action === 'getStaff') {
+      const result = getStaff();
+      return ContentService
+        .createTextOutput(JSON.stringify(result))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // Default response
+    return ContentService
+      .createTextOutput(JSON.stringify({ 
+        status: 'online',
+        message: 'Elite Way School Registration API is running',
+        availableActions: ['getRegistrations', 'getStaff']
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ 
+        status: 'error',
+        message: error.toString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /**
