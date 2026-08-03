@@ -8,6 +8,7 @@ import ParticipantCard from './ParticipantCard';
 import StaffManagementSection from './StaffManagementSection';
 import StatsSummary from './StatsSummary';
 import BottomNavigation from './BottomNavigation';
+import DesktopNavigation from './DesktopNavigation';
 
 function AdminDashboard({ user: _user, onLogout }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,6 +18,7 @@ function AdminDashboard({ user: _user, onLogout }) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sidebarWidth, setSidebarWidth] = useState(288);
 
   useEffect(() => {
     loadDashboardData();
@@ -67,72 +69,89 @@ function AdminDashboard({ user: _user, onLogout }) {
   const visibleParticipants = filteredParticipants.slice(0, visibleCount);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-on-background">
       <DashboardHeader onProfileClick={handleLogout} />
+      <DesktopNavigation 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        onWidthChange={setSidebarWidth}
+      />
 
-      <main className="pt-20 pb-24 px-4 md:px-8 min-h-screen bg-background transition-colors duration-300" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/pinstripe.png")', backgroundRepeat: 'repeat' }}>
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 bg-error-container border border-error rounded-xl p-4 text-center">
-            <p className="text-on-error-container font-label-md">{error}</p>
-            <button
-              onClick={loadDashboardData}
-              className="mt-2 px-4 py-2 bg-error text-on-error rounded font-label-sm uppercase"
-            >
-              Reintentar
-            </button>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
-            <p className="text-on-surface-variant font-label-md">Cargando datos...</p>
-          </div>
-        ) : (
-          <>
-        {/* Summary Section */}
-        <section className="mb-8">
-          <div className="flex flex-col gap-4">
-            <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-primary flex items-center gap-2">
-              Participantes Registrados
-            </h2>
-            <SearchBar onSearch={handleSearch} />
-          </div>
-        </section>
-
-        {/* Participants List */}
-        <section className="mb-8">
-          <div className="flex flex-col gap-4">
-            {visibleParticipants.length > 0 ? (
-              visibleParticipants.map((participant) => (
-                <ParticipantCard key={participant.id} participant={participant} />
-              ))
-            ) : (
-              <div className="bg-surface-container-lowest border border-outline-variant/10 shadow-md rounded-xl p-8 text-center transition-colors duration-300">
-                <p className="text-on-surface-variant">No se encontraron participantes</p>
-              </div>
-            )}
-          </div>
-
-          {visibleCount < filteredParticipants.length && (
-            <button
-              onClick={handleLoadMore}
-              className="w-full mt-6 py-4 font-label-lg text-label-lg text-secondary border border-secondary hover:bg-secondary/5 active:scale-95 transition-all rounded-lg uppercase tracking-widest"
-            >
-              Cargar Más Participantes
-            </button>
+      <main 
+        className="pt-20 pb-24 px-4 md:px-8 lg:px-12 min-h-screen transition-colors duration-300"
+        style={{ marginLeft: window.innerWidth >= 768 ? `${sidebarWidth}px` : '0' }}
+      >
+        <div className="max-w-7xl mx-auto space-y-10">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 glass-card rounded-xl p-6 text-center border-l-4 border-l-error">
+              <p className="text-on-surface font-label-md mb-2">{error}</p>
+              <button
+                onClick={loadDashboardData}
+                className="academic-red-btn px-6 py-3 rounded-xl font-label-md uppercase tracking-wider"
+              >
+                Reintentar
+              </button>
+            </div>
           )}
-        </section>
 
-        {/* Staff Management Section */}
-        <StaffManagementSection onUpdate={handleStaffUpdate} />
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+              <p className="text-on-surface-variant font-label-md">Cargando datos...</p>
+            </div>
+          ) : (
+            <>
+              {/* Header Section */}
+              <section className="mb-8">
+                <div className="space-y-2 mb-6">
+                  <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded-full font-label-sm uppercase tracking-wider">
+                    PANEL DE CONTROL
+                  </span>
+                  <h2 className="font-display-lg-mobile text-display-lg-mobile text-on-surface tracking-tight">
+                    Participantes Registrados
+                  </h2>
+                  <p className="font-body-md text-on-surface-variant">
+                    Gestione la nómina académica de la gala. Verifique los estados de confirmación y pertenencia a las casas reales.
+                  </p>
+                </div>
+                <SearchBar onSearch={handleSearch} />
+              </section>
 
-        {/* Stats Grid */}
-        <StatsSummary students={stats.students} houses={stats.houses} />
-          </>
-        )}
+              {/* Participants Cards */}
+              <section className="mb-8">
+                <div className="space-y-4">
+                  {visibleParticipants.length > 0 ? (
+                    visibleParticipants.map((participant) => (
+                      <ParticipantCard key={participant.id} participant={participant} />
+                    ))
+                  ) : (
+                    <div className="glass-card rounded-xl p-8 text-center">
+                      <p className="text-on-surface-variant font-body-md">No se encontraron participantes</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Load More Button */}
+                {visibleCount < filteredParticipants.length && (
+                  <button
+                    onClick={handleLoadMore}
+                    className="w-full mt-6 py-4 font-label-md text-secondary border border-secondary/30 rounded-xl hover:bg-secondary/5 active:scale-95 transition-all uppercase tracking-wider"
+                  >
+                    Cargar Más Participantes
+                  </button>
+                )}
+              </section>
+
+              {/* Staff Management Section */}
+              <StaffManagementSection onUpdate={handleStaffUpdate} />
+
+              {/* Stats Grid */}
+              <StatsSummary students={stats.students} houses={stats.houses} />
+            </>
+          )}
+        </div>
       </main>
 
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
