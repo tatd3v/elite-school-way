@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  ignorePatterns: ['dist'],
   env: {
     browser: true,
     es2020: true,
@@ -20,7 +21,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: 'detect',
+      version: '18.2',
     },
   },
   plugins: ['react-refresh'],
