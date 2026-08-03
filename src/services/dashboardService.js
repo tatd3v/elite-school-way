@@ -5,9 +5,7 @@ class DashboardService {
     try {
       const response = await fetch(`${API_CONFIG.GOOGLE_SCRIPT_URL}?action=getRegistrations`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        redirect: 'follow',
       });
 
       if (!response.ok) {
@@ -49,9 +47,7 @@ class DashboardService {
     try {
       const response = await fetch(`${API_CONFIG.GOOGLE_SCRIPT_URL}?action=getStaff`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        redirect: 'follow',
       });
 
       if (!response.ok) {
