@@ -22,7 +22,7 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
   const navItems = [
     { id: 'dashboard', icon: 'dashboard', label: 'Panel Principal' },
     { id: 'participants', icon: 'groups', label: 'Participantes', filled: true },
-    { id: 'faculty', icon: 'school', label: 'Gestión de Claustro' },
+    { id: 'faculty', icon: 'school', label: 'Staff' },
     { id: 'competitions', icon: 'military_tech', label: 'Competiciones' },
     { id: 'settings', icon: 'settings', label: 'Ajustes' },
   ]
