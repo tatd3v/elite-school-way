@@ -21,3 +21,23 @@ export const DEFAULT_ADMIN = {
 };
 
 export const CATEGORIES_COUNT = 12;
+
+export const STAFF_CONFIG = {
+  SHEET_NAME: 'Staff',
+  ACTIONS: {
+    GET_ALL: 'getStaff',
+    INCLUDE_HIDDEN_PARAM: 'includeHidden',
+    UPDATE: 'updateStaff',
+    DELETE: 'deleteStaff',
+    TOGGLE_VISIBILITY: 'toggleStaffVisibility',
+  },
+  HEADERS: {
+    NAME: 'Name',
+    ROLE: 'Role',
+    BIO: 'Bio',
+    PHOTO: 'Photo URL',
+    SOCIAL_LINKS: 'Social Links',
+    DISPLAY_ORDER: 'Display Order',
+    IS_VISIBLE: 'Is Visible',
+  },
+};
