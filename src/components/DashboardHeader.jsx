@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 function DashboardHeader({ onProfileClick }) {
   return (
-    <header className="bg-surface-container/80 backdrop-blur-xl border-b border-outline-variant/20 fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16">
+    <header className="bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 fixed top-0 w-full z-50 flex justify-between items-center px-margin-mobile h-16">
       <div className="flex items-center gap-3">
         <img
           alt="Elite Way School Crest"
