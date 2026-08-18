@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 
-function BottomNavigation({ activeTab = 'dashboard', onTabChange }) {
+function BottomNavigation({ activeTab = 'participants', onTabChange }) {
   const tabs = [
-    { id: 'dashboard', icon: 'dashboard', label: 'Dashboard', filled: true },
-    { id: 'faculty', icon: 'school', label: 'Faculty', filled: false },
-    { id: 'students', icon: 'group', label: 'Students', filled: false },
-    { id: 'settings', icon: 'settings', label: 'Settings', filled: false },
+    { id: 'participants', icon: 'groups', label: 'Participantes', filled: true },
+    { id: 'faculty', icon: 'school', label: 'Staff', filled: false },
   ];
 
   const handleTabClick = (tabId) => {
