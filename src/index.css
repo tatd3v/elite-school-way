@@ -38,9 +38,11 @@
   .dark .bg-surface-container-lowest\/90 { background-color: rgba(7, 10, 43, 0.9) !important; }
   .dark .bg-surface-container-low { background-color: #151939 !important; }
   .dark .bg-surface-container { background-color: #191d3d !important; }
+  .dark .bg-surface-container\/80 { background-color: rgba(25, 29, 61, 0.8) !important; }
   .dark .bg-surface-container-high { background-color: #232748 !important; }
   .dark .bg-surface-container-highest { background-color: #2e3253 !important; }
   .dark .bg-surface-variant { background-color: #2e3253 !important; }
+  .dark .bg-surface-container-high\/95 { background-color: rgba(35, 39, 72, 0.95) !important; }
   
   /* Override primary colors in dark mode */
   .dark .bg-primary { background-color: #ffb4ac !important; }
@@ -122,13 +124,10 @@
   /* Linen texture background */
   .linen-texture {
     background-color: #fbf9f8;
-    background-image: url("https://www.transparenttextures.com/patterns/pinstripe.png");
-    background-repeat: repeat;
   }
 
   .dark .linen-texture {
     background-color: #0c1030;
-    background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
   }
 
   /* Luxury card - light admin theme */
@@ -144,6 +143,12 @@
     background: rgba(25, 29, 61, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(171, 137, 133, 0.15);
+  }
+
+  .glass-panel {
+    background: rgba(22, 27, 61, 0.7);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(171, 137, 133, 0.1);
   }
 
   /* Gold border glow */
@@ -192,19 +197,6 @@
 
   .grain-overlay {
     position: relative;
-  }
-
-  .grain-overlay::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("https://www.transparenttextures.com/patterns/pinstripe-dark.png");
-    opacity: 0.05;
-    pointer-events: none;
-  }
-  
-  .dark .grain-overlay::after {
-    opacity: 0.1;
   }
 
   .card-hover {

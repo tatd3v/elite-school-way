@@ -77,6 +77,7 @@ export default {
         'body-lg': ['Libre Franklin', 'sans-serif'],
         'body-md': ['Libre Franklin', 'sans-serif'],
         'label-lg': ['Hanken Grotesk', 'sans-serif'],
+        'label-md': ['Hanken Grotesk', 'sans-serif'],
         'label-sm': ['Hanken Grotesk', 'sans-serif'],
       },
       fontSize: {
@@ -87,6 +88,7 @@ export default {
         'body-lg': ['18px', { lineHeight: '28px', fontWeight: '400' }],
         'body-md': ['16px', { lineHeight: '24px', fontWeight: '400' }],
         'label-lg': ['14px', { lineHeight: '20px', letterSpacing: '0.1em', fontWeight: '700' }],
+        'label-md': ['14px', { lineHeight: '20px', letterSpacing: '0.05em', fontWeight: '500' }],
         'label-sm': ['12px', { lineHeight: '16px', fontWeight: '500' }],
       },
       spacing: {
