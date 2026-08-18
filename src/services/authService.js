@@ -20,25 +20,6 @@ class AuthService {
   async authenticate(email, password) {
     this.validateCredentials(email, password);
 
-    // Development mode fallback
-    if (import.meta.env.DEV) {
-      const { DEFAULT_ADMIN } = await import('../config/constants');
-      
-      if (email === DEFAULT_ADMIN.EMAIL && password === DEFAULT_ADMIN.PASSWORD) {
-        return {
-          success: true,
-          email: DEFAULT_ADMIN.EMAIL,
-          name: 'Admin User',
-          role: 'admin',
-        };
-      }
-      
-      return {
-        success: false,
-        message: ERROR_MESSAGES.INVALID_CREDENTIALS,
-      };
-    }
-
     try {
       const response = await fetch(this.apiUrl, {
         method: 'POST',
