@@ -123,7 +123,7 @@ function AdminLogin({ onLoginSuccess }) {
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full bg-primary dark:bg-primary text-on-primary dark:text-on-primary py-4 font-label-lg text-label-lg uppercase tracking-widest hover:bg-primary/90 dark:hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded"
+                className="w-full bg-primary text-on-primary dark:text-on-primary py-4 font-label-lg text-label-lg uppercase tracking-widest hover:bg-primary/90 dark:hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed rounded"
                 disabled={isLoading}
               >
                 {isLoading ? 'VERIFICANDO...' : 'INICIAR SESIÓN'}
