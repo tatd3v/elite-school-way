@@ -38,7 +38,7 @@ export const categories = [
     id: 'beginners',
     icon: 'school',
     iconColor: 'primary',
-    title: 'Beginners',
+    title: 'Beginners Performance',
     description: 'Nuevos talentos. El primer peldaño hacia la gloria académica del ballroom.'
   },
   {
