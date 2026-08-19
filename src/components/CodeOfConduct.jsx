@@ -10,10 +10,10 @@ export default function CodeOfConduct({ rules, pledge }) {
 
       <div className="max-w-3xl mx-auto">
         <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-10 text-center">
-          KIKI BALL — CODE OF CONDUCT
+          KIKI BALL — CÓDIGO DE CONDUCTA
         </h3>
         <p className="font-label-lg text-label-lg text-secondary uppercase tracking-widest mb-8 text-center">
-          DISCIPLINE • CULTURE • RESPECT • LEGACY
+          DISCIPLINA • CULTURA • RESPETO • LEGADO
         </p>
 
         <ul className="conduct-list">
@@ -42,7 +42,7 @@ export default function CodeOfConduct({ rules, pledge }) {
 
       <div className="space-y-4 text-center">
         <h4 className="font-headline-lg text-headline-lg text-secondary uppercase">
-          THE ELITE PLEDGE
+          EL JURAMENTO ÉLITE
         </h4>
         <ul className="space-y-3 font-body-lg text-body-lg text-on-surface font-semibold list-none">
           {pledge.map((item, index) => (
