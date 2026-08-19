@@ -11,6 +11,23 @@ export const countryCodes = [
   { code: '+506', country: 'Costa Rica', flag: '🇨🇷' },
   { code: '+34', country: 'España', flag: '🇪🇸' },
   { code: '+55', country: 'Brasil', flag: '🇧🇷' },
+  { code: '+502', country: 'Guatemala', flag: '🇬🇹' },
+  { code: '+503', country: 'El Salvador', flag: '🇸🇻' },
+  { code: '+504', country: 'Honduras', flag: '🇭🇳' },
+  { code: '+505', country: 'Nicaragua', flag: '🇳🇮' },
+  { code: '+591', country: 'Bolivia', flag: '🇧🇴' },
+  { code: '+595', country: 'Paraguay', flag: '🇵🇾' },
+  { code: '+598', country: 'Uruguay', flag: '🇺🇾' },
+  { code: '+44', country: 'Reino Unido', flag: '🇬🇧' },
+  { code: '+33', country: 'Francia', flag: '🇫🇷' },
+  { code: '+49', country: 'Alemania', flag: '🇩🇪' },
+  { code: '+39', country: 'Italia', flag: '🇮🇹' },
+  { code: '+351', country: 'Portugal', flag: '🇵🇹' },
+  { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+81', country: 'Japón', flag: '🇯🇵' },
+  { code: '+82', country: 'Corea del Sur', flag: '🇰🇷' },
+  { code: '+91', country: 'India', flag: '🇮🇳' },
 ]
 
 export const DEFAULT_COUNTRY_CODE = '+57'
