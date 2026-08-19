@@ -364,7 +364,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 )}
               </button>
               <p className="mt-4 text-center text-label-sm font-label-sm text-[#c6c5d4] opacity-70">
-                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball - Ballroom Bogota.
+                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball - Ballroom Bogotá.
               </p>
             </div>
           </div>
