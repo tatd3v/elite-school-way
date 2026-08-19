@@ -39,7 +39,7 @@ export const categories = [
     icon: 'school',
     iconColor: 'primary',
     title: 'Beginners Performance',
-    description: 'Nuevos talentos. El primer peldaño hacia la gloria académica del ballroom.'
+    description: 'Bebés de la escena. El primer peldaño hacia la gloria académica de ballroom.'
   },
   {
     id: 'commentator',
