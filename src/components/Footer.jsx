@@ -17,10 +17,22 @@ export default function Footer() {
           <h4 className="font-label-lg text-label-lg text-secondary uppercase mb-4">Contacto</h4>
           <ul className="space-y-2">
             <li className="font-label-sm text-label-sm text-on-surface-variant hover:translate-x-1 transition-transform duration-200">
-              Instagram: theeliteway_b
+              <a
+                href="https://www.instagram.com/theeliteway_b"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Instagram: theeliteway_b
+              </a>
             </li>
             <li className="font-label-sm text-label-sm text-on-surface-variant hover:translate-x-1 transition-transform duration-200">
-              Phone: 3337380581
+              <a
+                href="tel:+573337380581"
+                className="hover:text-primary transition-colors"
+              >
+                Phone: +57 333 738 0581
+              </a>
             </li>
           </ul>
         </div>
