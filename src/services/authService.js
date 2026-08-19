@@ -1,3 +1,4 @@
+import { jsonp } from '../utils/jsonp';
 import { API_CONFIG, AUTH_CONFIG, ERROR_MESSAGES } from '../config/constants';
 
 class AuthService {
@@ -10,7 +11,7 @@ class AuthService {
     if (!email || !password) {
       throw new Error(ERROR_MESSAGES.MISSING_CREDENTIALS);
     }
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       throw new Error('Invalid email format');
@@ -21,25 +22,13 @@ class AuthService {
     this.validateCredentials(email, password);
 
     try {
-      const response = await fetch(this.apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: AUTH_CONFIG.LOGIN_ACTION,
-          email,
-          password,
-        }),
-      });
+      const url = new URL(this.apiUrl);
+      url.searchParams.set('action', AUTH_CONFIG.LOGIN_ACTION);
+      url.searchParams.set('email', email);
+      url.searchParams.set('password', password);
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
+      return await jsonp(url.toString());
+    } catch {
       throw new Error(ERROR_MESSAGES.CONNECTION_ERROR);
     }
   }
