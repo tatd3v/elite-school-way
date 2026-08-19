@@ -2,21 +2,15 @@ import { useState, useEffect } from 'preact/hooks';
 import { dashboardService } from '../services/dashboardService';
 import StaffMemberCard from './StaffMemberCard';
 
-const fallbackStaff = [
-  { id: 'director', name: 'PRÓXIMAMENTE', role: 'Director de Academia', bio: '', photo: '', socialLinks: '', icon: 'school' },
-  { id: 'mc', name: 'PRÓXIMAMENTE', role: 'Maestro de Ceremonia', bio: '', photo: '', socialLinks: '', icon: 'mic_external_on' },
-  { id: 'dj', name: 'PRÓXIMAMENTE', role: 'Curador Musical', bio: '', photo: '', socialLinks: '', icon: 'album' },
-];
-
 function StaffSection() {
-  const [staff, setStaff] = useState(fallbackStaff);
+  const [staff, setStaff] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadStaff = async () => {
       try {
         const data = await dashboardService.fetchVisibleStaff();
-        setStaff(data.length > 0 ? data : fallbackStaff);
+        setStaff(data || []);
       } catch (error) {
         console.error('Error loading staff section:', error);
       } finally {
@@ -29,20 +23,23 @@ function StaffSection() {
 
   return (
     <section
-      className="py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto"
+      className="py-24 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto"
       id="staff"
       aria-labelledby="staff-heading"
     >
       <div className="text-center mb-20">
+        <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-4 block">
+          Facultad de Excelencia
+        </span>
         <h2
           id="staff-heading"
-          className="font-headline-lg text-headline-lg text-primary uppercase inline-block relative pb-4"
+          className="font-display-lg text-display-lg text-primary uppercase"
         >
           STAFF ESCOLAR
-          <span className="absolute bottom-0 left-1/4 right-1/4 h-1 bg-secondary"></span>
         </h2>
-        <p className="text-on-surface-variant mt-6 max-w-xl mx-auto">
-          Seleccionados por su excelencia y trayectoria académica en la escena Ballroom.
+        <div className="w-24 h-1 bg-secondary mx-auto mt-6"></div>
+        <p className="text-on-surface-variant mt-8 max-w-2xl mx-auto font-body-lg">
+          Seleccionadxs por su excelencia y trayectoria académica en la escena Ballroom Colombia.
         </p>
       </div>
 
@@ -52,7 +49,7 @@ function StaffSection() {
           <p className="text-on-surface-variant font-label-md">Cargando staff...</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           {staff.map((member) => (
             <StaffMemberCard key={member.id} member={member} />
           ))}
@@ -63,4 +60,3 @@ function StaffSection() {
 }
 
 export default StaffSection;
-

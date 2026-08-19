@@ -33,9 +33,9 @@ const defaultStaff = [
     },
   ];
 
-function StaffManagementSection({ onUpdate }) {
-  const [staff, setStaff] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = true }) {
+  const [staff, setStaff] = useState(initialStaff);
+  const [isLoading, setIsLoading] = useState(!initialStaff || initialStaff.length === 0);
   const [editingMember, setEditingMember] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [togglingId, setTogglingId] = useState(null);
@@ -44,6 +44,12 @@ function StaffManagementSection({ onUpdate }) {
   const [actionSuccess, setActionSuccess] = useState(null);
 
   useEffect(() => {
+    if (initialStaff && initialStaff.length > 0) {
+      setStaff(initialStaff);
+      setIsLoading(false);
+      return;
+    }
+
     const enrichStaff = (list) =>
       list.map((member, index) => ({
         ...member,
@@ -66,7 +72,7 @@ function StaffManagementSection({ onUpdate }) {
     };
 
     loadStaff();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showError = (message) => {
     setActionError(message);
@@ -79,6 +85,7 @@ function StaffManagementSection({ onUpdate }) {
   };
 
   const handleEdit = (member) => {
+    if (!canEdit) return;
     setEditingMember({ ...member });
   };
 
@@ -110,7 +117,8 @@ function StaffManagementSection({ onUpdate }) {
   };
 
   const handleDelete = async (member) => {
-    const confirmed = window.confirm(`¿Eliminar a ${member.name} del claustro?`);
+    if (!canEdit) return;
+    const confirmed = window.confirm(`¿Eliminar a ${member.name} del Staff?`);
     if (!confirmed) return;
 
     setDeletingId(member.id);
@@ -135,6 +143,7 @@ function StaffManagementSection({ onUpdate }) {
   };
 
   const handleToggleVisibility = async (member) => {
+    if (!canEdit) return;
     const nextVisible = !member.isVisible;
     const updated = { ...member, isVisible: nextVisible };
 
@@ -177,7 +186,7 @@ function StaffManagementSection({ onUpdate }) {
     <section className="mb-section-gap-mobile">
       <div className="luxury-card rounded-xl overflow-hidden">
         <div className="bg-primary p-4 flex justify-between items-center">
-          <h2 className="font-headline-md text-white text-md">Gestión de Claustro</h2>
+          <h2 className="font-headline-md text-white text-md">Gestión de Staff</h2>
           <span className="material-symbols-outlined text-white/70">event</span>
         </div>
 
@@ -236,59 +245,65 @@ function StaffManagementSection({ onUpdate }) {
                       <p className="font-body-md text-sm font-semibold text-on-surface truncate">{member.name}</p>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleToggleVisibility(member)}
-                      disabled={isBusy}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 ${
-                        member.isVisible ? 'bg-secondary' : 'bg-outline-variant'
-                      }`}
-                      role="switch"
-                      aria-checked={member.isVisible}
-                      aria-label={`${member.isVisible ? 'Ocultar' : 'Mostrar'} a ${member.name}`}
-                    >
-                      <span
-                        className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                          member.isVisible ? 'translate-x-5' : 'translate-x-0'
-                        }`}
-                      />
-                    </button>
+                    {canEdit && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleVisibility(member)}
+                          disabled={isBusy}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 ${
+                            member.isVisible ? 'bg-secondary' : 'bg-outline-variant'
+                          }`}
+                          role="switch"
+                          aria-checked={member.isVisible}
+                          aria-label={`${member.isVisible ? 'Ocultar' : 'Mostrar'} a ${member.name}`}
+                        >
+                          <span
+                            className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                              member.isVisible ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                          />
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => handleEdit(member)}
-                      disabled={isBusy}
-                      className="text-outline hover:text-primary transition-colors flex-shrink-0 disabled:opacity-50"
-                      aria-label={`Editar a ${member.name}`}
-                    >
-                      <span className="material-symbols-outlined">edit</span>
-                    </button>
+                        <button
+                          type="button"
+                          onClick={() => handleEdit(member)}
+                          disabled={isBusy}
+                          className="text-outline hover:text-primary transition-colors flex-shrink-0 disabled:opacity-50"
+                          aria-label={`Editar a ${member.name}`}
+                        >
+                          <span className="material-symbols-outlined">edit</span>
+                        </button>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(member)}
-                      disabled={isBusy}
-                      className="text-outline hover:text-error transition-colors flex-shrink-0 disabled:opacity-50"
-                      aria-label={`Eliminar a ${member.name}`}
-                    >
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(member)}
+                          disabled={isBusy}
+                          className="text-outline hover:text-error transition-colors flex-shrink-0 disabled:opacity-50"
+                          aria-label={`Eliminar a ${member.name}`}
+                        >
+                          <span className="material-symbols-outlined">delete</span>
+                        </button>
+                      </>
+                    )}
                   </div>
                 );
               })
             )}
           </div>
 
-          <button
-            onClick={onUpdate}
-            className="w-full mt-6 bg-secondary text-white py-4 font-label-lg text-label-lg rounded active:scale-[0.98] transition-transform uppercase tracking-widest"
-          >
-            Actualizar
-          </button>
+          {canEdit && (
+            <button
+              onClick={onUpdate}
+              className="w-full mt-6 bg-secondary text-white py-4 font-label-lg text-label-lg rounded active:scale-[0.98] transition-transform uppercase tracking-widest"
+            >
+              Actualizar
+            </button>
+          )}
         </div>
       </div>
 
-      {editingMember && (
+      {canEdit && editingMember && (
         <StaffEditModal
           member={editingMember}
           onSave={handleSaveEdit}
@@ -302,6 +317,8 @@ function StaffManagementSection({ onUpdate }) {
 
 StaffManagementSection.propTypes = {
   onUpdate: PropTypes.func,
+  staff: PropTypes.array,
+  canEdit: PropTypes.bool,
 };
 
 export default StaffManagementSection;

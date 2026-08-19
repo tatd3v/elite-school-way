@@ -1,8 +1,25 @@
+import { useMemo, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
+import { getDriveImageCandidates } from '../utils/driveImage';
 
 function StaffMemberCard({ member }) {
   const { id, name, role, bio, photo, socialLinks, icon } = member;
   const hasPhoto = typeof photo === 'string' && photo.trim() !== '';
+
+  // Multiple candidate URLs are tried in order (Drive embeds aren't 100%
+  // reliable across all sharing configs), falling back to a generated
+  // avatar if every candidate fails to load.
+  const candidates = useMemo(
+    () => (hasPhoto ? getDriveImageCandidates(photo) : []),
+    [hasPhoto, photo]
+  );
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff&size=512`;
+  const photoSrc = hasPhoto
+    ? candidateIndex < candidates.length
+      ? candidates[candidateIndex]
+      : fallbackAvatar
+    : null;
 
   const socialUrl =
     typeof socialLinks === 'string' && socialLinks.trim() !== ''
@@ -11,53 +28,72 @@ function StaffMemberCard({ member }) {
         : `https://${socialLinks}`
       : null;
 
+  const socialHandle = (() => {
+    if (!socialLinks) return '';
+    const cleaned = socialLinks
+      .replace(/^https?:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/^instagram\.com\//, '')
+      .split('?')[0]
+      .split('/')
+      .filter(Boolean)
+      .pop();
+    if (!cleaned) return socialLinks;
+    return cleaned.startsWith('@') ? cleaned : `@${cleaned}`;
+  })();
+
   return (
-    <article
-      className="group bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-secondary transition-all"
-      aria-labelledby={`staff-${id}-name`}
-    >
-      <div className="h-[400px] bg-surface-container-high flex items-center justify-center relative overflow-hidden">
+    <article className="group flex flex-col" aria-labelledby={`staff-${id}-name`}>
+      <div className="relative mb-8 rounded-xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-secondary/20 group-hover:-translate-y-2 bg-surface-container-high">
         {hasPhoto ? (
           <img
-            src={photo}
+            src={photoSrc}
+            data-photo-original={photo}
             alt={`Foto de ${name}`}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full aspect-[4/5] object-cover"
             loading="lazy"
+            onError={() => {
+              console.warn(
+                `[StaffMemberCard] Failed to load photo for "${name}". Original sheet value: "${photo}". Failed URL: "${photoSrc}".`
+              );
+              setCandidateIndex((prev) => prev + 1);
+            }}
           />
         ) : (
-          <span
-            className="material-symbols-outlined text-8xl text-outline-variant opacity-30"
-            aria-hidden="true"
-          >
-            {icon || 'person'}
-          </span>
+          <div className="w-full aspect-[4/5] flex items-center justify-center">
+            <span
+              className="material-symbols-outlined text-8xl text-outline-variant opacity-30"
+              aria-hidden="true"
+            >
+              {icon || 'person'}
+            </span>
+          </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
-          <span className="font-body-md text-body-md text-secondary font-bold line-clamp-3">
-            {bio || 'Confirmación Pendiente'}
-          </span>
-        </div>
+        <div className="absolute inset-0 border-2 border-white/10 rounded-xl pointer-events-none"></div>
       </div>
-      <div className="p-8 text-center">
-        <p className="font-label-sm text-label-sm text-secondary uppercase tracking-widest font-bold mb-2">
+
+      <div className="flex flex-col items-start">
+        <span className="text-secondary font-label-sm tracking-[0.3em] uppercase font-bold mb-3">
           {role}
-        </p>
+        </span>
         <h3
           id={`staff-${id}-name`}
-          className="font-headline-md text-headline-md text-on-surface mb-3"
+          className="font-headline-md text-on-surface mb-4 tracking-tight"
         >
           {name}
         </h3>
+        <p className="text-on-surface-variant font-body-md leading-relaxed mb-6 opacity-80">
+          {bio || 'Confirmación Pendiente'}
+        </p>
         {socialUrl && (
           <a
             href={socialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1 text-outline hover:text-secondary transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-primary font-label-md hover:text-secondary transition-colors"
             aria-label={`Red social de ${name}`}
           >
-            <span className="material-symbols-outlined text-base">link</span>
-            <span className="truncate max-w-[200px]">{socialLinks}</span>
+            <span>{socialHandle}</span>
           </a>
         )}
       </div>
