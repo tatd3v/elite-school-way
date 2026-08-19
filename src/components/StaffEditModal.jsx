@@ -61,7 +61,7 @@ function StaffEditModal({ member, onSave, onCancel, isSubmitting }) {
       >
         <div className="bg-primary p-4 flex justify-between items-center rounded-t-xl">
           <h3 id="staff-edit-title" className="font-headline-md text-white text-md">
-            Editar Miembro del Claustro
+            Editar Miembro del Staff
           </h3>
           <button
             type="button"
