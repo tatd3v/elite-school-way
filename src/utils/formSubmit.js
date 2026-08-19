@@ -1,3 +1,5 @@
+import { PAYMENT_QR_IMAGE_URL } from '../config/constants';
+
 /**
  * Submit form data to Google Sheets via Google Apps Script
  * @param {Object} formData - The form data to submit
@@ -19,7 +21,8 @@ export async function submitForm(formData) {
     house: formData.house || 'N/A',
     categories: formData.categories.join(', ') || 'Ninguna',
     age: formData.age || 'N/A',
-    comments: formData.comments || 'N/A'
+    qrImageUrl: PAYMENT_QR_IMAGE_URL,
+    paymentScreenshot: formData.paymentScreenshot || '',
   }
 
   try {
