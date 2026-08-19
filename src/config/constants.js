@@ -22,6 +22,9 @@ export const DEFAULT_ADMIN = {
 
 export const CATEGORIES_COUNT = 12;
 
+export const PAYMENT_QR_IMAGE_URL = 'https://i.imgur.com/Y6fr7uJ.jpeg';
+export const PAYMENT_SCREENSHOT_LABEL = 'Comprobante de pago';
+
 export const STAFF_CONFIG = {
   SHEET_NAME: 'Staff',
   ACTIONS: {
