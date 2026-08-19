@@ -2,6 +2,7 @@ import { useState, useEffect } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
 import { categories as categoryData } from '../data/categories'
+import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
 import logo from '../assets/logo.png'
 import logoDark from '../assets/logo_dark_bg.png'
@@ -10,6 +11,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
     artistName: '',
     email: '',
+    countryCode: DEFAULT_COUNTRY_CODE,
     phone: '',
     house: '',
     categories: [],
@@ -78,13 +80,17 @@ export default function RegistrationModal({ isOpen, onClose }) {
     setSubmitStatus(null)
 
     try {
-      await submitForm(formData)
+      await submitForm({
+        ...formData,
+        phone: `${formData.countryCode} ${formData.phone}`.trim(),
+      })
       setSubmitStatus('success')
 
       setTimeout(() => {
         setFormData({
           artistName: '',
           email: '',
+          countryCode: DEFAULT_COUNTRY_CODE,
           phone: '',
           house: '',
           categories: [],
@@ -178,15 +184,30 @@ export default function RegistrationModal({ isOpen, onClose }) {
               <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
                 Teléfono *
               </label>
-              <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="+57 300 000 0000"
-                required
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-              />
+              <div className="flex gap-2">
+                <select
+                  className="flex-shrink-0 w-[4.75rem] sm:w-24 bg-surface-container-low border border-outline-variant pl-3 pr-1 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3E%3Cpath%20fill%3D%22%23c6c5d4%22%20d%3D%22M1%201l5%205%205-5%22%20stroke%3D%22%23c6c5d4%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%2F%3E%3C%2Fsvg%3E')] bg-no-repeat bg-[right_0.5rem_center] bg-[length:10px]"
+                  name="countryCode"
+                  value={formData.countryCode}
+                  onChange={handleInputChange}
+                  aria-label="Código de país"
+                >
+                  {countryCodes.map(({ code, country }) => (
+                    <option key={code} value={code} title={country}>
+                      {code}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="flex-1 min-w-0 bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                  placeholder="300 000 0000"
+                  required
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
 
             <div className="col-span-1">
@@ -267,12 +288,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
                     type="button"
                     onClick={() => setQrLightboxOpen(true)}
                     aria-label="Ver QR en pantalla completa"
-                    className="w-48 h-48 flex items-center justify-center bg-white p-2 rounded-sm border-0 cursor-pointer"
+                    className="w-64 h-64 md:w-80 md:h-80 flex items-center justify-center bg-white rounded-sm border-0 cursor-pointer overflow-hidden transition-transform hover:scale-105"
                   >
                     <img
                       src={PAYMENT_QR_IMAGE_URL}
                       alt="Código QR de pago"
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-cover object-center scale-100"
                     />
                   </button>
                   <div className="flex gap-4">
@@ -293,10 +314,10 @@ export default function RegistrationModal({ isOpen, onClose }) {
                   </div>
                 </div>
                 <div className="flex-1 w-full">
-                  <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+                  <label className="block font-label-lg text-label-lg text-[#c6c5d4] mb-2 uppercase tracking-wider">
                     {PAYMENT_SCREENSHOT_LABEL}
                   </label>
-                  <p className="font-body-md text-[#c6c5d4] mb-3">
+                  <p className="font-body-md text-[#c6c5d4] text-sm mb-3">
                     Debes cargar o subir el comprobante del pago para que el registro se haga efectivo.
                   </p>
                   <div className="flex items-center gap-4">
@@ -343,7 +364,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 )}
               </button>
               <p className="mt-4 text-center text-label-sm font-label-sm text-[#c6c5d4] opacity-70">
-                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Ballroom Culture.
+                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball - Ballroom Bogota.
               </p>
             </div>
           </div>
@@ -375,7 +396,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
           <img
             src={PAYMENT_QR_IMAGE_URL}
             alt="Código QR de pago"
-            className="max-w-full max-h-[85vh] object-contain rounded-lg"
+            className="max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain rounded-lg bg-white p-4"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
