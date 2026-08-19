@@ -15,7 +15,7 @@ export const dressCodes = [
     hex: '#87CEEB', 
     name: 'AZUL CIELO', 
     meaning: 'Claridad y Visión',
-    description: 'Refleja la lucidez mental y la frescura de los nuevos talentos que ingresan.'
+    description: 'Refleja la lucidez mental y la frescura de los talentos que hacen parte de la escena.'
   },
   { 
     hex: '#FFFFFF', 
