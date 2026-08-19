@@ -11,7 +11,7 @@ export const conductRules = [
   },
   {
     id: 'substance',
-    title: 'POLÍTICAS DE CERO SUSTANCIAS ILÍCITAS 🚫',
+    title: 'POLÍTICA DE CERO SUSTANCIAS ILÍCITAS 🚫',
     content: 'Está prohibido portar, consumir, distribuir o comercializar sustancias psicoactivas dentro del establecimiento, sus inmediaciones y durante el desarrollo del evento.',
     extraContent: 'También se podrá solicitar el retiro de personas que lleguen o permanezcan bajo efectos evidentes de sustancias cuando esto comprometa la seguridad o convivencia.'
   },
