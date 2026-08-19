@@ -84,6 +84,19 @@ function generatePasswordHash() {
 
 Simply delete their row from the Admins sheet.
 
+### Roles: Admin vs Viewer
+
+The **Role** column controls what a logged-in user can do on the dashboard:
+
+- **`admin`** — Full access. Can see the "Acciones" menu on Participantes (Confirmar Pago, Editar, Eliminar) and can manage Staff (toggle visibility, edit, delete, add).
+- **`viewer`** (or any value other than `admin`) — Read-only access. Can see the Participantes table and Staff list, but the "Acciones" column and all edit/delete/toggle controls are hidden. Any attempt to trigger these actions is also blocked in code, not just hidden in the UI.
+
+To create a viewer account, add a new row in the **Admins/Users** sheet with:
+   - Email: viewer's email
+   - Password Hash: generated hash (see above)
+   - Role: `viewer`
+   - Name: display name
+
 ### Change Password
 
 1. Generate a new password hash (see above)

@@ -15,8 +15,43 @@
 
 // Name of the sheets
 const SHEET_NAME = 'Registrations';
-const ADMINS_SHEET_NAME = 'Admins';
+const ADMINS_SHEET_NAME = 'Users';
 const STAFF_SHEET_NAME = 'Staff';
+
+const STAFF_ACTIONS = {
+  UPDATE: 'updateStaff',
+  DELETE: 'deleteStaff',
+  TOGGLE_VISIBILITY: 'toggleStaffVisibility',
+};
+
+/**
+ * Helper to return JSON responses.
+ * Note: Apps Script's ContentService cannot set custom response headers
+ * (no setHeader/addHeader API), so CORS is handled by avoiding preflight
+ * requests entirely on the client (see formSubmit.js / authService.js,
+ * which send requests with a 'text/plain' Content-Type instead of
+ * 'application/json' so the browser treats them as simple requests).
+ */
+function createJsonResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function createJsonpResponse(callback, obj) {
+  return ContentService
+    .createTextOutput(`${callback}(${JSON.stringify(obj)});`)
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+
+/**
+ * Handle CORS preflight requests (kept for completeness; should no longer
+ * be triggered once the client sends 'text/plain' requests instead of
+ * 'application/json', which avoids the preflight altogether).
+ */
+function doOptions(e) {
+  return createJsonResponse({ status: 'ok' });
+}
 
 /**
  * Initialize the Admins sheet with headers if it doesn't exist
@@ -59,34 +94,7 @@ function initializeStaffSheet() {
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
     
-    // Add default staff members
-    sheet.appendRow([
-      'DJ Fierce',
-      'Official DJ',
-      'Spinning ballroom culture beats since 2015',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDtIgOIiZRxVtCbD81LtdX53nJZtkD6S05KtTyulzJ9nxdqb6Wcew5on-4tcCqfeanwjKF045jePxaI-uO7K_5N3NR2s-OTIT8GnPl84EigaiEsVoEHrV2YO3MXvQKE2h4iSZAybLv7xjDxukhUvMytF2Fc6V5DYYRUAQYal1iD50WXGdqxpKfycVepBsOx07vTNg8U1ibY9JGA0bP61xjR6tCOyVHpSJGjNTaStiTFALfOi8_kSOXQ',
-      'instagram.com/djfierce',
-      1,
-      'TRUE'
-    ]);
-    sheet.appendRow([
-      'Prof. Enrique Madrigal',
-      'Director de Gala',
-      'Leading Elite Way School ballroom events with elegance and precision',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDWU46qmVq2SfRzbea-dALxTLfoMkNgmRegWMbf1oaVPMBIyob3RCWE-woPgneMTgPAN2n4CQjMf79lc-5aUlZfHkJLKW6YvwZaY7w9bTFRcb7mBjMag7EhS7P8-cygo6VGf_eb95Dgm4mXxm2yUYkk2KJhuVuvF1KKlEymRWnr8eKVCP-Z2xERa42u9qCY8ghVrePJMy1ffwozuuyspSbqEzvEzrkFde0VRhpKs6m62VuJOeN_sM11',
-      'instagram.com/prof.madrigal',
-      2,
-      'TRUE'
-    ]);
-    sheet.appendRow([
-      'Sebastian de la Fuente',
-      'Maestro de Ceremonia',
-      'Your charismatic host bringing energy to every ballroom moment',
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAoU21leSPDgDVRJ4FiTRFmmuLPg0pwlm4bxsQAH3LlkzkrFqqjb1pEY7inOEV617_m0CwxV1vjFDXKEqqbkb0SaoOtlArSlkjAieiAiV79QSBRz799AXM2iHdgl61vwKZtw8UtZJLx2raMm9JCF3N1Fr6DoNTB-NvEbex8Iv4b8eGrO9dJW93EN17DHlt6w0retsHc6VOxBB_t-he4-s_sZRoDyj4hmYyLcOpO5P_LSIOFGG9tsWV7',
-      'instagram.com/sebastianmc',
-      3,
-      'TRUE'
-    ]);
+    // Staff sheet starts empty except for headers; members are managed through the admin panel
   }
   
   return sheet;
@@ -109,7 +117,7 @@ function initializeSheet() {
       'House/007',
       'Categorías',
       'Edad',
-      'Comentarios'
+      'Screenshot'
     ];
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
@@ -133,6 +141,42 @@ function hashPassword(password) {
       password
     )
   );
+}
+
+/**
+ * Get or create a subfolder by name. The parent is searched by name at the Drive root.
+ */
+function getOrCreateSubFolder(parentName, childName) {
+  const parents = DriveApp.getFoldersByName(parentName);
+  const parent = parents.hasNext() ? parents.next() : DriveApp.createFolder(parentName);
+  const children = parent.getFoldersByName(childName);
+  return children.hasNext() ? children.next() : parent.createFolder(childName);
+}
+
+/**
+ * Save a base64 data-URL screenshot to the PAGOS_QR Drive folder and return a shareable URL
+ */
+function saveScreenshotToDrive(dataUrl, artistName) {
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) {
+    return '';
+  }
+
+  const match = dataUrl.match(/^data:([^/]+)\/([^;]+);base64,(.+)$/);
+  if (!match) {
+    return '';
+  }
+
+  const mimeType = match[1] + '/' + match[2];
+  const extension = match[2];
+  const base64 = match[3];
+  const bytes = Utilities.base64Decode(base64);
+  const fileName = 'payment-screenshot-' + (artistName || 'anonymous') + '-' + Date.now() + '.' + extension;
+
+  const folder = getOrCreateSubFolder('elite-way-school-data', 'PAGOS_QR');
+  const blob = Utilities.newBlob(bytes, mimeType, fileName);
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return file.getUrl();
 }
 
 /**
@@ -174,14 +218,20 @@ function doPost(e) {
     // Parse the incoming data
     const data = JSON.parse(e.postData.contents);
     let result;
-    
+
     // Handle admin login request
     if (data.action === 'login') {
       result = verifyAdmin(data.email, data.password);
+    } else if (data.action === STAFF_ACTIONS.UPDATE) {
+      result = updateStaff(data);
+    } else if (data.action === STAFF_ACTIONS.DELETE) {
+      result = deleteStaff(data);
+    } else if (data.action === STAFF_ACTIONS.TOGGLE_VISIBILITY) {
+      result = toggleStaffVisibility(data);
     } else {
       // Handle registration submission
       const sheet = initializeSheet();
-      
+
       // Prepare row data
       // House/007 is prefixed with an apostrophe so Google Sheets treats it as text
       // and preserves leading zeros (e.g., 007 instead of 7).
@@ -193,29 +243,25 @@ function doPost(e) {
         data.house ? "'" + data.house : 'N/A',
         data.categories,
         data.age,
-        data.comments
+        saveScreenshotToDrive(data.paymentScreenshot, data.artistName)
       ];
-      
+
       // Append the data to the sheet
       sheet.appendRow(rowData);
-      
-      result = { 
-        status: 'success', 
-        message: 'Registration received successfully' 
+
+      result = {
+        status: 'success',
+        message: 'Registration received successfully'
       };
     }
-    
-    return ContentService
-      .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON);
-      
+
+    return createJsonResponse(result);
+
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
-        status: 'error', 
-        message: error.toString() 
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return createJsonResponse({
+      status: 'error',
+      message: error.toString()
+    });
   }
 }
 
@@ -256,33 +302,36 @@ function getRegistrations() {
 }
 
 /**
- * Get all staff members from the sheet
+ * Get staff members from the sheet
+ * @param {boolean} includeHidden - If true, returns all members including hidden ones
  */
-function getStaff() {
+function getStaff(includeHidden = false) {
   try {
     const sheet = initializeStaffSheet();
     const data = sheet.getDataRange().getValues();
     const staff = [];
-    
+
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
-      // Check if visible (column index 6)
-      if (row[6] === 'TRUE' || row[6] === true) {
+      const isVisible = row[6] === 'TRUE' || row[6] === true;
+
+      if (includeHidden || isVisible) {
         staff.push({
+          rowIndex: i + 1,
           name: row[0],
           role: row[1],
           bio: row[2],
           photo: row[3],
           socialLinks: row[4],
           displayOrder: row[5],
-          isVisible: row[6]
+          isVisible: isVisible,
         });
       }
     }
-    
+
     // Sort by display order
     staff.sort((a, b) => (a.displayOrder || 999) - (b.displayOrder || 999));
-    
+
     return { staff };
   } catch (error) {
     return { staff: [], error: error.toString() };
@@ -290,37 +339,108 @@ function getStaff() {
 }
 
 /**
+ * Update an existing staff member row
+ */
+function updateStaff(data) {
+  const sheet = initializeStaffSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  const row = [
+    data.name || '',
+    data.role || '',
+    data.bio || '',
+    data.photo || '',
+    data.socialLinks || '',
+    Number(data.displayOrder) || 0,
+    data.isVisible ? 'TRUE' : 'FALSE',
+  ];
+
+  sheet.getRange(rowIndex, 1, 1, row.length).setValues([row]);
+
+  return { status: 'success', message: 'Staff member updated' };
+}
+
+/**
+ * Delete a staff member row
+ */
+function deleteStaff(data) {
+  const sheet = initializeStaffSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  sheet.deleteRow(rowIndex);
+
+  return { status: 'success', message: 'Staff member deleted' };
+}
+
+/**
+ * Toggle the visibility of a staff member
+ */
+function toggleStaffVisibility(data) {
+  const sheet = initializeStaffSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  const isVisible = data.isVisible === true || data.isVisible === 'true' ? 'TRUE' : 'FALSE';
+  sheet.getRange(rowIndex, 7).setValue(isVisible);
+
+  return { status: 'success', isVisible: isVisible === 'TRUE' };
+}
+
+/**
  * Handle GET requests
  */
 function doGet(e) {
+  const action = e.parameter.action;
+  const callback = e.parameter.callback;
+
   try {
-    const action = e.parameter.action;
     let result;
-    
+
     if (action === 'getRegistrations') {
       result = getRegistrations();
     } else if (action === 'getStaff') {
-      result = getStaff();
+      const includeHidden = e.parameter.includeHidden === 'true';
+      result = getStaff(includeHidden);
+    } else if (action === 'login') {
+      result = verifyAdmin(e.parameter.email, e.parameter.password);
     } else {
       // Default response
-      result = { 
+      result = {
         status: 'online',
         message: 'Elite Way School Registration API is running',
-        availableActions: ['getRegistrations', 'getStaff']
+        availableActions: [
+          'getRegistrations',
+          'getStaff',
+          'login',
+          'updateStaff',
+          'deleteStaff',
+          'toggleStaffVisibility',
+        ]
       };
     }
-    
-    return ContentService
-      .createTextOutput(JSON.stringify(result))
-      .setMimeType(ContentService.MimeType.JSON);
-      
+
+    if (callback) {
+      return createJsonpResponse(callback, result);
+    }
+    return createJsonResponse(result);
+
   } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
-        status: 'error',
-        message: error.toString()
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    const errorResult = { status: 'error', message: error.toString() };
+    if (callback) {
+      return createJsonpResponse(callback, errorResult);
+    }
+    return createJsonResponse(errorResult);
   }
 }
 
