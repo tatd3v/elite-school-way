@@ -25,11 +25,21 @@ export const CATEGORIES_COUNT = 12;
 export const PAYMENT_QR_IMAGE_URL = 'https://i.imgur.com/Y6fr7uJ.jpeg';
 export const PAYMENT_SCREENSHOT_LABEL = 'Comprobante de pago';
 
+export const REGISTRATION_STATUS = {
+  REGISTERED: 'Registrado',
+  PAID: 'Pagado',
+};
+
+export const REGISTRATION_ACTIONS = {
+  UPDATE_STATUS: 'updateRegistrationStatus',
+};
+
 export const STAFF_CONFIG = {
   SHEET_NAME: 'Staff',
   ACTIONS: {
     GET_ALL: 'getStaff',
     INCLUDE_HIDDEN_PARAM: 'includeHidden',
+    ADD: 'addStaff',
     UPDATE: 'updateStaff',
     DELETE: 'deleteStaff',
     TOGGLE_VISIBILITY: 'toggleStaffVisibility',
