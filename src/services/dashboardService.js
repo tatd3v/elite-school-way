@@ -1,4 +1,4 @@
-import { API_CONFIG, STAFF_CONFIG } from '../config/constants';
+import { API_CONFIG, STAFF_CONFIG, REGISTRATION_ACTIONS } from '../config/constants';
 import { jsonp } from '../utils/jsonp';
 
 class DashboardService {
@@ -105,6 +105,28 @@ class DashboardService {
     }
   }
 
+  async addStaff(member) {
+    try {
+      const result = await this.postStaffAction(STAFF_CONFIG.ACTIONS.ADD, {
+        name: member.name,
+        role: member.role,
+        bio: member.bio,
+        photo: member.photo,
+        socialLinks: member.socialLinks,
+        displayOrder: member.displayOrder,
+        isVisible: member.isVisible,
+      });
+      return {
+        success: result?.status === 'success',
+        data: result,
+        rowIndex: result?.rowIndex,
+      };
+    } catch (error) {
+      console.error('Error adding staff:', error);
+      throw error;
+    }
+  }
+
   async deleteStaff(rowIndex) {
     try {
       const result = await this.postStaffAction(STAFF_CONFIG.ACTIONS.DELETE, { rowIndex });
@@ -124,6 +146,21 @@ class DashboardService {
       return { success: result?.status === 'success', data: result };
     } catch (error) {
       console.error('Error toggling staff visibility:', error);
+      throw error;
+    }
+  }
+
+  async updateRegistrationStatus(rowIndex, status) {
+    try {
+      // postStaffAction is a generic { action, ...payload } POST helper
+      // despite its name — reused here for registration status updates.
+      const result = await this.postStaffAction(REGISTRATION_ACTIONS.UPDATE_STATUS, {
+        rowIndex,
+        status,
+      });
+      return { success: result?.status === 'success', data: result };
+    } catch (error) {
+      console.error('Error updating registration status:', error);
       throw error;
     }
   }
