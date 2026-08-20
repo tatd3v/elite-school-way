@@ -1,237 +1,171 @@
-# 🎓 Elite Way School - Ballroom Colombia 2026
+# Elite Way School - Ballroom Colombia 2026
 
-Modern SPA landing page for Elite Way School Ballroom event with integrated registration form and Google Sheets backend.
+SPA moderna para el evento Elite Way School Kiki Ball. Incluye landing pública, formulario de inscripción con pago por QR/screenshot, panel de administración con autenticación Google Sheets, y directorio de staff.
 
-![Elite Way School](https://img.shields.io/badge/Preact-673AB8?style=for-the-badge&logo=preact&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+## Características
 
-## 🌟 Features
+- **SPA con Preact + Vite** — Build rápida y ligera.
+- **Diseño responsivo** — Mobile-first, modo oscuro por defecto.
+- **Inscripción con Google Sheets** — Formulario que guarda en Google Sheets vía Apps Script.
+- **Pago por QR** — Muestra QR de pago y permite subir comprobante (screenshot).
+- **Selector de código de país** — Con buscador y Colombia como opción destacada.
+- **Código de conducta** — Sección en español con reglas del evento.
+- **Directorio de Staff** — Carga staff visible desde Google Sheets con fotos, roles y redes.
+- **Panel de administración** — Login con hash SHA-256, roles `admin` / `viewer`, gestión de inscripciones y staff.
+- **Calidad de código** — ESLint, Prettier, Vitest, PropTypes.
 
-- ⚡ **Lightning Fast** - Built with Preact & Vite
-- 🎨 **Beautiful Design** - Academic Prestige & Ballroom Grandeur theme
-- 📱 **Fully Responsive** - Mobile-first approach
-- 📊 **Google Sheets Integration** - Zero-cost form backend
-- � **Admin Authentication** - Google Sheets-based admin panel
-- � **Easy Deployment** - Netlify-ready
-- ♿ **Accessible** - WCAG compliant with ARIA labels
-- 🧪 **Tested** - Vitest for unit and component tests
-- ✨ **Code Quality** - ESLint + Prettier + CI/CD
-- 🔒 **Type Safety** - PropTypes validation
-
-## 🏗️ Tech Stack
+## Tech Stack
 
 - **Framework:** Preact 10.19+
-- **Build Tool:** Vite 5.0+
+- **Build Tool:** Vite 8+
 - **Styling:** Tailwind CSS 3.4+
-- **Backend:** Google Apps Script (Free)
-- **Hosting:** Netlify (Free tier)
+- **Backend:** Google Apps Script (sin servidor propio)
+- **Hosting:** Netlify (o cualquier static host)
 
-## 📦 Installation
+## Instalación
 
 ```bash
-# Clone the repository
+# Clonar el repositorio
 git clone https://github.com/yourusername/elite-school-way.git
 cd elite-school-way
 
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Start development server
+# Iniciar servidor de desarrollo
 npm run dev
 ```
 
-Visit `http://localhost:5173`
+Visita `http://localhost:5173`.
 
-## 🧪 Development Tools
-
-### Testing
+## Scripts disponibles
 
 ```bash
-# Run tests once
-npm test
-
-# Run tests in watch mode
+npm run dev         # Dev server
+npm run build       # Build de producción
+npm run preview     # Previsualizar build
+npm run lint        # ESLint
+npm run lint:fix    # ESLint con auto-fix
+npm run format      # Prettier
+npm run format:check
+npm run test        # Vitest
 npm run test:watch
-
-# Run tests with UI
 npm run test:ui
 ```
 
-### Linting & Formatting
+## Configuración
+
+### 1. Google Apps Script
+
+La guía completa está en [`SETUP.md`](./SETUP.md). Los pasos rápidos son:
+
+1. Crear una hoja de Google Sheets.
+2. Abrir **Extensions → Apps Script**.
+3. Copiar el contenido de [`google-apps-script.md`](./google-apps-script.md).
+4. Desplegar como **Web app** con **Execute as: Me** y **Who has access: Anyone**.
+5. Copiar la URL del deployment.
+
+### 2. Variables de entorno
 
 ```bash
-# Run ESLint
-npm run lint
-
-# Fix ESLint issues
-npm run lint:fix
-
-# Format code with Prettier
-npm run format
-
-# Check formatting
-npm run format:check
+cp .env.example .env
 ```
 
-## 🔧 Configuration
+Edita `.env`:
 
-### 1. Google Sheets Setup
-
-Follow the complete guide in [`SETUP.md`](./SETUP.md) to configure Google Sheets integration.
-
-Quick steps:
-
-1. Create Google Sheet
-2. Deploy Apps Script (from `google-apps-script.js`)
-3. Copy Web App URL
-4. Add to `.env` file
-
-### 2. Admin Panel Setup (Optional)
-
-For admin-only access to manage registrations, see [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
-
-The admin panel provides:
-- Secure login using Google Sheets as authentication database
-- Dashboard with registration statistics
-- Direct access to Google Sheets data
-- Zero-cost admin authentication solution
-
-### 2. Environment Variables
-
-```bash
-# Copy example env file
-cp .env.example .env
-
-# Edit .env and add your Google Script URL
+```env
 VITE_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
-## 🚀 Build & Deploy
+### 3. Panel de administración
+
+Para crear/ver usuarios admin, ver [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
+
+## Build y Deploy
 
 ```bash
-# Build for production
 npm run build
-
-# Preview production build
-npm run preview
 ```
 
-### Deploy to Netlify
+Sube la carpeta `dist/` a Netlify Drop, o conecta el repositorio a Netlify y configura:
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Environment variable: `VITE_GOOGLE_SCRIPT_URL`
 
-**Manual deployment:**
-
-1. Run `npm run build`
-2. Drag `dist` folder to [Netlify Drop](https://app.netlify.com/drop)
-3. Add environment variable `VITE_GOOGLE_SCRIPT_URL`
-
-## 📁 Project Structure
+## Estructura del proyecto
 
 ```
 elite-school-way/
-├── .github/
-│   └── workflows/
-│       └── ci.yml                 # GitHub Actions CI
 ├── src/
-│   ├── components/
-│   │   ├── __tests__/             # Component tests
-│   │   │   └── ThemeToggle.test.jsx
-│   │   ├── CategoryCard.jsx       # Single category card
-│   │   ├── Categories.jsx         # Categories section
-│   │   ├── CodeOfConduct.jsx      # Code of conduct rules
-│   │   ├── DressCode.jsx          # Dress code display
-│   │   ├── EventDetails.jsx
-│   │   ├── FinalCTA.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Header.jsx
+│   ├── components/          # Componentes de Preact
 │   │   ├── Hero.jsx
+│   │   ├── EventDetails.jsx
+│   │   ├── Categories.jsx / CategoryCard.jsx
+│   │   ├── DressCode.jsx
+│   │   ├── RulesSection.jsx / CodeOfConduct.jsx
+│   │   ├── StaffSection.jsx / StaffMemberCard.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Header.jsx / DesktopNavigation.jsx / BottomNavigation.jsx
 │   │   ├── RegistrationModal.jsx
-│   │   ├── RulesSection.jsx       # Rules container
-│   │   ├── StaffSection.jsx
-│   │   └── ThemeToggle.jsx
-│   ├── data/                      # Data/content configs
+│   │   ├── AdminLogin.jsx / AdminPanel.jsx / AdminDashboard.jsx
+│   │   └── ...
+│   ├── data/                # Contenido estático
 │   │   ├── categories.js
 │   │   ├── conductRules.js
+│   │   ├── countryCodes.js
 │   │   └── dressCodes.js
-│   ├── test/
-│   │   └── setup.js               # Test configuration
-│   ├── utils/
-│   │   └── formSubmit.js
+│   ├── services/            # Llamadas al backend
+│   │   ├── authService.js
+│   │   └── dashboardService.js
+│   ├── utils/               # Helpers
+│   │   ├── formSubmit.js
+│   │   ├── jsonp.js
+│   │   └── driveImage.js
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-├── .eslintrc.cjs                  # ESLint config
-├── .prettierrc.json               # Prettier config
-├── vitest.config.js               # Vitest config
-├── google-apps-script.js
-├── SETUP.md
-├── package.json
-├── vite.config.js
+├── .env.example
+├── .eslintrc.cjs
+├── .prettierrc.json
 ├── tailwind.config.js
-└── index.html
+├── vite.config.js
+├── vitest.config.js
+├── google-apps-script.md   # Backend de Apps Script
+├── SETUP.md                # Guía de setup
+├── ADMIN_SETUP.md          # Guía del panel admin
+├── AGENTS.md               # Notas para agentes de IA
+└── README.md
 ```
 
-## 🎨 Design System
+## Datos del formulario
 
-### Colors
+Las inscripciones se guardan en la hoja `Registrations` con las columnas:
 
-- **Primary (Navy):** #000666, #1a237e
-- **Secondary (Crimson):** #b52617, #ff5c45
-- **Accent (Silver):** #c6c5d4
-- **Surface:** #fbf9f8, #ffffff
+1. Timestamp
+2. Nombre Artístico
+3. Email
+4. Teléfono
+5. House/007
+6. Categorías
+7. Edad
+8. Screenshot
 
-### Typography
+El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-data/PAGOS_QR` y solo se escribe el enlace en la hoja.
 
-- **Headlines:** Hanken Grotesk (600-700)
-- **Body:** Libre Franklin (400-600)
+## Información del evento
 
-### Spacing
+- **Evento:** Elite Way School Kiki Ball 2026
+- **Fecha:** 17 de octubre de 2026
+- **Hora:** 6:00 PM
+- **Lugar:** The Game Dance Studio
+- **Dirección:** Kr 13 #56-72, Chapinero, Bogotá
 
-- Desktop: 64px margins, 80px section gaps
-- Mobile: 20px margins, 48px section gaps
+## Contacto
 
-## 📊 Form Data
+- **Instagram:** [@theeliteway_b](https://www.instagram.com/theeliteway_b)
+- **Teléfono:** [+57 333 738 0581](tel:+573337380581)
 
-Registrations are saved to Google Sheets with:
+## Licencia
 
-- Timestamp
-- Nombre Artístico
-- Email
-- Teléfono
-- House/007
-- Categorías (comma-separated)
-- Edad
-- Comentarios
-
-**Export to Excel:** File → Download → Microsoft Excel (.xlsx)
-
-## 🐛 Troubleshooting
-
-See [`SETUP.md`](./SETUP.md#-troubleshooting) for common issues.
-
-## 📝 Event Information
-
-**Event:** Elite Way School Kiki Ball 2026  
-**Date:** October 17, 2026  
-**Time:** 6:00 PM  
-**Venue:** The Game Dance Studio  
-**Location:** Kr 13 #56-72, Chapinero, Bogotá
-
-## 📞 Contact
-
-- **Instagram:** [@theeliteway_b](https://instagram.com/theeliteway_b)
-- **Phone:** 3337380581
-
-## 📄 License
-
-© 2026 Elite Way School Ballroom Bogotrans. All Rights Reserved.
-
-## 🤝 Contributing
-
-This is a private event registration site. For issues or questions, contact the organizers directly.
-
----
-
-### Built with ❤️ for the Colombian Ballroom Community
+© 2026 Elite Way School Ballroom Bogotrans. Todos los derechos reservados.

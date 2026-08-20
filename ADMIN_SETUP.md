@@ -1,66 +1,65 @@
 # Admin Authentication Setup Guide
 
-This guide explains how to set up and use the Google Sheets-based admin authentication for Elite Way School.
+Guía para configurar y usar la autenticación del panel de administración de Elite Way School.
 
-## 📋 Overview
+## Resumen
 
-The admin system uses Google Sheets as a simple, secure database for storing admin credentials. No external auth services required!
+El panel admin usa una hoja de Google Sheets (`Users`) como base de datos simple de usuarios. No requiere servicios de autenticación externos.
 
-## 🔧 Setup Instructions
+## Requisitos previos
 
-### Step 1: Update Google Apps Script
+- Seguir el setup de [`SETUP.md`](./SETUP.md) primero.
+- El código de [`google-apps-script.md`](./google-apps-script.md) debe estar copiado y desplegado en Apps Script.
 
-1. Open your Google Sheet (the one with "Registrations" tab)
-2. Go to **Extensions** → **Apps Script**
-3. **Replace ALL existing code** with the updated code from `google-apps-script.js`
-4. Click **Save** (💾)
-5. Click **Deploy** → **Manage deployments**
-6. Click the **Edit** icon (pencil) on your existing deployment
-7. Under "Version", select **New version**
-8. Click **Deploy**
+## Instrucciones de configuración
 
-### Step 2: Verify Admins Sheet Was Created
+### Paso 1: Desplegar el script actualizado
 
-1. Go back to your Google Sheet
-2. You should see a new tab called **"Admins"**
-3. It will have these columns:
-   - **Email** - Admin email address
-   - **Password Hash** - SHA-256 hashed password
-   - **Role** - Admin role (admin, staff, etc.)
-   - **Name** - Display name
+1. Abre tu hoja de Google Sheets.
+2. Ve a **Extensions → Apps Script**.
+3. Asegúrate de que el código esté copiado desde [`google-apps-script.md`](./google-apps-script.md).
+4. Guarda y despliega una nueva versión: **Deploy → Manage deployments → Edit → New version → Deploy**.
 
-4. There should be a sample admin already created:
+### Paso 2: Verificar la hoja de usuarios
+
+1. Vuelve a tu hoja de cálculo.
+2. El script crea automáticamente una hoja llamada **Users** (aunque la función interna se llame `initializeAdminsSheet`).
+3. Las columnas son:
+   - **Email** — correo del usuario
+   - **Password Hash** — hash SHA-256 de la contraseña
+   - **Role** — `admin` o `viewer`
+   - **Name** — nombre para mostrar
+
+4. Debería existir un usuario por defecto:
    - Email: `admin@elite.com`
    - Password: `admin123`
    - Role: `admin`
 
-### Step 3: Test Admin Login
+### Paso 3: Probar login
 
-1. Go to your site: `http://localhost:3000/admin`
-2. Login with:
+1. En desarrollo: `http://localhost:5173/admin`
+2. En producción: `https://tu-sitio.netlify.app/admin`
+3. Ingresa:
    - **Email:** `admin@elite.com`
    - **Password:** `admin123`
-3. You should see the admin dashboard!
+4. Si todo está bien, entrarás al panel.
 
 ---
 
-## 👥 Managing Admin Users
+## Gestión de usuarios
 
-### Add a New Admin
+### Crear un nuevo usuario
 
-To add a new admin user, you need to manually add them to the Google Sheet:
+1. Abre la hoja **Users**.
+2. Genera el hash SHA-256 de la contraseña.
 
-1. Open your Google Sheet
-2. Go to the **Admins** tab
-3. You need to generate a password hash for the new admin
+#### Generar hash de contraseña
 
-#### Generate Password Hash
-
-Open the **Apps Script Editor** and run this function:
+En el editor de Apps Script, crea y ejecuta esta función:
 
 ```javascript
 function generatePasswordHash() {
-  const password = 'your_password_here';  // Replace with actual password
+  const password = 'tu_contraseña_aqui';
   const hash = Utilities.base64Encode(
     Utilities.computeDigest(
       Utilities.DigestAlgorithm.SHA_256,
@@ -71,143 +70,98 @@ function generatePasswordHash() {
 }
 ```
 
-1. Replace `'your_password_here'` with the desired password
-2. Click **Run** (▶️)
-3. Check the **Execution log** at the bottom - copy the hash
-4. Add a new row in the Admins sheet with:
-   - Email: new admin email
-   - Password Hash: the hash you just copied
-   - Role: admin or staff
-   - Name: display name
+1. Reemplaza `'tu_contraseña_aqui'` por la contraseña deseada.
+2. Ejecuta la función (**Run**).
+3. Copia el hash del **Execution log**.
+4. Agrega una fila en la hoja **Users**:
+   - Email: correo del nuevo usuario
+   - Password Hash: el hash copiado
+   - Role: `admin` o `viewer`
+   - Name: nombre para mostrar
 
-### Remove an Admin
+### Cambiar una contraseña
 
-Simply delete their row from the Admins sheet.
+1. Genera un nuevo hash (ver arriba).
+2. Reemplaza el hash en la hoja **Users**.
 
-### Roles: Admin vs Viewer
+### Eliminar un usuario
 
-The **Role** column controls what a logged-in user can do on the dashboard:
-
-- **`admin`** — Full access. Can see the "Acciones" menu on Participantes (Confirmar Pago, Editar, Eliminar) and can manage Staff (toggle visibility, edit, delete, add).
-- **`viewer`** (or any value other than `admin`) — Read-only access. Can see the Participantes table and Staff list, but the "Acciones" column and all edit/delete/toggle controls are hidden. Any attempt to trigger these actions is also blocked in code, not just hidden in the UI.
-
-To create a viewer account, add a new row in the **Admins/Users** sheet with:
-   - Email: viewer's email
-   - Password Hash: generated hash (see above)
-   - Role: `viewer`
-   - Name: display name
-
-### Change Password
-
-1. Generate a new password hash (see above)
-2. Replace the old hash in the Admins sheet
+Simplemente borra su fila en la hoja **Users**.
 
 ---
 
-## 🔐 Security Notes
+## Roles
 
-### Password Hashing
-- Passwords are hashed using SHA-256 before storage
-- Never store plain text passwords in the sheet
-- Hash is generated server-side (in Google Apps Script)
+- **`admin`** — Acceso completo: puede editar/eliminar inscripciones, gestionar staff, cambiar visibilidad, etc.
+- **`viewer`** (o cualquier otro valor) — Solo lectura: ve inscripciones y staff, pero no puede realizar acciones. El bloqueo se aplica tanto en UI como en el backend.
 
-### Session Management
-- Admin sessions last 24 hours
-- Session data stored in browser localStorage
-- Automatic logout after 24 hours of inactivity
-
-### Access Control
-- Only people with the Google Sheet link can manage admins
-- Keep your Google Sheet private
-- Don't share your admin credentials
+Para crear un usuario con permisos de solo lectura, asigna el rol `viewer`.
 
 ---
 
-## 🚀 Accessing Admin Panel
+## Seguridad
 
-### Development
-```
-http://localhost:3000/admin
-```
-
-### Production (after deployment)
-```
-https://your-site.netlify.app/admin
-```
-
-Or add a link in your app.
+- Las contraseñas se almacenan como hash SHA-256, nunca en texto plano.
+- La sesión del admin dura **24 horas** y se guarda en `localStorage`.
+- Mantén privada la hoja de Google Sheets.
+- Cambia la contraseña por defecto (`admin123`) en producción.
 
 ---
 
-## 📊 Admin Dashboard Features
+## Panel de administración
 
-Once logged in, admins can:
+Una vez logueado, los administradores pueden:
 
-- ✅ View registration statistics
-- ✅ Access Google Sheet directly
-- ✅ Export data to Excel
-- ✅ Monitor categories and registrations
-
----
-
-## 🔧 Troubleshooting
-
-### "Invalid credentials" error
-- Check that you're using the correct email/password
-- Verify the password hash in the Admins sheet is correct
-- Make sure you updated the Google Apps Script with the new code
-
-### Admins sheet not created
-- Run `initializeAdminsSheet()` manually from Apps Script editor
-- Or add the sheet manually with columns: Email, Password Hash, Role, Name
-
-### Login not working
-- Check browser console for errors (F12)
-- Verify VITE_GOOGLE_SCRIPT_URL is set in .env
-- Make sure Google Apps Script deployment is set to "Anyone"
-
-### Session expired
-- Sessions last 24 hours
-- Just login again
+- Ver estadísticas de inscripciones.
+- Ver listado de participantes con acciones (confirmar pago, editar, eliminar).
+- Ver y gestionar el directorio de staff.
+- Exportar datos a Excel desde Google Sheets.
 
 ---
 
-## 🔄 Integration with Existing App
+## Troubleshooting
 
-To add admin panel access to your main app, you can add a link in the footer or header:
+### "Credenciales inválidas"
 
-```jsx
-<a href="/admin" className="text-on-surface-variant hover:text-primary">
-  Admin
-</a>
-```
+- Verifica email y contraseña.
+- Asegúrate de que el hash en la hoja **Users** sea correcto.
+- Confirma que el despliegue de Apps Script esté actualizado.
 
-Or create a dedicated admin route (requires routing library).
+### No se crea la hoja Users
+
+- Ejecuta manualmente `initializeAdminsSheet()` en Apps Script.
+- O crea la hoja manualmente con los headers: `Email, Password Hash, Role, Name`.
+
+### El login no carga
+
+- Revisa la consola del navegador (F12).
+- Verifica `VITE_GOOGLE_SCRIPT_URL` en `.env`.
+- Asegúrate de que el despliegue tenga acceso **Anyone**.
+
+### Sesión expirada
+
+- Las sesiones duran 24 horas.
+- Vuelve a iniciar sesión.
 
 ---
 
-## 📝 Default Admin Credentials
+## Credenciales por defecto
 
 **Email:** `admin@elite.com`  
 **Password:** `admin123`
 
-⚠️ **IMPORTANT:** Change the default password immediately in production!
-
-To change:
-1. Generate new hash for your password
-2. Update the Admins sheet
-3. Delete or update the default admin row
+⚠️ **Importante:** cambia la contraseña por defecto antes de poner el sitio en producción.
 
 ---
 
-## ✅ Setup Checklist
+## Checklist
 
-- [ ] Updated Google Apps Script with auth code
-- [ ] Deployed new version of the script
-- [ ] Verified Admins sheet exists
-- [ ] Tested login with default credentials
-- [ ] Changed default admin password
-- [ ] Added your own admin accounts
-- [ ] Accessed admin dashboard successfully
+- [ ] Código de `google-apps-script.md` copiado y desplegado
+- [ ] Nueva versión del despliegue publicada
+- [ ] Hoja `Users` creada con usuario por defecto
+- [ ] Login con credenciales por defecto probado
+- [ ] Contraseña por defecto cambiada
+- [ ] Usuarios adicionales agregados (si aplica)
+- [ ] Panel de admin accedido correctamente
 
-**Your admin authentication is now ready! 🎉**
+**¡Autenticación de administrador lista!**
