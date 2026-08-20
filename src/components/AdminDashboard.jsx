@@ -138,14 +138,24 @@ function AdminDashboard({ user }) {
     setOpenMenuId(null);
   };
 
-  const handleSaveParticipant = (updatedParticipant) => {
+  const handleSaveParticipant = async (updatedParticipant) => {
     if (!isAdmin) return;
     setIsSubmitting(true);
-    setParticipants((prev) =>
-      prev.map((p) => (p.id === updatedParticipant.id ? { ...p, ...updatedParticipant } : p))
-    );
-    setIsSubmitting(false);
-    setEditingParticipant(null);
+
+    try {
+      const result = await dashboardService.updateRegistration(updatedParticipant);
+      if (result.success) {
+        await loadDashboardData();
+        setEditingParticipant(null);
+      } else {
+        throw new Error('Update failed');
+      }
+    } catch (err) {
+      console.error('Error updating participant:', err);
+      setError('Error al actualizar el participante');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleDeleteClick = (participant) => {
@@ -154,10 +164,24 @@ function AdminDashboard({ user }) {
     setOpenMenuId(null);
   };
 
-  const handleConfirmDelete = () => {
-    if (!isAdmin) return;
-    setParticipants((prev) => prev.filter((p) => p.id !== deletingParticipant.id));
-    setDeletingParticipant(null);
+  const handleConfirmDelete = async () => {
+    if (!isAdmin || !deletingParticipant) return;
+
+    setIsSubmitting(true);
+    try {
+      const result = await dashboardService.deleteRegistration(deletingParticipant.rowIndex);
+      if (result.success) {
+        await loadDashboardData();
+      } else {
+        throw new Error('Delete failed');
+      }
+    } catch (err) {
+      console.error('Error deleting participant:', err);
+      setError('Error al eliminar el participante');
+    } finally {
+      setIsSubmitting(false);
+      setDeletingParticipant(null);
+    }
   };
 
   const filteredParticipants = participants.filter((p) => {
@@ -230,23 +254,14 @@ function AdminDashboard({ user }) {
               {activeTab === 'participants' && (
               <section className="flex flex-col md:flex-1 md:min-h-0">
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 flex-shrink-0">
-                  <div className="space-y-2">
-                    <span className="inline-block px-3 py-1 bg-secondary/10 text-secondary border border-secondary/20 rounded-full font-label-sm text-label-sm uppercase tracking-tighter">
-                      Panel de Control
-                    </span>
-                    <h2 className="font-display-lg text-display-lg text-on-surface tracking-tight">
-                      Participantes Registrados
-                    </h2>
-                    <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
-                      Gestione la nómina académica de la gala. Verifique los estados de confirmación y pertenencia a las casas reales.
-                    </p>
-                  </div>
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
+                  <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
                 </div>
 
                 <div className="flex items-center gap-3 mb-6 flex-shrink-0">
-                  <div className="max-w-xl flex-1">
-                    <SearchBar onSearch={handleSearch} placeholder="Buscar expediente..." />
+                  <div className="flex-1">
+                    <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
                   </div>
 
                   <div className="relative">
