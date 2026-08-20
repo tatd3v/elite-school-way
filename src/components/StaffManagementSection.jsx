@@ -93,7 +93,7 @@ const defaultStaff = [
     },
   ];
 
-function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = true }) {
+function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = false }) {
   const [staff, setStaff] = useState(initialStaff);
   const [isLoading, setIsLoading] = useState(!initialStaff || initialStaff.length === 0);
   const [editingMember, setEditingMember] = useState(null);
