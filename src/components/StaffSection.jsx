@@ -1,3 +1,4 @@
+import { Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { dashboardService } from '../services/dashboardService';
 import StaffMemberCard from './StaffMemberCard';
@@ -27,7 +28,7 @@ function StaffSection() {
       id="staff"
       aria-labelledby="staff-heading"
     >
-      <div className="text-center mb-20">
+      <div className="text-center mb-10">
         <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-4 block">
           Facultad de Excelencia
         </span>
@@ -50,8 +51,13 @@ function StaffSection() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {staff.map((member) => (
-            <StaffMemberCard key={member.id} member={member} />
+          {staff.map((member, index) => (
+            <Fragment key={member.id}>
+              <StaffMemberCard member={member} />
+              {index < staff.length - 1 && (
+                <div className="md:hidden border-t border-outline-variant/30 pt-0"></div>
+              )}
+            </Fragment>
           ))}
         </div>
       )}
