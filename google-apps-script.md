@@ -19,9 +19,21 @@ const ADMINS_SHEET_NAME = 'Users';
 const STAFF_SHEET_NAME = 'Staff';
 
 const STAFF_ACTIONS = {
+  ADD: 'addStaff',
   UPDATE: 'updateStaff',
   DELETE: 'deleteStaff',
   TOGGLE_VISIBILITY: 'toggleStaffVisibility',
+};
+
+const REGISTRATION_STATUS = {
+  REGISTERED: 'Registrado',
+  PAID: 'Pagado',
+};
+
+const REGISTRATION_ACTIONS = {
+  UPDATE_STATUS: 'updateRegistrationStatus',
+  DELETE: 'deleteRegistration',
+  UPDATE_REGISTRATION: 'updateRegistration',
 };
 
 /**
@@ -117,15 +129,17 @@ function initializeSheet() {
       'House/007',
       'Categorías',
       'Edad',
-      'Screenshot'
+      'Screenshot',
+      'Status'
     ];
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
   }
 
-  // Always force the House/007 column (column E) to TEXT format so values
-  // like "007" are preserved instead of being converted to the number 7.
+  // Always force the Teléfono (column D) and House/007 (column E) to TEXT
+  // format so values like "+57 300..." and "007" are preserved.
+  sheet.getRange('D:D').setNumberFormat('@');
   sheet.getRange('E:E').setNumberFormat('@');
   
   return sheet;
@@ -180,6 +194,32 @@ function saveScreenshotToDrive(dataUrl, artistName) {
 }
 
 /**
+ * Save a base64 data-URL staff photo to the Staff Photos Drive folder and return a shareable URL
+ */
+function saveStaffPhotoToDrive(dataUrl, name) {
+  if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:')) {
+    return dataUrl || '';
+  }
+
+  const match = dataUrl.match(/^data:([^/]+)\/([^;]+);base64,(.+)$/);
+  if (!match) {
+    return dataUrl;
+  }
+
+  const mimeType = match[1] + '/' + match[2];
+  const extension = match[2];
+  const base64 = match[3];
+  const bytes = Utilities.base64Decode(base64);
+  const fileName = (name || 'staff') + '-' + Date.now() + '.' + extension;
+
+  const folder = getOrCreateSubFolder('elite-way-school-data', 'FOTOS_STAFF');
+  const blob = Utilities.newBlob(bytes, mimeType, fileName);
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return file.getUrl();
+}
+
+/**
  * Verify admin credentials
  */
 function verifyAdmin(email, password) {
@@ -222,28 +262,40 @@ function doPost(e) {
     // Handle admin login request
     if (data.action === 'login') {
       result = verifyAdmin(data.email, data.password);
+    } else if (data.action === STAFF_ACTIONS.ADD) {
+      result = addStaff(data);
     } else if (data.action === STAFF_ACTIONS.UPDATE) {
       result = updateStaff(data);
     } else if (data.action === STAFF_ACTIONS.DELETE) {
       result = deleteStaff(data);
     } else if (data.action === STAFF_ACTIONS.TOGGLE_VISIBILITY) {
       result = toggleStaffVisibility(data);
+    } else if (data.action === REGISTRATION_ACTIONS.UPDATE_STATUS) {
+      result = updateRegistrationStatus(data);
+    } else if (data.action === REGISTRATION_ACTIONS.UPDATE_REGISTRATION) {
+      result = updateRegistration(data);
+    } else if (data.action === REGISTRATION_ACTIONS.DELETE) {
+      result = deleteRegistration(data);
     } else {
       // Handle registration submission
       const sheet = initializeSheet();
 
       // Prepare row data
-      // House/007 is prefixed with an apostrophe so Google Sheets treats it as text
-      // and preserves leading zeros (e.g., 007 instead of 7).
+      // Phone and House/007 are prefixed with an apostrophe so Google Sheets
+      // treats them as literal text instead of trying to parse them as a
+      // formula (a leading "+" like "+57 300..." would otherwise trigger
+      // Sheets' formula parser and show #ERROR!) or a number that drops
+      // leading zeros (e.g. 007 becoming 7).
       const rowData = [
         new Date(data.timestamp),
         data.artistName,
         data.email,
-        data.phone,
+        data.phone ? "'" + data.phone : '',
         data.house ? "'" + data.house : 'N/A',
         data.categories,
         data.age,
-        saveScreenshotToDrive(data.paymentScreenshot, data.artistName)
+        saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
+        REGISTRATION_STATUS.REGISTERED
       ];
 
       // Append the data to the sheet
@@ -266,6 +318,67 @@ function doPost(e) {
 }
 
 /**
+ * Update the Status column for a single registration row
+ */
+function updateRegistrationStatus(data) {
+  const sheet = initializeSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  const status = data.status === REGISTRATION_STATUS.PAID
+    ? REGISTRATION_STATUS.PAID
+    : REGISTRATION_STATUS.REGISTERED;
+
+  sheet.getRange(rowIndex, 9).setValue(status);
+
+  return { status: 'success', registrationStatus: status };
+}
+
+/**
+ * Delete a registration row
+ */
+function deleteRegistration(data) {
+  const sheet = initializeSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  sheet.deleteRow(rowIndex);
+
+  return { status: 'success', message: 'Registration deleted' };
+}
+
+/**
+ * Update a registration row (does not touch Timestamp, Screenshot or Status)
+ */
+function updateRegistration(data) {
+  const sheet = initializeSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  const row = [
+    data.name || '',
+    data.email || '',
+    data.phone ? "'" + data.phone : '',
+    data.house ? "'" + data.house : 'N/A',
+    data.categories || '',
+    data.age || '',
+  ];
+
+  sheet.getRange(rowIndex, 2, 1, row.length).setValues([row]);
+
+  return { status: 'success', message: 'Registration updated' };
+}
+
+/**
  * Get all registrations from the sheet
  */
 function getRegistrations() {
@@ -281,8 +394,15 @@ function getRegistrations() {
     
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
+
+      // Skip blank/ghost rows in the sheet's used range.
+      if (!row[1] || String(row[1]).trim() === '') {
+        continue;
+      }
+
       registrations.push({
         id: i,
+        rowIndex: i + 1,
         timestamp: row[0],
         name: row[1],
         email: row[2],
@@ -290,8 +410,8 @@ function getRegistrations() {
         house: row[4],
         categories: row[5],
         age: row[6],
-        comments: row[7],
-        status: 'confirmed' // Default status, can be customized
+        screenshot: row[7],
+        status: row[8] || REGISTRATION_STATUS.REGISTERED
       });
     }
     
@@ -313,6 +433,13 @@ function getStaff(includeHidden = false) {
 
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
+
+      // Skip blank/ghost rows (e.g. leftover formatting in the sheet's used
+      // range with no actual data) so they never show up as staff members.
+      if (!row[0] || String(row[0]).trim() === '') {
+        continue;
+      }
+
       const isVisible = row[6] === 'TRUE' || row[6] === true;
 
       if (includeHidden || isVisible) {
@@ -339,6 +466,27 @@ function getStaff(includeHidden = false) {
 }
 
 /**
+ * Add a new staff member row
+ */
+function addStaff(data) {
+  const sheet = initializeStaffSheet();
+  const row = [
+    data.name || '',
+    data.role || '',
+    data.bio || '',
+    saveStaffPhotoToDrive(data.photo, data.name),
+    data.socialLinks || '',
+    Number(data.displayOrder) || 0,
+    data.isVisible ? 'TRUE' : 'FALSE',
+  ];
+
+  sheet.appendRow(row);
+  const rowIndex = sheet.getLastRow();
+
+  return { status: 'success', rowIndex: rowIndex, message: 'Staff member added' };
+}
+
+/**
  * Update an existing staff member row
  */
 function updateStaff(data) {
@@ -353,7 +501,7 @@ function updateStaff(data) {
     data.name || '',
     data.role || '',
     data.bio || '',
-    data.photo || '',
+    saveStaffPhotoToDrive(data.photo, data.name),
     data.socialLinks || '',
     Number(data.displayOrder) || 0,
     data.isVisible ? 'TRUE' : 'FALSE',
@@ -423,9 +571,13 @@ function doGet(e) {
           'getRegistrations',
           'getStaff',
           'login',
+          'addStaff',
           'updateStaff',
           'deleteStaff',
           'toggleStaffVisibility',
+          'updateRegistration',
+          'updateRegistrationStatus',
+          'deleteRegistration',
         ]
       };
     }
