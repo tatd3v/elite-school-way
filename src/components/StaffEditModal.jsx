@@ -30,6 +30,17 @@ function StaffEditModal({ member, onSave, onCancel, isSubmitting }) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      handleChange('photo', event.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -61,7 +72,7 @@ function StaffEditModal({ member, onSave, onCancel, isSubmitting }) {
       >
         <div className="bg-primary p-4 flex justify-between items-center rounded-t-xl">
           <h3 id="staff-edit-title" className="font-headline-md text-white text-md">
-            Editar Miembro del Staff
+            {member && !member.isNew ? 'Editar Miembro del Staff' : 'Agregar Miembro del Staff'}
           </h3>
           <button
             type="button"
@@ -116,27 +127,37 @@ function StaffEditModal({ member, onSave, onCancel, isSubmitting }) {
           </div>
 
           <div>
-            <label htmlFor="staff-edit-photo" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
-              URL de Foto
+            <label htmlFor="staff-edit-photo-upload" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
+              Subir Foto
             </label>
             <input
-              id="staff-edit-photo"
-              type="url"
-              value={formData.photo}
-              onChange={(e) => handleChange('photo', e.target.value)}
+              id="staff-edit-photo-upload"
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
               className="w-full p-3 rounded border border-outline-variant bg-surface focus:ring-1 focus:ring-primary outline-none font-body-md"
             />
+            {formData.photo && (
+              <div className="flex justify-center mt-3">
+                <img
+                  src={formData.photo}
+                  alt="Vista previa"
+                  className="w-20 h-20 object-cover rounded border border-outline-variant"
+                />
+              </div>
+            )}
           </div>
 
           <div>
             <label htmlFor="staff-edit-social" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
-              Redes Sociales
+              Perfil de Instagram
             </label>
             <input
               id="staff-edit-social"
               type="text"
               value={formData.socialLinks}
               onChange={(e) => handleChange('socialLinks', e.target.value)}
+              placeholder="instagram.com/usuario"
               className="w-full p-3 rounded border border-outline-variant bg-surface focus:ring-1 focus:ring-primary outline-none font-body-md"
             />
           </div>
@@ -157,15 +178,9 @@ function StaffEditModal({ member, onSave, onCancel, isSubmitting }) {
             </div>
 
             <div className="flex items-end">
-              <label className="flex items-center gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={formData.isVisible}
-                  onChange={(e) => handleChange('isVisible', e.target.checked)}
-                  className="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary"
-                />
-                <span className="font-body-md text-on-surface">Visible</span>
-              </label>
+              <span className="font-body-md text-on-surface-variant">
+                La visibilidad se gestiona con el switch del card
+              </span>
             </div>
           </div>
 
@@ -196,6 +211,7 @@ StaffEditModal.propTypes = {
   member: PropTypes.shape({
     id: PropTypes.string,
     rowIndex: PropTypes.number,
+    isNew: PropTypes.bool,
     name: PropTypes.string,
     role: PropTypes.string,
     bio: PropTypes.string,
