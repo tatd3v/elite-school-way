@@ -160,6 +160,24 @@ class DashboardService {
     }
   }
 
+  async updateRegistration(participant) {
+    try {
+      const result = await this.postStaffAction(REGISTRATION_ACTIONS.UPDATE_REGISTRATION, {
+        rowIndex: participant.rowIndex,
+        name: participant.name,
+        email: participant.email,
+        phone: participant.phone,
+        house: participant.house,
+        categories: participant.categories,
+        age: participant.age,
+      });
+      return { success: result?.status === 'success', data: result };
+    } catch (error) {
+      console.error('Error updating registration:', error);
+      throw error;
+    }
+  }
+
   async updateRegistrationStatus(rowIndex, status) {
     try {
       // postStaffAction is a generic { action, ...payload } POST helper
