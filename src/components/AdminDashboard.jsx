@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import PropTypes from 'prop-types';
-import { logoutAdmin } from '../utils/auth';
 import { dashboardService } from '../services/dashboardService';
+import { REGISTRATION_STATUS } from '../config/constants';
 import DashboardHeader from './DashboardHeader';
 import SearchBar from './SearchBar';
 import StaffManagementSection from './StaffManagementSection';
@@ -12,7 +12,7 @@ import ParticipantEditModal from './ParticipantEditModal';
 
 const ADMIN_ROLE = 'admin';
 
-function AdminDashboard({ user, onLogout }) {
+function AdminDashboard({ user }) {
   const isAdmin = user?.role === ADMIN_ROLE;
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('participants');
@@ -27,6 +27,8 @@ function AdminDashboard({ user, onLogout }) {
   const [editingParticipant, setEditingParticipant] = useState(null);
   const [deletingParticipant, setDeletingParticipant] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -51,7 +53,7 @@ function AdminDashboard({ user, onLogout }) {
       setError(null);
       const [registrationsData, staffData] = await Promise.all([
         dashboardService.fetchRegistrations(),
-        dashboardService.fetchVisibleStaff(),
+        dashboardService.fetchStaff(), // includes hidden staff so admins can re-enable them
       ]);
       setParticipants(registrationsData);
       setStaff(staffData);
@@ -63,31 +65,57 @@ function AdminDashboard({ user, onLogout }) {
     }
   };
 
-  const handleLogout = () => {
-    logoutAdmin();
-    onLogout();
-  };
-
   const handleSearch = (term) => {
     setSearchTerm(term);
   };
 
-  const handleStaffUpdate = () => {
-    console.log('Updating staff...');
+  const handleStaffUpdate = async () => {
+    // Refetch staff from the sheet so rowIndex values stay accurate after
+    // any add/edit/delete/toggle — deleting a row shifts every row below it
+    // up by one, so cached rowIndex values would otherwise go stale and
+    // cause later actions to hit the wrong sheet row (e.g. toggling
+    // visibility on the wrong member).
+    try {
+      const staffData = await dashboardService.fetchStaff();
+      setStaff(staffData);
+    } catch (err) {
+      console.error('Error refreshing staff:', err);
+    }
   };
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + 3);
   };
 
-  const handleConfirmPayment = (participantId) => {
+  const handleConfirmPayment = async (participantId) => {
     if (!isAdmin) return;
+    setOpenMenuId(null);
+
+    const participant = participants.find((p) => p.id === participantId);
+    if (!participant) return;
+
+    // Optimistic update for instant feedback
     setParticipants((prev) =>
       prev.map((p) =>
-        p.id === participantId ? { ...p, status: 'paid' } : p
+        p.id === participantId ? { ...p, status: REGISTRATION_STATUS.PAID } : p
       )
     );
-    setOpenMenuId(null);
+
+    try {
+      const result = await dashboardService.updateRegistrationStatus(
+        participant.rowIndex,
+        REGISTRATION_STATUS.PAID
+      );
+      if (!result.success) {
+        throw new Error('Update failed');
+      }
+    } catch (err) {
+      console.error('Error confirming payment:', err);
+      // Revert on failure
+      setParticipants((prev) =>
+        prev.map((p) => (p.id === participantId ? participant : p))
+      );
+    }
   };
 
   const toggleMenu = (participantId, event) => {
@@ -132,11 +160,19 @@ function AdminDashboard({ user, onLogout }) {
     setDeletingParticipant(null);
   };
 
-  const filteredParticipants = participants.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.house || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (p.email || '').toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredParticipants = participants.filter((p) => {
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.house || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.email || '').toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === 'all' ||
+      (statusFilter === 'paid' && p.status === REGISTRATION_STATUS.PAID) ||
+      (statusFilter === 'registered' && p.status !== REGISTRATION_STATUS.PAID);
+
+    return matchesSearch && matchesStatus;
+  });
 
   const visibleParticipants = filteredParticipants.slice(0, visibleCount);
 
@@ -157,7 +193,7 @@ function AdminDashboard({ user, onLogout }) {
 
   return (
     <div className="min-h-screen bg-background text-on-background">
-      <DashboardHeader onProfileClick={handleLogout} />
+      <DashboardHeader />
       <DesktopNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -165,10 +201,10 @@ function AdminDashboard({ user, onLogout }) {
       />
 
       <main
-        className="pt-16 pb-24 md:pb-6 px-margin-mobile h-[calc(100vh-4rem)] overflow-hidden linen-texture md:ml-[var(--sidebar-width)]"
+        className="pt-16 pb-28 md:pb-6 px-margin-mobile min-h-[calc(100vh-4rem)] overflow-y-auto md:h-[calc(100vh-4rem)] md:overflow-hidden linen-texture md:ml-[var(--sidebar-width)]"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
-        <div className="max-w-7xl mx-auto h-full flex flex-col space-y-6 py-6">
+        <div className="max-w-7xl mx-auto md:h-full flex flex-col space-y-6 py-6">
           {/* Error Message */}
           {error && (
             <div className="mb-6 luxury-card rounded-xl p-6 text-center border-l-4 border-l-error">
@@ -192,7 +228,7 @@ function AdminDashboard({ user, onLogout }) {
             <>
               {/* Participantes Section */}
               {activeTab === 'participants' && (
-              <section className="flex flex-col flex-1 min-h-0">
+              <section className="flex flex-col md:flex-1 md:min-h-0">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 flex-shrink-0">
                   <div className="space-y-2">
@@ -206,24 +242,144 @@ function AdminDashboard({ user, onLogout }) {
                       Gestione la nómina académica de la gala. Verifique los estados de confirmación y pertenencia a las casas reales.
                     </p>
                   </div>
-                  <div className="flex gap-4">
-                    <button className="px-6 py-3 border border-outline-variant/30 rounded-lg font-label-md text-label-md hover:bg-surface-container-high transition-colors flex items-center gap-2">
-                      <span className="material-symbols-outlined">download</span>
-                      Exportar CSV
+                </div>
+
+                <div className="flex items-center gap-3 mb-6 flex-shrink-0">
+                  <div className="max-w-xl flex-1">
+                    <SearchBar onSearch={handleSearch} placeholder="Buscar expediente..." />
+                  </div>
+
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setIsFilterOpen((prev) => !prev)}
+                      className={`h-12 w-12 flex items-center justify-center rounded-lg border transition-colors ${
+                        statusFilter !== 'all'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-outline-variant/30 hover:bg-surface-container-high'
+                      }`}
+                      aria-label="Filtrar por estado"
+                      aria-haspopup="true"
+                      aria-expanded={isFilterOpen}
+                    >
+                      <span className="material-symbols-outlined text-primary">filter_list</span>
                     </button>
-                    <button className="px-6 py-3 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md font-bold flex items-center gap-2 transition-transform active:scale-95">
-                      <span className="material-symbols-outlined">filter_list</span>
-                      Filtros Avanzados
-                    </button>
+
+                    {isFilterOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-10"
+                          onClick={() => setIsFilterOpen(false)}
+                        />
+                        <div className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg z-20 overflow-hidden">
+                          {[
+                            { id: 'all', label: 'Todos' },
+                            { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
+                            { id: 'paid', label: REGISTRATION_STATUS.PAID },
+                          ].map((option) => (
+                            <button
+                              key={option.id}
+                              onClick={() => {
+                                setStatusFilter(option.id);
+                                setIsFilterOpen(false);
+                              }}
+                              className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
+                                statusFilter === option.id
+                                  ? 'text-primary bg-primary/10'
+                                  : 'text-on-surface hover:bg-surface-container-highest'
+                              }`}
+                            >
+                              {option.label}
+                              {statusFilter === option.id && (
+                                <span className="material-symbols-outlined text-sm">check</span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
-                <div className="max-w-xl mb-6 flex-shrink-0">
-                  <SearchBar onSearch={handleSearch} placeholder="Buscar expediente..." />
+                {/* Participantes Card List (mobile) */}
+                <div className="md:hidden flex flex-col gap-4 pb-2">
+                  {visibleParticipants.length > 0 ? (
+                    visibleParticipants.map((participant) => {
+                      const isPaid = participant.status === REGISTRATION_STATUS.PAID;
+                      const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
+                      const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
+                      const statusClass = isPaid
+                        ? 'bg-green-900/30 border-green-500/20 text-green-300'
+                        : 'bg-secondary/20 border-secondary/20 text-secondary';
+
+                      return (
+                        <div
+                          key={participant.id}
+                          className="glass-panel rounded-xl p-4 flex flex-col gap-3 relative overflow-hidden"
+                        >
+                          <div className="absolute top-0 right-0 w-24 h-24 bg-primary-container/5 rounded-bl-full blur-xl pointer-events-none"></div>
+
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="h-12 w-12 rounded-full overflow-hidden border border-outline-variant/30 shrink-0 bg-surface-container-high flex items-center justify-center">
+                                <span className="font-body-md text-on-surface font-semibold">
+                                  {getInitials(participant.name)}
+                                </span>
+                              </div>
+                              <div className="min-w-0">
+                                <h3 className="font-headline-md text-[18px] leading-tight text-on-surface truncate">
+                                  {participant.name}
+                                </h3>
+                                <p className="font-body-md text-[14px] text-on-surface-variant truncate">
+                                  {getCleanHouse(participant.house)}
+                                </p>
+                              </div>
+                            </div>
+                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full border flex-shrink-0 ${statusClass}`}>
+                              <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></div>
+                              <span className="font-label-sm text-label-sm">{statusLabel}</span>
+                            </div>
+                          </div>
+
+                          <div className="h-[1px] w-full bg-tertiary/10"></div>
+
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span className="material-symbols-outlined text-secondary/70 text-sm">category</span>
+                              <span className="font-label-md text-label-md text-on-surface-variant truncate">
+                                {getCategories(participant.categories)}
+                              </span>
+                            </div>
+                            {isAdmin && (
+                              <button
+                                onClick={(e) => toggleMenu(participant.id, e)}
+                                className="material-symbols-outlined text-on-surface-variant hover:text-primary flex-shrink-0"
+                              >
+                                more_vert
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <div className="glass-panel rounded-xl p-8 text-center font-body-md text-on-surface-variant">
+                      No se encontraron participantes
+                    </div>
+                  )}
+
+                  {visibleCount < filteredParticipants.length && (
+                    <button
+                      onClick={handleLoadMore}
+                      className="w-full py-4 mt-2 border border-outline-variant/30 rounded-xl text-secondary font-label-md text-label-md hover:bg-surface-container-high transition-colors"
+                    >
+                      Cargar Más
+                    </button>
+                  )}
                 </div>
 
-                {/* Participantes Data Table */}
-                <section className="glass-panel rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 flex flex-col flex-1 min-h-0">
+                {/* Participantes Data Table (desktop) */}
+                <section className="hidden md:flex glass-panel rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 flex-col flex-1 min-h-0">
                   <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
                     <table className="w-full text-left border-collapse">
                       <thead>
@@ -241,8 +397,8 @@ function AdminDashboard({ user, onLogout }) {
                       <tbody className="divide-y divide-outline-variant/10">
                         {visibleParticipants.length > 0 ? (
                           visibleParticipants.map((participant) => {
-                            const isPaid = participant.status === 'paid';
-                            const statusLabel = isPaid ? 'Pagado' : 'Registrado';
+                            const isPaid = participant.status === REGISTRATION_STATUS.PAID;
+                            const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
                             const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
                             const statusClass = isPaid
                               ? 'bg-green-500/10 text-green-400 border-green-500/20'
@@ -355,7 +511,7 @@ function AdminDashboard({ user, onLogout }) {
           >
             {(() => {
               const activeParticipant = participants.find((p) => p.id === openMenuId);
-              const isPaid = activeParticipant?.status === 'paid';
+              const isPaid = activeParticipant?.status === REGISTRATION_STATUS.PAID;
 
               return (
                 <>
@@ -450,7 +606,6 @@ AdminDashboard.propTypes = {
     role: PropTypes.string.isRequired,
     timestamp: PropTypes.number.isRequired,
   }).isRequired,
-  onLogout: PropTypes.func.isRequired,
 };
 
 export default AdminDashboard;
