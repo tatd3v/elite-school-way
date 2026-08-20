@@ -34,7 +34,7 @@ function StaffSection() {
         </span>
         <h2
           id="staff-heading"
-          className="font-display-lg text-display-lg text-primary uppercase"
+          className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight"
         >
           STAFF ESCOLAR
         </h2>

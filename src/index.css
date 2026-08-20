@@ -5,6 +5,8 @@
 @layer base {
   html {
     background-color: #0c1030;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   body {
@@ -13,6 +15,8 @@
     min-height: 100vh;
     background-color: #0c1030;
     color: #dfe0ff;
+    overflow-x: hidden;
+    width: 100%;
   }
   
   /* Dark mode color overrides using Tailwind's approach */
