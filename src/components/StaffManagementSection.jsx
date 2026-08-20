@@ -296,23 +296,6 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   return (
     <section className="mb-section-gap-mobile">
       <div className="luxury-card rounded-xl overflow-hidden">
-        <div className="bg-primary p-4 flex justify-between items-center">
-          <h2 className="font-headline-md text-white text-md">Gestión de Staff</h2>
-          <div className="hidden md:flex items-center">
-            {canEdit ? (
-              <button
-                type="button"
-                onClick={handleAddClick}
-                className="text-white/80 hover:text-white transition-colors"
-                aria-label="Agregar miembro"
-              >
-                <span className="material-symbols-outlined">add</span>
-              </button>
-            ) : (
-              <span className="material-symbols-outlined text-white/70">event</span>
-            )}
-          </div>
-        </div>
 
         <div className="p-5">
           {actionError && (
@@ -326,26 +309,11 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
             </div>
           )}
 
-          <div className="mb-6">
-            <label className="block font-label-sm text-label-sm text-outline mb-2 uppercase tracking-tighter">
-              Seleccionar Fecha de Gala
-            </label>
-            <div className="relative">
-              <select className="w-full p-3 rounded border border-outline-variant bg-surface appearance-none focus:ring-1 focus:ring-primary outline-none font-body-md">
-                <option>Sábado, 12 de Octubre, 2024</option>
-                <option>Sábado, 19 de Octubre, 2024</option>
-                <option>Sábado, 26 de Octubre, 2024</option>
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">
-                expand_more
-              </span>
-            </div>
-          </div>
-
           <div className="space-y-4">
-            <h4 className="font-label-lg text-label-lg text-primary uppercase border-b border-outline-variant/30 pb-2">
-              Facultad Asignada
-            </h4>
+            <div className="md:hidden flex items-center justify-between mb-2">
+              <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
+              <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
+            </div>
 
             {isLoading ? (
               <div className="py-8 text-center">
