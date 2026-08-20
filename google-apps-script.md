@@ -170,7 +170,7 @@ function saveScreenshotToDrive(dataUrl, artistName) {
   const extension = match[2];
   const base64 = match[3];
   const bytes = Utilities.base64Decode(base64);
-  const fileName = 'payment-screenshot-' + (artistName || 'anonymous') + '-' + Date.now() + '.' + extension;
+  const fileName = (artistName || 'anonymous') + '-payment-' + Date.now() + '.' + extension;
 
   const folder = getOrCreateSubFolder('elite-way-school-data', 'PAGOS_QR');
   const blob = Utilities.newBlob(bytes, mimeType, fileName);
