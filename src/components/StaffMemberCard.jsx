@@ -45,44 +45,54 @@ function StaffMemberCard({ member }) {
   return (
     <article className="group flex flex-col" aria-labelledby={`staff-${id}-name`}>
       <div className="relative mb-8 rounded-xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-secondary/20 group-hover:-translate-y-2 bg-surface-container-high">
-        {hasPhoto ? (
-          <img
-            src={photoSrc}
-            data-photo-original={photo}
-            alt={`Foto de ${name}`}
-            className="w-full aspect-[4/5] object-cover"
-            loading="lazy"
-            onError={() => {
-              console.warn(
-                `[StaffMemberCard] Failed to load photo for "${name}". Original sheet value: "${photo}". Failed URL: "${photoSrc}".`
-              );
-              setCandidateIndex((prev) => prev + 1);
-            }}
-          />
-        ) : (
-          <div className="w-full aspect-[4/5] flex items-center justify-center">
-            <span
-              className="material-symbols-outlined text-8xl text-outline-variant opacity-30"
-              aria-hidden="true"
-            >
-              {icon || 'person'}
-            </span>
-          </div>
-        )}
+        {/*
+          The 4:5 ratio box below uses the classic padding-percentage trick
+          (padding-top: 125% = height/width) instead of the CSS `aspect-ratio`
+          property. Old Android WebViews (pre-2021 roughly) don't support
+          `aspect-ratio`, which collapses the box to 0 height with nothing
+          else to size it — making the whole card invisible. The padding
+          trick works on virtually every browser, including old ones.
+        */}
+        <div className="relative w-full" style={{ paddingTop: '125%' }}>
+          {hasPhoto ? (
+            <img
+              src={photoSrc}
+              data-photo-original={photo}
+              alt={`Foto de ${name}`}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+              onError={() => {
+                console.warn(
+                  `[StaffMemberCard] Failed to load photo for "${name}". Original sheet value: "${photo}". Failed URL: "${photoSrc}".`
+                );
+                setCandidateIndex((prev) => prev + 1);
+              }}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                className="material-symbols-outlined text-8xl text-outline-variant opacity-30"
+                aria-hidden="true"
+              >
+                {icon || 'person'}
+              </span>
+            </div>
+          )}
+        </div>
         <div className="absolute inset-0 border-2 border-white/10 rounded-xl pointer-events-none"></div>
       </div>
 
       <div className="flex flex-col items-start">
-        <span className="text-secondary font-label-sm tracking-[0.3em] uppercase font-bold mb-3">
+        <span className="text-secondary font-label-sm tracking-[0.3em] uppercase font-bold mb-1">
           {role}
         </span>
         <h3
           id={`staff-${id}-name`}
-          className="font-headline-md text-on-surface mb-4 tracking-tight"
+          className="font-headline-md text-on-surface mb-2 tracking-tight"
         >
           {name}
         </h3>
-        <p className="text-on-surface-variant font-body-md leading-relaxed mb-6 opacity-80">
+        <p className="text-on-surface-variant font-body-md leading-relaxed mb-3 opacity-80">
           {bio || 'Confirmación Pendiente'}
         </p>
         {socialUrl && (
