@@ -32,6 +32,8 @@ export const REGISTRATION_STATUS = {
 
 export const REGISTRATION_ACTIONS = {
   UPDATE_STATUS: 'updateRegistrationStatus',
+  DELETE: 'deleteRegistration',
+  UPDATE_REGISTRATION: 'updateRegistration',
 };
 
 export const STAFF_CONFIG = {
