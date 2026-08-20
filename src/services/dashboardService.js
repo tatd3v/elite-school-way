@@ -150,6 +150,16 @@ class DashboardService {
     }
   }
 
+  async deleteRegistration(rowIndex) {
+    try {
+      const result = await this.postStaffAction(REGISTRATION_ACTIONS.DELETE, { rowIndex });
+      return { success: result?.status === 'success', data: result };
+    } catch (error) {
+      console.error('Error deleting registration:', error);
+      throw error;
+    }
+  }
+
   async updateRegistrationStatus(rowIndex, status) {
     try {
       // postStaffAction is a generic { action, ...payload } POST helper
