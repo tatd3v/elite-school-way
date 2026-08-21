@@ -109,7 +109,7 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
     <div className="col-span-1 md:col-span-2 mt-10 p-6 md:p-8 bg-surface-container-low border border-outline-variant/30 rounded-lg">
       <div className="mb-6">
         <h3 className="font-headline-md text-headline-md text-[#fbf9f8] mb-2">Pago por QR</h3>
-        <p className="font-body-md text-[#c6c5d4]">Escanea el código QR para realizar el pago y sube el comprobante.</p>
+        <p className="font-body-md text-[#c6c5d4] text-sm md:text-xs">Escanea el código QR para realizar el pago y sube el comprobante.</p>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
         <div className="flex flex-col items-center gap-4">
@@ -142,15 +142,15 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
             </a>
           </div>
         </div>
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full min-w-0">
           <label className="block font-label-lg text-label-lg text-[#c6c5d4] mb-2 uppercase tracking-wider">
             {PAYMENT_SCREENSHOT_LABEL}
           </label>
-          <p className="font-body-md text-[#c6c5d4] text-sm mb-3">
+          <p className="font-body-md text-[#c6c5d4] text-sm md:text-xs mb-3">
             Debes cargar o subir el comprobante del pago para que el registro se haga efectivo.
           </p>
-          <div className="flex items-center gap-4">
-            <label className="cursor-pointer bg-surface-container-high border border-outline-variant px-6 py-3 rounded-md font-label-sm text-[#fbf9f8] hover:bg-surface-bright hover:text-surface transition-all">
+          <div className="flex flex-col gap-2 w-full min-w-0">
+            <label className="cursor-pointer inline-flex items-center justify-center bg-surface-container-high border border-outline-variant px-6 py-3 rounded-md font-label-sm text-[#fbf9f8] hover:bg-surface-bright hover:text-surface transition-all w-full sm:w-auto text-center whitespace-nowrap shrink-0">
               <span>Seleccionar archivo</span>
               <input
                 type="file"
@@ -160,7 +160,7 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
                 onChange={handleFileChange}
               />
             </label>
-            <span className="text-label-sm text-[#c6c5d4] opacity-60">
+            <span className="text-label-sm text-[#c6c5d4] opacity-60 truncate block w-full min-w-0">
               {screenshotName || 'Sin archivos seleccionados'}
             </span>
           </div>
