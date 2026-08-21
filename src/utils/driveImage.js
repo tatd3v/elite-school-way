@@ -39,10 +39,9 @@ export function toDirectImageUrl(url) {
 
   if (!fileId) return trimmed;
 
-  // The googleusercontent.com host is what Drive/Photos itself uses to embed
-  // images and hotlinks reliably. The drive.google.com/thumbnail endpoint
-  // often returns 403 when loaded from a different origin (anti-hotlinking).
-  return `https://lh3.googleusercontent.com/d/${fileId}=w1000`;
+  // For Google Drive files shared with "Anyone with the link", the thumbnail
+  // endpoint is usually the most reliable direct image format.
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
 }
 
 /**
@@ -78,8 +77,8 @@ export function getDriveImageCandidates(url) {
   if (!fileId) return [trimmed];
 
   return [
-    `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
     `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
     `https://drive.google.com/uc?export=view&id=${fileId}`,
+    `https://lh3.googleusercontent.com/d/${fileId}=w1000`,
   ];
 }
