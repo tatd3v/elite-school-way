@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
+import { toDirectImageUrl } from '../utils/driveImage';
 import StaffEditModal from './StaffEditModal';
 
 const MAX_BIO_PREVIEW = 80;
@@ -342,7 +343,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                         <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border border-outline/20 bg-surface-container-high flex items-center justify-center">
                           {hasPhoto ? (
                             <img
-                              src={member.photo}
+                              src={toDirectImageUrl(member.photo)}
                               alt={member.name}
                               className="w-full h-full object-cover"
                               onError={() =>
@@ -461,7 +462,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                         <div className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center border border-outline-variant/20 flex-shrink-0">
                           {typeof member.photo === 'string' && member.photo.trim() !== '' && !photoErrors[member.id] ? (
                             <img
-                              src={member.photo}
+                              src={toDirectImageUrl(member.photo)}
                               alt={member.name}
                               className="w-full h-full object-cover"
                               onError={() =>
