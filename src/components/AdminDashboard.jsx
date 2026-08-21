@@ -268,10 +268,10 @@ function AdminDashboard({ user }) {
                     <button
                       type="button"
                       onClick={() => setIsFilterOpen((prev) => !prev)}
-                      className={`h-12 w-12 flex items-center justify-center rounded-lg border transition-colors ${
+                      className={`flex items-center justify-center p-3 rounded-lg border transition-colors active:bg-surface-container ${
                         statusFilter !== 'all'
                           ? 'border-primary bg-primary/10'
-                          : 'border-outline-variant/30 hover:bg-surface-container-high'
+                          : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container'
                       }`}
                       aria-label="Filtrar por estado"
                       aria-haspopup="true"
