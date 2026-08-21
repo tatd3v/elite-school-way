@@ -470,6 +470,27 @@ function getStaff(includeHidden = false) {
  */
 function addStaff(data) {
   const sheet = initializeStaffSheet();
+
+  // Find the first empty row below the header, or use the row after the last
+  // populated one. This avoids appending to the very end when there are blank
+  // rows in the middle (e.g. after deletions).
+  let targetRow = -1;
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow > 1) {
+    const names = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+    for (let i = 0; i < names.length; i++) {
+      if (String(names[i][0]).trim() === '') {
+        targetRow = i + 2;
+        break;
+      }
+    }
+  }
+
+  if (targetRow === -1) {
+    targetRow = lastRow + 1;
+  }
+
   const row = [
     data.name || '',
     data.role || '',
@@ -480,10 +501,9 @@ function addStaff(data) {
     data.isVisible ? 'TRUE' : 'FALSE',
   ];
 
-  sheet.appendRow(row);
-  const rowIndex = sheet.getLastRow();
+  sheet.getRange(targetRow, 1, 1, row.length).setValues([row]);
 
-  return { status: 'success', rowIndex: rowIndex, message: 'Staff member added' };
+  return { status: 'success', rowIndex: targetRow, message: 'Staff member added' };
 }
 
 /**
