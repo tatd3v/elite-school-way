@@ -12,7 +12,7 @@ SPA moderna para el evento Elite Way School Kiki Ball. Incluye landing pública,
 - **Código de conducta** — Sección en español con reglas del evento.
 - **Directorio de Staff** — Carga staff visible desde Google Sheets con fotos, roles y redes.
 - **Panel de administración** — Login con hash SHA-256, roles `admin` / `viewer`, gestión de inscripciones y staff.
-- **Calidad de código** — ESLint, Prettier, Vitest, PropTypes.
+- **Calidad de código** — ESLint, Prettier, PropTypes, DRY, SOLID principles.
 
 ## Tech Stack
 
@@ -48,10 +48,24 @@ npm run lint        # ESLint
 npm run lint:fix    # ESLint con auto-fix
 npm run format      # Prettier
 npm run format:check
-npm run test        # Vitest
-npm run test:watch
-npm run test:ui
+npm run test        # Vitest - run all tests
+npm run test:watch  # Vitest - watch mode
+npm run test:ui     # Vitest - interactive UI
 ```
+
+## 📚 Documentación
+
+### Setup Inicial
+- **[SETUP.md](./SETUP.md)** — Guía completa de configuración (Google Sheets, Apps Script, variables de entorno)
+- **[ADMIN_SETUP.md](./ADMIN_SETUP.md)** — Configuración del panel de administración y usuarios
+
+### Testing
+- **[TEST.md](./TEST.md)** — Guía de testing con Vitest
+
+### Referencia Técnica
+- **[AGENTS.md](./AGENTS.md)** — Notas para agentes de IA (arquitectura, gotchas, convenciones, DRY, SOLID, folder structure)
+- **[google-apps-script.md](./google-apps-script.md)** — Código fuente del backend (Apps Script)
+- **[ROW_INSERTION_LOGIC.md](./ROW_INSERTION_LOGIC.md)** — Explicación visual de la lógica de inserción de filas
 
 ## Configuración
 
@@ -80,6 +94,30 @@ VITE_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ### 3. Panel de administración
 
 Para crear/ver usuarios admin, ver [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
+
+Credenciales por defecto:
+- **Email:** `admin@elite.com`
+- **Password:** `admin123`
+
+## Testing
+
+### Ejecutar Tests
+
+```bash
+npm run test              # Run all tests
+npm run test:watch       # Watch mode (re-run on changes)
+npm run test:ui          # Interactive UI
+```
+
+### Tests Disponibles
+
+- Fetch registrations
+- Fetch staff
+- Add staff member
+- Update staff member
+- Delete staff member
+
+Ver [TEST.md](./TEST.md) para más detalles.
 
 ## Build y Deploy
 
@@ -122,19 +160,26 @@ elite-school-way/
 │   │   ├── formSubmit.js
 │   │   ├── jsonp.js
 │   │   └── driveImage.js
+│   ├── config/              # Configuración
+│   │   └── constants.js
+│   ├── assets/              # Imágenes y logos
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
+
 ├── .env.example
 ├── .eslintrc.cjs
 ├── .prettierrc.json
 ├── tailwind.config.js
 ├── vite.config.js
 ├── vitest.config.js
-├── google-apps-script.md   # Backend de Apps Script
-├── SETUP.md                # Guía de setup
-├── ADMIN_SETUP.md          # Guía del panel admin
-├── AGENTS.md               # Notas para agentes de IA
+├── google-apps-script.md    # Backend de Apps Script
+├── SETUP.md                 # Guía de setup
+├── ADMIN_SETUP.md           # Guía del panel admin
+├── TEST_INSTRUCTIONS.md     # Testing guide
+├── STAFF_TESTING.md         # Staff testing details
+├── QUICK_TEST.md            # Quick test reference
+├── AGENTS.md                # Notas para agentes de IA
 └── README.md
 ```
 
@@ -150,6 +195,7 @@ Las inscripciones se guardan en la hoja `Registrations` con las columnas:
 6. Categorías
 7. Edad
 8. Screenshot
+9. Status (Registrado / Pagado)
 
 El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-data/PAGOS_QR` y solo se escribe el enlace en la hoja.
 
@@ -168,4 +214,4 @@ El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-d
 
 ## Licencia
 
-© 2026 Elite Way School Ballroom Bogotrans. Todos los derechos reservados.
+© 2026 Elite Way School Ballroom Bogotá. Todos los derechos reservados.
