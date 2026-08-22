@@ -8,7 +8,7 @@ export default function Footer() {
             ELITE WAY SCHOOL
           </span>
           <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
-            Ballroom Bogotrans & Academic Excellence. 2026.
+            Ballroom Xua & Ballroom Bogotrans. 2026.
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export default function Footer() {
             src={logo}
           /> */}
           <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
-            © 2026 ELITE WAY SCHOOL KIKI BALL. All Rights Reserved.
+            © 2026 ELITE WAY SCHOOL KIKI BALL. Todos los derechos reservados.
           </p>
         </div>
       </div>
