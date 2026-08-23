@@ -228,7 +228,7 @@ function AdminDashboard({ user }) {
         className="pt-16 pb-28 md:pb-6 px-margin-mobile min-h-[calc(100vh-4rem)] overflow-y-auto md:h-[calc(100vh-4rem)] md:overflow-hidden linen-texture md:ml-[var(--sidebar-width)]"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
-        <div className="max-w-7xl mx-auto md:h-full flex flex-col space-y-6 py-6">
+        <div className="w-full md:h-full flex flex-col space-y-6 py-6 md:space-y-4 md:py-4">
           {/* Error Message */}
           {error && (
             <div className="mb-6 luxury-card rounded-xl p-6 text-center border-l-4 border-l-error">
@@ -252,14 +252,14 @@ function AdminDashboard({ user }) {
             <>
               {/* Participantes Section */}
               {activeTab === 'participants' && (
-              <section className="flex flex-col md:flex-1 md:min-h-0">
+              <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden">
                 {/* Header Section */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-6 md:mb-4 flex-shrink-0">
                   <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
                   <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
                 </div>
 
-                <div className="flex items-center gap-3 mb-6 flex-shrink-0">
+                <div className="flex items-center gap-3 mb-6 flex-shrink-0 md:mb-4">
                   <div className="flex-1">
                     <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
                   </div>
@@ -394,60 +394,63 @@ function AdminDashboard({ user }) {
                 </div>
 
                 {/* Participantes Data Table (desktop) */}
-                <section className="hidden md:flex glass-panel rounded-xl overflow-hidden shadow-2xl border border-outline-variant/10 flex-col flex-1 min-h-0">
-                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
-                    <table className="w-full text-left border-collapse">
+                <section className="hidden md:flex bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full">
+                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1 w-full">
+                    <table className="w-full min-w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-surface-container-highest/50 border-b border-outline-variant/20">
-                          <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest">Nombre Artístico</th>
-                          <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest">Email Académico</th>
-                          <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest">Categorías</th>
-                          <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest">House / Linaje</th>
-                          <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest text-center">Status</th>
+                        <tr className="bg-surface-container-high border-b border-outline-variant/20">
+                          <th className="p-4 font-label-md text-on-background font-medium">Nombre Artístico</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Email Académico</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Categorías</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">House / Linaje</th>
+                          <th className="p-4 font-label-md text-on-background font-medium text-center">Status</th>
                           {isAdmin && (
-                            <th className="px-6 py-4 font-label-md text-label-md text-secondary uppercase tracking-widest text-right">Acciones</th>
+                            <th className="p-4 font-label-md text-on-background font-medium text-right">Acciones</th>
                           )}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-outline-variant/10">
+                      <tbody className="divide-y divide-outline-variant/20">
                         {visibleParticipants.length > 0 ? (
-                          visibleParticipants.map((participant) => {
+                          visibleParticipants.map((participant, idx) => {
                             const isPaid = participant.status === REGISTRATION_STATUS.PAID;
                             const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
                             const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
                             const statusClass = isPaid
                               ? 'bg-green-500/10 text-green-400 border-green-500/20'
                               : 'bg-secondary/10 text-secondary border-secondary/20';
+                            const rowBg = idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest/50';
 
                             return (
-                              <tr key={participant.id} className="hover:bg-surface-container-high/30 transition-colors group">
-                                <td className="px-6 py-5">
+                              <tr key={participant.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group`}>
+                                <td className="p-4">
                                   <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full border border-secondary/30 overflow-hidden bg-surface-container-high flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-full border border-outline-variant/50 overflow-hidden bg-surface-container-high flex items-center justify-center">
                                       <span className="font-body-md text-on-surface font-semibold">{getInitials(participant.name)}</span>
                                     </div>
-                                    <span className="font-body-md text-on-surface font-semibold">{participant.name}</span>
+                                    <span className="font-body-md text-on-background font-semibold">{participant.name}</span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-5 font-body-md text-on-surface-variant">{participant.email || '—'}</td>
-                                <td className="px-6 py-5 font-body-md text-on-surface-variant">
+                                <td className="p-4 font-body-md text-on-surface-variant">{participant.email || '—'}</td>
+                                <td className="p-4 font-body-md text-on-surface-variant">
                                   {getCategories(participant.categories)}
                                 </td>
-                                <td className="px-6 py-5 font-body-md text-on-surface">{getCleanHouse(participant.house)}</td>
-                                <td className="px-6 py-5 text-center">
+                                <td className="p-4 font-body-md text-on-surface-variant">{getCleanHouse(participant.house)}</td>
+                                <td className="p-4 text-center">
                                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusClass}`}>
                                     <span className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></span>
                                     {statusLabel}
                                   </span>
                                 </td>
                                 {isAdmin && (
-                                  <td className="px-6 py-5 text-right">
-                                    <button
-                                      onClick={(e) => toggleMenu(participant.id, e)}
-                                      className="material-symbols-outlined text-on-surface-variant hover:text-primary"
-                                    >
-                                      more_vert
-                                    </button>
+                                  <td className="p-4 text-right">
+                                    <div className="flex justify-end gap-2">
+                                      <button
+                                        onClick={(e) => toggleMenu(participant.id, e)}
+                                        className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-[20px]"
+                                      >
+                                        more_vert
+                                      </button>
+                                    </div>
                                   </td>
                                 )}
                               </tr>
@@ -465,36 +468,28 @@ function AdminDashboard({ user }) {
                   </div>
 
                   {/* Pagination */}
-                  <div className="px-6 py-4 flex items-center justify-between border-t border-outline-variant/20 bg-surface-container-highest/20 flex-shrink-0">
-                    <span className="text-label-sm text-on-surface-variant">
+                  <div className="flex flex-col md:flex-row justify-between items-center p-4 border-t border-outline-variant/20 gap-4 flex-shrink-0">
+                    <div className="text-label-sm text-on-surface-variant">
                       Mostrando 1-{visibleParticipants.length} de {filteredParticipants.length} participantes
-                    </span>
-                    <div className="flex gap-2">
+                    </div>
+                    <div className="flex items-center gap-2">
                       <button
                         disabled
-                        className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant/50 cursor-not-allowed"
+                        className="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
-                        <span className="material-symbols-outlined text-sm">chevron_left</span>
+                        <span className="material-symbols-outlined">chevron_left</span>
                       </button>
-                      <button className="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-bold text-xs">1</button>
-                      <button
-                        disabled
-                        className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant/50 cursor-not-allowed"
-                      >
-                        2
-                      </button>
-                      <button
-                        disabled
-                        className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant/50 cursor-not-allowed"
-                      >
-                        3
-                      </button>
+                      <div className="flex gap-1">
+                        <button className="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md">1</button>
+                        <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-md transition-colors">2</button>
+                        <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-md transition-colors">3</button>
+                      </div>
                       <button
                         onClick={handleLoadMore}
                         disabled={visibleCount >= filteredParticipants.length}
-                        className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/30 text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-50"
+                        className="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <span className="material-symbols-outlined">chevron_right</span>
                       </button>
                     </div>
                   </div>
