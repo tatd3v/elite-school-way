@@ -4,7 +4,7 @@ export const categories = [
     icon: 'verified',
     iconColor: 'secondary',
     title: 'REALNESS',
-    dressCode: 'EL PROFE DE INGLÉS',
+    dressCode: 'PROFE DE INGLÉS',
     description: 'Welcome to English class! En esta categoría, REALNESS se trata de encarnar al típico profesor de inglés de The Elite Way School: actitud, porte, estética y presencia de docente que entra al salón y automáticamente takes control of the class.\n\nPrepárate para servir desde el English teacher realness, interpretando el personaje a través de tu look, actitud y performance. Ya seas the cool teacher, el profe estricto, el favorito de los estudiantes o quien definitivamente tiene más drama que toda la institución junta… convéncenos de que tú das la clase.'
   },
   {
@@ -13,7 +13,7 @@ export const categories = [
     iconColor: 'primary',
     title: 'GNC FACE WITH OVAH ENTRANCE',
     dressCode: 'LOS BULLYS',
-    description: 'En el Elite Way School, los pasillos también tienen jerarquías. Esta categoría es para quienes llegan con la actitud de los dueños del colegio, los que dominan el pasillo, intimidan con una mirada y convierten cada entrada en un verdadero momento de main character.\n\nEn GNC Face with Ovah Entrance, no basta con traer el look: queremos ver cara, actitud, confianza y una entrada que haga que todo el colegio se voltee a mirar.\n\nTu misión: servir el personaje del bully escolar sin perder el glamour. Puedes ser el popular, la mean girl, el atleta arrogante, el estudiante rebelde o simplemente esa persona que todos prefieren no cruzarse en el pasillo.'
+    description: 'En el Elite Way School, los pasillos también tienen jerarquías. Esta categoría es para quienes llegan con la actitud de lxs dueñxs del colegio, quienes dominan el pasillo, intimidan con una mirada y convierten cada entrada en un verdadero momento de protagonista.\n\nEn GNC Face with Ovah Entrance, no basta con traer el look: queremos ver cara, actitud, confianza y una entrada que haga que todxs en el colegio se volteen a mirar.\n\nTu misión: servir el personaje del bully escolar sin perder el glamour. Puedes ser lx divinx, lx mean girl, lx atleta arrogante, lx estudiante rebelde o simplemente esa persona que todxs prefieren no cruzarse en el pasillo.'
   },
   {
     id: 'ota-body',
@@ -69,7 +69,7 @@ export const categories = [
     iconColor: 'secondary',
     title: 'TRIPLE THREAT PERFORMANCE',
     dressCode: 'MEAN GIRLS',
-    description: 'POP • SPIN & DIP • EXCALIBUR • POSING\n\nOn Wednesdays, we serve PINK… but today, we serve BATTLE!\n\nEn el Elite Way School, las Mean Girls no necesitan presentación. Son las que dominan los pasillos, conocen todos los secretos y convierten cada entrada en un momento de protagonismo.\n\nEn esta categoría Triple Threat Performance, cada participante deberá demostrar que puede manejar POP, SPIN & DIP, EXCALIBUR y POSING con seguridad, precisión y actitud.'
+    description: 'POP • SPIN & DIP • EXCALIBUR • POSING\n\n“On Wednesdays, we serve PINK… but today, we serve BATTLE!”\n\nEn el Elite Way School, las Mean Girls no necesitan presentación. Son las que dominan los pasillos, conocen todos los secretos y convierten cada entrada en un momento de protagonismo.\n\nEn esta categoría Triple Threat Performance, cada participante deberá demostrar que puede manejar POP, SPIN & DIP, EXCALIBUR y POSING con seguridad, precisión y actitud.'
   },
   {
     id: 'femme-queen',
@@ -85,7 +85,7 @@ export const categories = [
     iconColor: 'secondary',
     title: 'GNC PERFORMANCE',
     dressCode: 'CLASE DE EDUCACIÓN FÍSICA',
-    description: 'GET READY, CLASS!\n\nEn el Elite Way School, la clase de Educación Física no es momento para esconderse: es momento de MOVERSE, PERFORMAR Y SERVIR.\n\nEn esta categoría, GNC Performance deberá llevar la energía de una verdadera clase de educación física al Ballroom: actitud, movimiento, musicalidad, resistencia y presencia escénica. Queremos ver cómo transformas la estética deportiva escolar en una performance que haga que todo el gimnasio se ponga de pie.'
+    description: 'GET READY, CLASS!\n\nEn el Elite Way School, la clase de Educación Física no es momento para esconderse: es momento de MOVERSE, PERFORMAR Y SERVIR.\n\nEn esta categoría, GNC Performance deberá llevar la energía de una verdadera clase de educación física al Ballroom: actitud, movimiento, musicalidad, resistencia y presencia escénica. Queremos ver cómo transforman la estética deportiva escolar en un performance que haga que todxs en el gimnasio se pongan de pie.'
   },
   {
     id: 'twister-sister',
