@@ -5,7 +5,7 @@ export const categories = [
     iconColor: 'secondary',
     title: 'REALNESS\n(FQ, BQ, TM, DG, Butch, TW)',
     dressCode: 'PROFE DE INGLÉS',
-    description: 'Welcome to English class! En esta categoría, REALNESS se trata de encarnar al típico profesor de inglés de The Elite Way School: actitud, porte, estética y presencia de docente que entra al salón y automáticamente takes control of the class.\n\nPrepárate para servir desde el English teacher realness, interpretando el personaje a través de tu look, actitud y performance. Ya seas the cool teacher, el profe estricto, el favorito de los estudiantes o quien definitivamente tiene más drama que toda la institución junta… convéncenos de que tú das la clase.'
+    description: 'Welcome to English class! En esta categoría, REALNESS se trata de encarnar al típico profesor de inglés del Elite Way School: actitud, porte, estética y presencia de docente que entra al salón y automáticamente takes control of the class.\n\nPrepárate para servir desde el English teacher realness, interpretando el personaje a través de tu look, actitud y performance. Ya seas the cool teacher, el profe estricto, el favorito de los estudiantes o quien definitivamente tiene más drama que toda la institución junta… convéncenos de que tú das la clase.'
   },
   {
     id: 'gnc-face',
@@ -21,7 +21,7 @@ export const categories = [
     iconColor: 'secondary',
     title: 'OTA BODY',
     dressCode: 'EQUIPO DE NATACIÓN',
-    description: 'Dive into the competition! En esta categoría, el pasillo se convierte en la piscina de The Elite Way School y cada participante tiene la oportunidad de servir su mejor versión del equipo de natación.\n\nAquí no importa el tipo de cuerpo, la talla ni la apariencia física: queremos ver confianza, actitud, presencia y la capacidad de hacer que tu cuerpo hable por ti.'
+    description: 'Dive into the competition! En esta categoría, el pasillo se convierte en la piscina del Elite Way School y cada participante tiene la oportunidad de servir su mejor versión del equipo de natación.\n\nAquí no importa el tipo de cuerpo, la talla ni la apariencia física: queremos ver confianza, actitud, presencia y la capacidad de hacer que tu cuerpo hable por ti.'
   },
   {
     id: 'runway',
@@ -37,7 +37,7 @@ export const categories = [
     iconColor: 'secondary',
     title: 'BEST OUTFIT',
     dressCode: 'REALEZA DEL BAILE DE PROM',
-    description: 'Welcome to the Prom, darling! La noche más esperada de The Elite Way School llega con una sola misión: descubrir quién tiene el look digno de convertirse en la realeza del baile.\n\nEsta categoría celebra la elegancia, el glamour y la creatividad de participantes negrxs, llevando la estética del Prom Royalty a otro nivel. Queremos ver coronas imaginarias, vestidos y trajes de impacto, siluetas memorables, detalles impecables y ese star quality que hace que todo el salón se detenga.'
+    description: 'Welcome to the Prom, darling! La noche más esperada del Elite Way School llega con una sola misión: descubrir quién tiene el look digno de convertirse en la realeza del baile.\n\nEsta categoría celebra la elegancia, el glamour y la creatividad de participantes negrxs, llevando la estética del Prom Royalty a otro nivel. Queremos ver coronas imaginarias, vestidos y trajes de impacto, siluetas memorables, detalles impecables y ese star quality que hace que todo el salón se detenga.'
   },
   {
     id: 'beginners',
