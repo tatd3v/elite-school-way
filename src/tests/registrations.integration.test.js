@@ -239,7 +239,6 @@ describe.skipIf(!shouldRun)('Multi-registration / Duplication', () => {
     const timestamp = new Date().toISOString();
     const base = `multi-${Date.now()}`;
     const email = `duplicate-${base}@example.com`;
-    const added = [];
 
     for (let i = 1; i <= 3; i++) {
       const result = await postRegistration({
