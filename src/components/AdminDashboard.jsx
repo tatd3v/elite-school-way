@@ -22,8 +22,6 @@ function AdminDashboard({ user }) {
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(3);
   const [sidebarWidth, setSidebarWidth] = useState(288);
-  const [openMenuId, setOpenMenuId] = useState(null);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const [editingParticipant, setEditingParticipant] = useState(null);
   const [deletingParticipant, setDeletingParticipant] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,19 +32,6 @@ function AdminDashboard({ user }) {
   useEffect(() => {
     loadDashboardData();
   }, []);
-
-  useEffect(() => {
-    if (openMenuId === null) return;
-
-    const closeMenu = () => setOpenMenuId(null);
-    window.addEventListener('scroll', closeMenu, true);
-    window.addEventListener('resize', closeMenu);
-
-    return () => {
-      window.removeEventListener('scroll', closeMenu, true);
-      window.removeEventListener('resize', closeMenu);
-    };
-  }, [openMenuId]);
 
   const loadDashboardData = async () => {
     try {
@@ -90,7 +75,6 @@ function AdminDashboard({ user }) {
 
   const handleConfirmPayment = async (participantId) => {
     if (!isAdmin) return;
-    setOpenMenuId(null);
 
     const participant = participants.find((p) => p.id === participantId);
     if (!participant) return;
@@ -119,24 +103,9 @@ function AdminDashboard({ user }) {
     }
   };
 
-  const toggleMenu = (participantId, event) => {
-    if (!isAdmin) return;
-    if (openMenuId === participantId) {
-      setOpenMenuId(null);
-      return;
-    }
-    const rect = event.currentTarget.getBoundingClientRect();
-    setMenuPosition({
-      top: rect.bottom + 4,
-      left: rect.right - 192, // align right edge (menu width: 12rem / 192px)
-    });
-    setOpenMenuId(participantId);
-  };
-
   const handleEditClick = (participant) => {
     if (!isAdmin) return;
     setEditingParticipant(participant);
-    setOpenMenuId(null);
   };
 
   const handleSaveParticipant = async (updatedParticipant) => {
@@ -217,7 +186,7 @@ function AdminDashboard({ user }) {
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-background">
+    <div className="h-screen bg-background text-on-background flex flex-col overflow-hidden">
       <DashboardHeader />
       <DesktopNavigation
         activeTab={activeTab}
@@ -226,13 +195,13 @@ function AdminDashboard({ user }) {
       />
 
       <main
-        className="pt-16 pb-28 md:pb-6 px-margin-mobile min-h-[calc(100vh-4rem)] overflow-y-auto md:h-[calc(100vh-4rem)] md:overflow-hidden linen-texture md:ml-[var(--sidebar-width)]"
+        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile linen-texture md:ml-[var(--sidebar-width)]"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
-        <div className="w-full md:h-full flex flex-col space-y-6 py-6 md:space-y-4 md:py-4">
+        <div className="w-full h-full flex flex-col space-y-3 py-3 md:space-y-2 md:py-2 gap-3">
           {/* Error Message */}
           {error && (
-            <div className="mb-6 luxury-card rounded-xl p-6 text-center border-l-4 border-l-error">
+            <div className="luxury-card rounded-xl p-6 text-center border-l-4 border-l-error flex-shrink-0">
               <p className="text-on-surface font-body-md mb-2">{error}</p>
               <button
                 onClick={loadDashboardData}
@@ -245,7 +214,7 @@ function AdminDashboard({ user }) {
 
           {/* Loading State */}
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-20">
+            <div className="flex flex-col items-center justify-center py-20 flex-shrink-0">
               <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
               <p className="text-on-surface-variant font-label-md">Cargando datos...</p>
             </div>
@@ -253,14 +222,14 @@ function AdminDashboard({ user }) {
             <>
               {/* Participantes Section */}
               {activeTab === 'participants' && (
-              <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden">
+              <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
                 {/* Header Section (mobile only) */}
                 <div className="md:hidden flex items-center justify-between mb-6 flex-shrink-0">
                   <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
                   <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
                 </div>
 
-                <div className="flex items-center gap-3 mb-6 flex-shrink-0 md:mb-4">
+                <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3">
                   <div className="flex-1">
                     <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
                   </div>
@@ -274,21 +243,6 @@ function AdminDashboard({ user }) {
                   >
                     <span className="material-symbols-outlined text-[20px]">refresh</span>
                   </button>
-
-                  {/* Filas por página dropdown */}
-                  <div className="hidden md:flex items-center bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/50 gold-border-focus gap-2">
-                    <span className="text-label-sm text-on-surface-variant">Filas:</span>
-                    <select
-                      value={pageSize}
-                      onChange={(e) => setPageSize(Number(e.target.value))}
-                      className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
-                    >
-                      <option value={10}>10</option>
-                      <option value={20}>20</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                  </div>
 
                   <div className="relative">
                     <button
@@ -423,19 +377,19 @@ function AdminDashboard({ user }) {
                 <section className="hidden md:flex bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full">
                   <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1 w-full">
                     <table className="w-full min-w-full text-left border-collapse">
-                      <thead>
+                      <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
-                          <th className="p-4 font-label-md text-on-background font-medium">Timestamp</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Nombre Artístico</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Email</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Teléfono</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">House</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Categorías</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Edad</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Screenshot</th>
-                          <th className="p-4 font-label-md text-on-background font-medium text-center">Status</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Timestamp</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre Artístico</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Email</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Teléfono</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">House</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Categorías</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Edad</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Screenshot</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Status</th>
                           {isAdmin && (
-                            <th className="p-4 font-label-md text-on-background font-medium text-right">Acciones</th>
+                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-right">Acciones</th>
                           )}
                         </tr>
                       </thead>
@@ -452,25 +406,25 @@ function AdminDashboard({ user }) {
 
                             return (
                               <tr key={participant.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group`}>
-                                <td className="p-4 font-body-md text-on-surface-variant text-xs">
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">
                                   {participant.timestamp ? new Date(participant.timestamp).toLocaleDateString() : '—'}
                                 </td>
-                                <td className="p-4">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full border border-outline-variant/50 overflow-hidden bg-surface-container-high flex items-center justify-center">
-                                      <span className="font-body-md text-on-surface font-semibold">{getInitials(participant.name)}</span>
+                                <td className="p-2">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 rounded-full border border-outline-variant/50 overflow-hidden bg-surface-container-high flex items-center justify-center flex-shrink-0">
+                                      <span className="font-label-sm text-on-surface font-semibold text-xs">{getInitials(participant.name)}</span>
                                     </div>
-                                    <span className="font-body-md text-on-background">{participant.name}</span>
+                                    <span className="font-label-sm text-on-background text-sm">{participant.name}</span>
                                   </div>
                                 </td>
-                                <td className="p-4 font-body-md text-on-surface-variant">{participant.email || '—'}</td>
-                                <td className="p-4 font-body-md text-on-surface-variant">{participant.phone || '—'}</td>
-                                <td className="p-4 font-body-md text-on-surface-variant">{getCleanHouse(participant.house)}</td>
-                                <td className="p-4 font-body-md text-on-surface-variant">
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.email || '—'}</td>
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.phone || '—'}</td>
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">{getCleanHouse(participant.house)}</td>
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">
                                   {getCategories(participant.categories)}
                                 </td>
-                                <td className="p-4 font-body-md text-on-surface-variant text-center">{participant.age || '—'}</td>
-                                <td className="p-4 text-center">
+                                <td className="p-2 font-label-sm text-on-surface-variant text-xs text-center">{participant.age || '—'}</td>
+                                <td className="p-2 text-center">
                                   {participant.screenshot ? (
                                     <a href={participant.screenshot} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-secondary text-xs underline">
                                       Ver
@@ -479,20 +433,40 @@ function AdminDashboard({ user }) {
                                     '—'
                                   )}
                                 </td>
-                                <td className="p-4 text-center">
-                                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusClass}`}>
-                                    <span className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></span>
+                                <td className="p-2 text-center">
+                                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-label-sm border ${statusClass}`}>
+                                    <span className={`w-1 h-1 rounded-full ${statusDot}`}></span>
                                     {statusLabel}
                                   </span>
                                 </td>
                                 {isAdmin && (
-                                  <td className="p-4 text-right">
-                                    <div className="flex justify-end gap-2">
+                                  <td className="p-2 text-center">
+                                    <div className="flex justify-center gap-1">
+                                      {!isPaid && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleConfirmPayment(participant.id)}
+                                          className="text-on-surface-variant hover:text-primary transition-colors"
+                                          aria-label="Confirmar pago"
+                                        >
+                                          <span className="material-symbols-outlined text-[16px]">paid</span>
+                                        </button>
+                                      )}
                                       <button
-                                        onClick={(e) => toggleMenu(participant.id, e)}
-                                        className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors text-[20px]"
+                                        type="button"
+                                        onClick={() => handleEditClick(participant)}
+                                        className="text-on-surface-variant hover:text-primary transition-colors"
+                                        aria-label="Editar participante"
                                       >
-                                        more_vert
+                                        <span className="material-symbols-outlined text-[16px]">edit</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteClick(participant)}
+                                        className="text-on-surface-variant hover:text-error transition-colors"
+                                        aria-label="Eliminar participante"
+                                      >
+                                        <span className="material-symbols-outlined text-[16px]">delete</span>
                                       </button>
                                     </div>
                                   </td>
@@ -512,28 +486,41 @@ function AdminDashboard({ user }) {
                   </div>
 
                   {/* Pagination */}
-                  <div className="flex flex-col md:flex-row justify-between items-center p-4 border-t border-outline-variant/20 gap-4 flex-shrink-0">
-                    <div className="text-label-sm text-on-surface-variant">
+                  <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4 flex-shrink-0">
+                    <div className="text-label-sm text-on-surface-variant text-xs">
                       Mostrando 1-{visibleParticipants.length} de {filteredParticipants.length} participantes
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
+                      <span className="text-label-sm text-on-surface-variant">Filas:</span>
+                      <select
+                        value={pageSize}
+                        onChange={(e) => setPageSize(Number(e.target.value))}
+                        className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
+                      >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                    <div className="flex items-center gap-1">
                       <button
                         disabled
-                        className="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                        className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
-                        <span className="material-symbols-outlined">chevron_left</span>
+                        <span className="material-symbols-outlined text-[18px]">chevron_left</span>
                       </button>
-                      <div className="flex gap-1">
-                        <button className="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-label-md">1</button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-md transition-colors">2</button>
-                        <button className="w-8 h-8 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-md transition-colors">3</button>
+                      <div className="flex gap-0.5">
+                        <button className="w-6 h-6 flex items-center justify-center rounded bg-primary text-on-primary font-label-sm text-xs">1</button>
+                        <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-sm text-xs transition-colors">2</button>
+                        <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-sm text-xs transition-colors">3</button>
                       </div>
                       <button
                         onClick={handleLoadMore}
                         disabled={visibleCount >= filteredParticipants.length}
-                        className="p-2 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                        className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
-                        <span className="material-symbols-outlined">chevron_right</span>
+                        <span className="material-symbols-outlined text-[18px]">chevron_right</span>
                       </button>
                     </div>
                   </div>
@@ -551,54 +538,6 @@ function AdminDashboard({ user }) {
       </main>
 
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-
-      {/* Actions dropdown menu — portal so it isn't clipped by table scroll */}
-      {isAdmin && openMenuId !== null && createPortal(
-        <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setOpenMenuId(null)}
-          />
-          <div
-            className="fixed w-48 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg z-50 overflow-hidden"
-            style={{ top: `${menuPosition.top}px`, left: `${menuPosition.left}px` }}
-          >
-            {(() => {
-              const activeParticipant = participants.find((p) => p.id === openMenuId);
-              const isPaid = activeParticipant?.status === REGISTRATION_STATUS.PAID;
-
-              return (
-                <>
-                  {!isPaid && (
-                    <button
-                      onClick={() => handleConfirmPayment(openMenuId)}
-                      className="w-full px-4 py-3 text-left font-label-md text-label-md text-secondary hover:bg-surface-container-highest transition-colors flex items-center gap-2"
-                    >
-                      <span className="material-symbols-outlined text-sm">check_circle</span>
-                      Confirmar Pago
-                    </button>
-                  )}
-                  <button
-                    onClick={() => handleEditClick(activeParticipant)}
-                    className="w-full px-4 py-3 text-left font-label-md text-label-md text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-sm">edit</span>
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(activeParticipant)}
-                    className="w-full px-4 py-3 text-left font-label-md text-label-md text-error hover:bg-surface-container-highest transition-colors flex items-center gap-2"
-                  >
-                    <span className="material-symbols-outlined text-sm">delete</span>
-                    Eliminar
-                  </button>
-                </>
-              );
-            })()}
-          </div>
-        </>,
-        document.body
-      )}
 
       {/* Edit Participant Modal */}
       {isAdmin && editingParticipant && (
