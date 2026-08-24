@@ -337,7 +337,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </div>
       )}
 
-      <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3">
+      <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
         <div className="flex-1">
           <SearchBar
             onSearch={handleSearch}
@@ -495,6 +495,22 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
 
                 {/* Desktop table */}
                 <div className="hidden md:flex flex-col bg-surface-container-low rounded-xl card-outline overflow-hidden flex-1 min-h-0">
+                  <div className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low border-b border-outline-variant/20">
+                    <div className="flex-1">
+                      <SearchBar
+                        onSearch={handleSearch}
+                        placeholder="Buscar miembro..."
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={loadStaff}
+                      className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                      aria-label="Actualizar datos"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">refresh</span>
+                    </button>
+                  </div>
                   <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
                     <table className="w-full min-w-full text-left border-collapse">
                       <thead className="sticky top-0 z-10">
