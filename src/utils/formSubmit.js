@@ -13,13 +13,15 @@ export async function submitForm(formData) {
     throw new Error('Configuración incompleta. Por favor, contacta al administrador.')
   }
 
+  const amount = formData.entryType ? formData.entryType.replace(/\D/g, '') : '';
+
   const payload = {
     timestamp: new Date().toISOString(),
     artistName: formData.artistName,
     email: formData.email,
     phone: formData.phone,
     house: formData.house || 'N/A',
-    entryType: formData.entryType || 'N/A',
+    entryType: amount ? Number(amount) : 'N/A',
     age: formData.age || 'N/A',
     qrImageUrl: PAYMENT_QR_IMAGE_URL,
     paymentScreenshot: formData.paymentScreenshot || '',
