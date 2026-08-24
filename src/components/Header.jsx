@@ -46,6 +46,12 @@ export default function Header() {
           </a>
           <a
             className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
+            href="#staff"
+          >
+            STAFF
+          </a>
+          <a
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
             href="#categories"
           >
             CATEGORÍAS
@@ -55,12 +61,6 @@ export default function Header() {
             href="#rules"
           >
             REGLAMENTO
-          </a>
-          <a
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
-            href="#staff"
-          >
-            STAFF
           </a>
         </nav>
 
