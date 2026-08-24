@@ -229,7 +229,7 @@ function AdminDashboard({ user }) {
                   <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
                 </div>
 
-                <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3">
+                <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
                   <div className="flex-1">
                     <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
                   </div>
@@ -375,6 +375,72 @@ function AdminDashboard({ user }) {
 
                 {/* Participantes Data Table (desktop) */}
                 <section className="hidden md:flex bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full">
+                  <div className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low border-b border-outline-variant/20">
+                    <div className="flex-1">
+                      <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
+                    </div>
+
+                    {/* Refresh Button */}
+                    <button
+                      type="button"
+                      onClick={loadDashboardData}
+                      className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                      aria-label="Actualizar datos"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">refresh</span>
+                    </button>
+
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setIsFilterOpen((prev) => !prev)}
+                        className={`flex items-center justify-center p-2 rounded-lg border transition-colors active:bg-surface-container ${
+                          statusFilter !== 'all'
+                            ? 'border-primary bg-primary/10'
+                            : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container'
+                        }`}
+                        aria-label="Filtrar por estado"
+                        aria-haspopup="true"
+                        aria-expanded={isFilterOpen}
+                      >
+                        <span className="material-symbols-outlined text-primary">filter_list</span>
+                      </button>
+
+                      {isFilterOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setIsFilterOpen(false)}
+                          />
+                          <div className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg z-20 overflow-hidden">
+                            {[
+                              { id: 'all', label: 'Todos' },
+                              { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
+                              { id: 'paid', label: REGISTRATION_STATUS.PAID },
+                            ].map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => {
+                                  setStatusFilter(option.id);
+                                  setIsFilterOpen(false);
+                                }}
+                                className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
+                                  statusFilter === option.id
+                                    ? 'text-primary bg-primary/10'
+                                    : 'text-on-surface hover:bg-surface-container-highest'
+                                }`}
+                              >
+                                {option.label}
+                                {statusFilter === option.id && (
+                                  <span className="material-symbols-outlined text-sm">check</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
                   <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1 w-full">
                     <table className="w-full min-w-full text-left border-collapse">
                       <thead className="sticky top-0 z-10">
