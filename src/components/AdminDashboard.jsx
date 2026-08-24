@@ -175,11 +175,6 @@ function AdminDashboard({ user }) {
     return name.split(' ').map((w) => w[0]).join('').substring(0, 2).toUpperCase();
   };
 
-  const getCategories = (categories) => {
-    if (!categories) return '—';
-    return categories;
-  };
-
   const getCleanHouse = (house) => {
     if (!house) return '—';
     return String(house).replace(/^'/, '');
@@ -187,7 +182,7 @@ function AdminDashboard({ user }) {
 
   return (
     <div className="h-screen bg-background text-on-background flex flex-col overflow-hidden">
-      <DashboardHeader />
+      {(activeTab !== 'participants' && activeTab !== 'faculty') && <DashboardHeader />}
       <DesktopNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -195,7 +190,7 @@ function AdminDashboard({ user }) {
       />
 
       <main
-        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile linen-texture md:ml-[var(--sidebar-width)]"
+        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile linen-texture md:ml-[var(--sidebar-width)] md:pt-0"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
         <div className="w-full h-full flex flex-col space-y-3 py-3 md:space-y-2 md:py-2 gap-3">
@@ -338,22 +333,16 @@ function AdminDashboard({ user }) {
 
                           <div className="h-[1px] w-full bg-tertiary/10"></div>
 
-                          <div className="flex justify-between items-center">
-                            <div className="flex items-center gap-2 min-w-0">
-                              <span className="material-symbols-outlined text-secondary/70 text-sm">category</span>
-                              <span className="font-label-md text-label-md text-on-surface-variant truncate">
-                                {getCategories(participant.categories)}
-                              </span>
-                            </div>
-                            {isAdmin && (
+                          {isAdmin && (
+                            <div className="flex justify-end">
                               <button
                                 onClick={(e) => toggleMenu(participant.id, e)}
                                 className="material-symbols-outlined text-on-surface-variant hover:text-primary flex-shrink-0"
                               >
                                 more_vert
                               </button>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })
@@ -374,8 +363,8 @@ function AdminDashboard({ user }) {
                 </div>
 
                 {/* Participantes Data Table (desktop) */}
-                <section className="hidden md:flex bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full">
-                  <div className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low border-b border-outline-variant/20">
+                <section className="hidden md:flex flex-col flex-1 min-h-0 w-full gap-3">
+                  <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low rounded-xl card-outline">
                     <div className="flex-1">
                       <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
                     </div>
@@ -441,16 +430,17 @@ function AdminDashboard({ user }) {
                       )}
                     </div>
                   </div>
-                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1 w-full">
-                    <table className="w-full min-w-full text-left border-collapse">
+
+                  <div className="bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full flex">
+                    <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1 w-full">
+                      <table className="w-full min-w-full text-left border-collapse">
                       <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
-                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Timestamp</th>
-                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre Artístico</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Fecha de registro</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre o AKA</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Email</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Teléfono</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">House</th>
-                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Categorías</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Edad</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Screenshot</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Status</th>
@@ -486,9 +476,6 @@ function AdminDashboard({ user }) {
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.email || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.phone || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{getCleanHouse(participant.house)}</td>
-                                <td className="p-2 font-label-sm text-on-surface-variant text-xs">
-                                  {getCategories(participant.categories)}
-                                </td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs text-center">{participant.age || '—'}</td>
                                 <td className="p-2 text-center">
                                   {participant.screenshot ? (
@@ -548,8 +535,8 @@ function AdminDashboard({ user }) {
                           </tr>
                         )}
                       </tbody>
-                    </table>
-                  </div>
+                      </table>
+                    </div>
 
                   {/* Pagination */}
                   <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4 flex-shrink-0">
@@ -590,7 +577,8 @@ function AdminDashboard({ user }) {
                       </button>
                     </div>
                   </div>
-                </section>
+                </div>
+              </section>
               </section>
               )}
 
