@@ -41,7 +41,7 @@ export default function DressCode({ dressCodes }) {
       </div>
 
       {/* Desktop Grid (New Design) */}
-      <div className="hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-20">
+      <div className="hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-0">
         <div className="text-center mb-16">
           <h3 className="font-headline-lg text-headline-lg text-secondary uppercase tracking-[0.2em]">
             DRESS CODE ACADÉMICO
