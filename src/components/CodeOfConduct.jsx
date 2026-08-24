@@ -16,7 +16,7 @@ export default function CodeOfConduct({ rules, pledge }) {
           DISCIPLINA • CULTURA • RESPETO • LEGADO
         </p>
 
-        <ul className="conduct-list">
+        <ul className="conduct-list space-y-10">
           {rules.map((rule) => (
             <li key={rule.id}>
               <div className="flex-1 text-justify">
