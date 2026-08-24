@@ -68,9 +68,10 @@ function buildRegistration(index) {
     email: `test${suffix}@example.com`,
     phone: '3001234567',
     house: 'House of Testing',
-    categories: 'Realness, Face',
+    entryType: 'General',
     age: '25',
     paymentScreenshot: '',
+    paymentScreenshotName: '',
   };
 }
 
@@ -143,7 +144,7 @@ describe.skipIf(!shouldRun)('Google Apps Script Registration API integration', (
       expect(registration.email).toBeDefined();
       expect(String(registration.phone)).toMatch(/3001234567/);
       expect(String(registration.house)).toMatch(/House of Testing/);
-      expect(registration.categories).toBe('Realness, Face');
+      expect(registration.entryType).toBe('General');
       expect(String(registration.age)).toBe('25');
 
       // Verify it's one of the remaining ones (not deleted)
