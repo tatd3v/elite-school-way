@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 export default function CategoryCard({ category }) {
   return (
     <article 
-      className="glass-effect rounded-lg p-4 glow-hover transition-all duration-300 group flex flex-col h-full relative overflow-hidden justify-around"
+      className="bg-surface-container-low border border-outline-variant/20 rounded-2xl p-8 transition-all duration-300 group flex flex-col h-full relative overflow-hidden justify-around card-hover"
       role="article"
       aria-labelledby={`category-${category.id}`}
     >
@@ -28,7 +28,7 @@ export default function CategoryCard({ category }) {
         </div>
       </div>
       
-      <div className="prose prose-invert max-w-none relative z-10 min-h-[200px] max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-secondary/20 scrollbar-track-transparent">
+      <div className="max-w-none relative z-10 min-h-[200px] max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-secondary/20 scrollbar-track-transparent">
         <p className="font-body-md text-body-md md:text-sm text-on-surface-variant leading-relaxed whitespace-pre-wrap">
           {category.description}
         </p>
