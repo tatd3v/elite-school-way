@@ -20,7 +20,7 @@ export default function Header() {
         scrolled ? 'shadow-md dark:shadow-2xl' : ''
       }`}
     >
-      <div className="flex justify-between items-center h-20 px-margin-mobile md:px-8 mx-auto">
+      <div className="flex justify-between items-center h-16 px-margin-mobile md:px-8 mx-auto">
         <div className="flex items-center gap-3">
           <img
             alt="Elite Way School Logo"
