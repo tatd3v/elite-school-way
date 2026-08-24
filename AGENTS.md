@@ -150,11 +150,12 @@ Key sheets (auto-created lazily on first use, not up front):
 - **Mobile horizontal overflow**: `html`/`body` in `src/index.css` have `overflow-x: hidden` as a safety net. When adding new large headings, always step down font size responsively (see `Hero.jsx`'s `text-3xl md:text-display-lg-mobile lg:text-display-lg` pattern) rather than using bare `text-display-lg`, since 56px headings can overflow narrow viewports.
 
 ## Pagination
-- **AdminDashboard (Participants)**: Starts with 3 items, loads 3 more per click (state: `visibleCount`)
-- **StaffManagementSection (Staff)**: Starts with 4 items, loads 4 more per click (state: `visibleCount`)
-- Both use `.slice(0, visibleCount)` to limit displayed items
-- "Load More" button shows: `Cargar más (X de Y)` where X = current visible, Y = total
-- Button hidden when `visibleCount >= total.length`
+- **AdminDashboard (Participants)**: Uses proper `currentPage`/`pageSize` pagination (state: `currentPage`, `pageSize`)
+- **StaffManagementSection (Staff)**: Uses proper `currentPage`/`pageSize` pagination (state: `currentPage`, `pageSize`)
+- Both use `.slice((currentPage - 1) * pageSize, currentPage * pageSize)` to display the active page
+- `Filas` selector updates `pageSize` and resets to page 1
+- Page number buttons, previous/next chevrons navigate `currentPage`
+- Text shows: `Mostrando {start}-{end} de {total}`
 
 ## Conventions
 - Spanish UI copy throughout (site is for a Spanish-speaking ballroom community in Bogotá, Colombia).
