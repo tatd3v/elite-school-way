@@ -41,7 +41,7 @@ export default function DressCode({ dressCodes }) {
       </div>
 
       {/* Desktop Grid (New Design) */}
-      <div className="hidden md:block mb-20">
+      <div className="hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-20">
         <div className="text-center mb-16">
           <h3 className="font-headline-lg text-headline-lg text-secondary uppercase tracking-[0.2em]">
             DRESS CODE ACADÉMICO
@@ -53,12 +53,12 @@ export default function DressCode({ dressCodes }) {
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {dressCodes.map((dress) => (
-            <div 
-              key={dress.name} 
+            <div
+              key={dress.name}
               className="group bg-surface-container border border-outline-variant/20 p-8 rounded-2xl transition-all hover:bg-surface-bright flex flex-col items-center text-center"
             >
-              <div 
-                className="w-24 h-24 rounded-full shadow-2xl mb-6 group-hover:scale-110 transition-transform"
+              <div
+                className="w-24 h-24 rounded-full shadow-2xl mb-6 ring-4 ring-white/5 group-hover:scale-110 transition-transform"
                 style={{ backgroundColor: dress.hex }}
                 role="img"
                 aria-label={`${dress.name} color swatch`}
