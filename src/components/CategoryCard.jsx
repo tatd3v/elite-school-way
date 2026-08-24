@@ -21,10 +21,10 @@ export default function CategoryCard({ category }) {
         </div>
       </div>
       
-      <div className="mb-6 relative z-10">
+      <div className="mb-6 relative z-10 flex justify-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded border border-tertiary/20">
           <span className="material-symbols-outlined text-secondary text-sm">styler</span>
-          <p className="font-label-md text-label-md text-secondary">{category.dressCode || 'Dress Code'}</p>
+          <p className="font-label-md text-label-md text-secondary text-center">{category.dressCode || 'Dress Code'}</p>
         </div>
       </div>
       
