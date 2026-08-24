@@ -2,13 +2,9 @@ import { useMemo, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { getDriveImageCandidates } from '../utils/driveImage';
 
-const MAX_BIO_PREVIEW = 120;
-
 function StaffMemberCard({ member }) {
   const { id, name, role, bio, photo, socialLinks, icon } = member;
-  const [isBioExpanded, setIsBioExpanded] = useState(false);
   const hasPhoto = typeof photo === 'string' && photo.trim() !== '';
-  const shouldTruncate = (bio || '').length > MAX_BIO_PREVIEW;
 
   // Multiple candidate URLs are tried in order (Drive embeds aren't 100%
   // reliable across all sharing configs), falling back to a generated
@@ -109,7 +105,7 @@ function StaffMemberCard({ member }) {
             href={socialUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-4 py-2 rounded-full font-label-sm text-label-sm uppercase font-bold tracking-wider hover:scale-105 transition-transform mt-0 min-w-0"
+            className="inline-flex items-center gap-2 self-start bg-secondary text-on-secondary px-4 py-2 rounded-full font-label-sm text-label-sm uppercase font-bold tracking-wider hover:scale-105 transition-transform mt-0 min-w-0"
             aria-label={`Red social de ${name}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
