@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 export default function CodeOfConduct({ rules, pledge }) {
   return (
-    <div className="bg-surface-container-low rounded-3xl p-12 md:p-20 border border-outline-variant/20 shadow-2xl relative overflow-hidden">
+    <div className="bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-20 border border-outline-variant/20 shadow-2xl relative overflow-hidden">
       <div
         className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 -mr-48 -mt-48 rounded-full blur-3xl"
         aria-hidden="true"
