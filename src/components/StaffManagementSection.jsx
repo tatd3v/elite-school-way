@@ -172,7 +172,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
     setEditingMember(null);
   };
 
-  const handleAddClick = () => {
+  const handleAddClick = useCallback(() => {
     const visibleOrders = staff
       .filter((m) => m.isVisible)
       .map((m) => Number(m.displayOrder) || 0);
@@ -188,14 +188,14 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
       displayOrder: nextOrder,
       isVisible: false,
     });
-  };
+  }, [staff]);
 
   useEffect(() => {
     if (autoOpenAdd && canEdit) {
       handleAddClick()
       if (onAutoOpenAdd) onAutoOpenAdd()
     }
-  }, [autoOpenAdd])
+  }, [autoOpenAdd, canEdit, handleAddClick, onAutoOpenAdd])
 
   const handleSaveEdit = async (updated) => {
     setIsSubmitting(true);
@@ -533,7 +533,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Orden</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Visible</th>
                           {canEdit && (
-                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-right">Acciones</th>
+                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Acciones</th>
                           )}
                         </tr>
                       </thead>
@@ -546,10 +546,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                             member.photo.trim() !== '' &&
                             !photoErrors[member.id];
                           const rowBg = idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest/50';
-                          const badgeClass =
-                            color === 'secondary'
-                              ? 'bg-secondary-container/20 text-secondary border-secondary/30'
-                              : 'bg-surface-variant text-on-surface-variant border-outline-variant/50';
+                          const badgeClass = 'bg-surface-variant text-on-surface-variant border-outline-variant/50';
 
                           return (
                             <tr key={member.id} className={`${rowBg} ${member.isVisible ? '' : 'opacity-60'}`}>
@@ -565,7 +562,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                                       }
                                     />
                                   ) : (
-                                    <span className={`material-symbols-outlined text-${color} text-[16px]`}>
+                                    <span className={`material-symbols-outlined text-${color} text-2xl`}>
                                       {getRoleIcon(member.role)}
                                     </span>
                                   )}
@@ -608,7 +605,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                                       className="text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50"
                                       aria-label={`${member.isVisible ? 'Ocultar' : 'Mostrar'} a ${member.name}`}
                                     >
-                                      <span className="material-symbols-outlined text-[16px]">
+                                      <span className="material-symbols-outlined text-2xl">
                                         {member.isVisible ? 'visibility' : 'visibility_off'}
                                       </span>
                                     </button>
@@ -619,7 +616,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                                       className="text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50"
                                       aria-label={`Editar a ${member.name}`}
                                     >
-                                      <span className="material-symbols-outlined text-[16px]">edit</span>
+                                      <span className="material-symbols-outlined text-2xl">edit</span>
                                     </button>
                                     <button
                                       type="button"
@@ -628,7 +625,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                                       className="text-on-surface-variant hover:text-error transition-colors disabled:opacity-50"
                                       aria-label={`Eliminar a ${member.name}`}
                                     >
-                                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                                      <span className="material-symbols-outlined text-2xl">delete</span>
                                     </button>
                                   </div>
                                 </td>
