@@ -253,8 +253,8 @@ function AdminDashboard({ user }) {
               {/* Participantes Section */}
               {activeTab === 'participants' && (
               <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden">
-                {/* Header Section */}
-                <div className="flex items-center justify-between mb-6 md:mb-4 flex-shrink-0">
+                {/* Header Section (mobile only) */}
+                <div className="md:hidden flex items-center justify-between mb-6 flex-shrink-0">
                   <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
                   <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
                 </div>
@@ -399,10 +399,14 @@ function AdminDashboard({ user }) {
                     <table className="w-full min-w-full text-left border-collapse">
                       <thead>
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
+                          <th className="p-4 font-label-md text-on-background font-medium">Timestamp</th>
                           <th className="p-4 font-label-md text-on-background font-medium">Nombre Artístico</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">Email Académico</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Email</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Teléfono</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">House</th>
                           <th className="p-4 font-label-md text-on-background font-medium">Categorías</th>
-                          <th className="p-4 font-label-md text-on-background font-medium">House / Linaje</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Edad</th>
+                          <th className="p-4 font-label-md text-on-background font-medium">Screenshot</th>
                           <th className="p-4 font-label-md text-on-background font-medium text-center">Status</th>
                           {isAdmin && (
                             <th className="p-4 font-label-md text-on-background font-medium text-right">Acciones</th>
@@ -422,19 +426,33 @@ function AdminDashboard({ user }) {
 
                             return (
                               <tr key={participant.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group`}>
+                                <td className="p-4 font-body-md text-on-surface-variant text-xs">
+                                  {participant.timestamp ? new Date(participant.timestamp).toLocaleDateString() : '—'}
+                                </td>
                                 <td className="p-4">
                                   <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-full border border-outline-variant/50 overflow-hidden bg-surface-container-high flex items-center justify-center">
                                       <span className="font-body-md text-on-surface font-semibold">{getInitials(participant.name)}</span>
                                     </div>
-                                    <span className="font-body-md text-on-background font-semibold">{participant.name}</span>
+                                    <span className="font-body-md text-on-background">{participant.name}</span>
                                   </div>
                                 </td>
                                 <td className="p-4 font-body-md text-on-surface-variant">{participant.email || '—'}</td>
+                                <td className="p-4 font-body-md text-on-surface-variant">{participant.phone || '—'}</td>
+                                <td className="p-4 font-body-md text-on-surface-variant">{getCleanHouse(participant.house)}</td>
                                 <td className="p-4 font-body-md text-on-surface-variant">
                                   {getCategories(participant.categories)}
                                 </td>
-                                <td className="p-4 font-body-md text-on-surface-variant">{getCleanHouse(participant.house)}</td>
+                                <td className="p-4 font-body-md text-on-surface-variant text-center">{participant.age || '—'}</td>
+                                <td className="p-4 text-center">
+                                  {participant.screenshot ? (
+                                    <a href={participant.screenshot} target="_blank" rel="noopener noreferrer" className="text-primary hover:text-secondary text-xs underline">
+                                      Ver
+                                    </a>
+                                  ) : (
+                                    '—'
+                                  )}
+                                </td>
                                 <td className="p-4 text-center">
                                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${statusClass}`}>
                                     <span className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></span>
@@ -458,7 +476,7 @@ function AdminDashboard({ user }) {
                           })
                         ) : (
                           <tr>
-                            <td colSpan={isAdmin ? 6 : 5} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
+                            <td colSpan={isAdmin ? 10 : 9} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
                               No se encontraron participantes
                             </td>
                           </tr>
