@@ -105,9 +105,25 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const [actionSuccess, setActionSuccess] = useState(null);
   const [photoErrors, setPhotoErrors] = useState({});
   const [expandedBios, setExpandedBios] = useState({});
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
 
   const toggleBio = (id) =>
     setExpandedBios((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const PAGE_SIZE = 4;
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + PAGE_SIZE);
+  };
+
+  const handlePrevPage = () => {
+    setVisibleCount((prev) => Math.max(PAGE_SIZE, prev - PAGE_SIZE));
+  };
+
+  const goToPage = (page, total) => {
+    setVisibleCount(Math.min(page * PAGE_SIZE, total));
+  };
 
   const loadStaff = useCallback(async () => {
     if (initialStaff && initialStaff.length > 0) {
@@ -293,6 +309,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   };
 
   const sortedStaff = [...staff].sort((a, b) => a.displayOrder - b.displayOrder);
+  const visibleStaff = sortedStaff.slice(0, visibleCount);
 
   return (
     <section className="mb-section-gap-mobile">
@@ -316,6 +333,34 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
               <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
             </div>
 
+            {/* Controls: Refresh and Filas por página */}
+            <div className="hidden md:flex items-center gap-3 mb-4">
+              {/* Refresh Button */}
+              <button
+                type="button"
+                onClick={loadStaff}
+                className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                aria-label="Actualizar datos"
+              >
+                <span className="material-symbols-outlined text-[20px]">refresh</span>
+              </button>
+
+              {/* Filas por página dropdown */}
+              <div className="flex items-center bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/50 gold-border-focus gap-2">
+                <span className="text-label-sm text-on-surface-variant">Filas:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(Number(e.target.value))}
+                  className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+              </div>
+            </div>
+
             {isLoading ? (
               <div className="py-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
@@ -325,7 +370,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
               <>
                 {/* Mobile card list */}
                 <div className="md:hidden space-y-4">
-                  {sortedStaff.map((member) => {
+                  {visibleStaff.map((member) => {
                     const color = getRoleColor(member.role);
                     const isBusy = togglingId === member.id || deletingId === member.id;
                     const hasPhoto =
@@ -449,124 +494,209 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                   })}
                 </div>
 
-                {/* Desktop row list */}
-                <div className="hidden md:block space-y-4">
-                  {sortedStaff.map((member) => {
-                    const color = getRoleColor(member.role);
-                    const isBusy = togglingId === member.id || deletingId === member.id;
+                {/* Desktop table */}
+                <div className="hidden md:block bg-surface-container-low rounded-xl card-outline overflow-hidden">
+                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar">
+                    <table className="w-full min-w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-surface-container-high border-b border-outline-variant/20">
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Foto</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Cargo</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Bio</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Redes Sociales</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Orden</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Visible</th>
+                          {canEdit && (
+                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-right">Acciones</th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-outline-variant/20">
+                        {visibleStaff.map((member, idx) => {
+                          const color = getRoleColor(member.role);
+                          const isBusy = togglingId === member.id || deletingId === member.id;
+                          const hasPhoto =
+                            typeof member.photo === 'string' &&
+                            member.photo.trim() !== '' &&
+                            !photoErrors[member.id];
+                          const rowBg = idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest/50';
+                          const badgeClass =
+                            color === 'secondary'
+                              ? 'bg-secondary-container/20 text-secondary border-secondary/30'
+                              : 'bg-surface-variant text-on-surface-variant border-outline-variant/50';
+
+                          return (
+                            <tr key={member.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group ${member.isVisible ? '' : 'opacity-60'}`}>
+                              <td className="p-2">
+                                <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center border border-outline-variant/50 flex-shrink-0">
+                                  {hasPhoto ? (
+                                    <img
+                                      src={toDirectImageUrl(member.photo)}
+                                      alt={member.name}
+                                      className="w-full h-full object-cover"
+                                      onError={() =>
+                                        setPhotoErrors((prev) => ({ ...prev, [member.id]: true }))
+                                      }
+                                    />
+                                  ) : (
+                                    <span className={`material-symbols-outlined text-${color} text-[16px]`}>
+                                      {getRoleIcon(member.role)}
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="p-2 font-label-sm text-on-background text-sm">{member.name}</td>
+                              <td className="p-2">
+                                <span className={`px-1.5 py-0.5 rounded text-xs font-label-sm border ${badgeClass}`}>
+                                  {member.role}
+                                </span>
+                              </td>
+                              <td className="p-2 font-label-sm text-on-surface-variant max-w-xs truncate text-xs">
+                                {member.bio ? member.bio.substring(0, 50) + '...' : '—'}
+                              </td>
+                              <td className="p-2 font-label-sm text-tertiary text-xs">
+                                {member.socialLinks ? getSocialHandle(member.socialLinks) : '—'}
+                              </td>
+                              <td className="p-2 font-label-sm text-tertiary text-xs">
+                                {member.displayOrder ?? '—'}
+                              </td>
+                              <td className="p-2">
+                                <span
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-label-sm border ${
+                                    member.isVisible
+                                      ? 'bg-primary/10 text-primary border-primary/20'
+                                      : 'bg-outline/10 text-outline border-outline/20'
+                                  }`}
+                                >
+                                  <span className={`w-1 h-1 rounded-full ${member.isVisible ? 'bg-primary' : 'bg-outline'}`}></span>
+                                  {member.isVisible ? 'Visible' : 'Oculto'}
+                                </span>
+                              </td>
+                              {canEdit && (
+                                <td className="p-2 text-right">
+                                  <div className="flex justify-end gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() => handleToggleVisibility(member)}
+                                      disabled={isBusy}
+                                      className="text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50"
+                                      aria-label={`${member.isVisible ? 'Ocultar' : 'Mostrar'} a ${member.name}`}
+                                    >
+                                      <span className="material-symbols-outlined text-[16px]">
+                                        {member.isVisible ? 'visibility' : 'visibility_off'}
+                                      </span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleEdit(member)}
+                                      disabled={isBusy}
+                                      className="text-on-surface-variant hover:text-primary transition-colors disabled:opacity-50"
+                                      aria-label={`Editar a ${member.name}`}
+                                    >
+                                      <span className="material-symbols-outlined text-[16px]">edit</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDelete(member)}
+                                      disabled={isBusy}
+                                      className="text-on-surface-variant hover:text-error transition-colors disabled:opacity-50"
+                                      aria-label={`Eliminar a ${member.name}`}
+                                    >
+                                      <span className="material-symbols-outlined text-[16px]">delete</span>
+                                    </button>
+                                  </div>
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination footer */}
+                  {sortedStaff.length > 0 && (() => {
+                    const totalPages = Math.ceil(sortedStaff.length / PAGE_SIZE);
+                    const currentPage = Math.ceil(visibleCount / PAGE_SIZE);
+                    const pageNumbers = totalPages <= 4
+                      ? Array.from({ length: totalPages }, (_, i) => i + 1)
+                      : [1, 2, 3];
+
                     return (
-                      <div
-                        key={member.id}
-                        className={`flex items-center gap-3 py-2 ${member.isVisible ? '' : 'opacity-60'}`}
-                      >
-                        <div className="h-10 w-10 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center border border-outline-variant/20 flex-shrink-0">
-                          {typeof member.photo === 'string' && member.photo.trim() !== '' && !photoErrors[member.id] ? (
-                            <img
-                              src={toDirectImageUrl(member.photo)}
-                              alt={member.name}
-                              className="w-full h-full object-cover"
-                              onError={() =>
-                                setPhotoErrors((prev) => ({ ...prev, [member.id]: true }))
-                              }
-                            />
-                          ) : (
-                            <span className={`material-symbols-outlined text-${color}`}>{getRoleIcon(member.role)}</span>
-                          )}
+                      <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4">
+                        <div className="text-label-sm text-on-surface-variant text-xs">
+                          Mostrando 1-{visibleStaff.length} de {sortedStaff.length} staff
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className={`text-[10px] font-bold text-${color} uppercase tracking-widest`}>{member.role}</p>
-                            <span
-                              className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${
-                                member.isVisible
-                                  ? 'bg-primary/10 text-primary border-primary/20'
-                                  : 'bg-outline/10 text-outline border-outline/20'
-                              }`}
-                            >
-                              {member.isVisible ? 'Visible' : 'Oculto'}
-                            </span>
-                          </div>
-                          <p className="font-body-md text-sm font-semibold text-on-surface truncate">{member.name}</p>
-                          {member.bio && (
-                            <BioWithToggle
-                              bio={member.bio}
-                              isExpanded={!!expandedBios[member.id]}
-                              onToggle={() => toggleBio(member.id)}
-                              className="text-on-surface-variant text-xs"
-                            />
-                          )}
-                          <div className="flex items-center gap-3 text-outline text-[11px] mt-0.5">
-                            <span>Orden: {member.displayOrder ?? '—'}</span>
-                            {member.socialLinks && (
-                              <a
-                                href={getSocialUrl(member.socialLinks)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="truncate max-w-[160px] text-primary hover:text-secondary transition-colors"
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={handlePrevPage}
+                            disabled={currentPage <= 1}
+                            className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                          </button>
+                          <div className="flex gap-0.5">
+                            {pageNumbers.map((page) => (
+                              <button
+                                key={page}
+                                type="button"
+                                onClick={() => goToPage(page, sortedStaff.length)}
+                                className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
+                                  page === currentPage
+                                    ? 'bg-primary text-on-primary'
+                                    : 'hover:bg-surface-container-highest text-on-surface-variant'
+                                }`}
                               >
-                                {getSocialHandle(member.socialLinks)}
-                              </a>
+                                {page}
+                              </button>
+                            ))}
+                            {totalPages > 4 && (
+                              <>
+                                <span className="text-on-surface-variant px-0.5 text-xs">...</span>
+                                <button
+                                  type="button"
+                                  onClick={() => goToPage(totalPages, sortedStaff.length)}
+                                  className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
+                                    totalPages === currentPage
+                                      ? 'bg-primary text-on-primary'
+                                      : 'hover:bg-surface-container-highest text-on-surface-variant'
+                                  }`}
+                                >
+                                  {totalPages}
+                                </button>
+                              </>
                             )}
                           </div>
+                          <button
+                            type="button"
+                            onClick={handleLoadMore}
+                            disabled={visibleCount >= sortedStaff.length}
+                            className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                          </button>
                         </div>
-
-                        {canEdit && (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => handleToggleVisibility(member)}
-                              disabled={isBusy}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full p-0.5 transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 flex-shrink-0 ${
-                                member.isVisible ? 'bg-secondary' : 'bg-outline-variant'
-                              }`}
-                              role="switch"
-                              aria-checked={member.isVisible}
-                              aria-label={`${member.isVisible ? 'Ocultar' : 'Mostrar'} a ${member.name}`}
-                            >
-                              <span
-                                className={`h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                                  member.isVisible ? 'translate-x-5' : 'translate-x-0'
-                                }`}
-                              />
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleEdit(member)}
-                              disabled={isBusy}
-                              className="text-outline hover:text-primary transition-colors flex-shrink-0 disabled:opacity-50"
-                              aria-label={`Editar a ${member.name}`}
-                            >
-                              <span className="material-symbols-outlined">edit</span>
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => handleDelete(member)}
-                              disabled={isBusy}
-                              className="text-outline hover:text-error transition-colors flex-shrink-0 disabled:opacity-50"
-                              aria-label={`Eliminar a ${member.name}`}
-                            >
-                              <span className="material-symbols-outlined">delete</span>
-                            </button>
-                          </>
-                        )}
                       </div>
                     );
-                  })}
+                  })()}
                 </div>
               </>
             )}
+
+            {/* Load More Button (mobile) */}
+            {visibleCount < sortedStaff.length && (
+              <button
+                type="button"
+                onClick={handleLoadMore}
+                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20"
+              >
+                Cargar más ({visibleCount} de {sortedStaff.length})
+              </button>
+            )}
           </div>
 
-          {canEdit && (
-            <button
-              onClick={onUpdate}
-              className="w-full mt-6 bg-secondary text-white py-4 font-label-lg text-label-lg rounded active:scale-[0.98] transition-transform uppercase tracking-widest"
-            >
-              Actualizar
-            </button>
-          )}
         </div>
       </div>
 
