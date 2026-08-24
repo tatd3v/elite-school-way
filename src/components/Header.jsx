@@ -56,6 +56,12 @@ export default function Header() {
           >
             REGLAMENTO
           </a>
+          <a
+            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
+            href="#staff"
+          >
+            STAFF
+          </a>
         </nav>
 
         <div className="flex items-center gap-4">
