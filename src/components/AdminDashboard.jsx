@@ -368,7 +368,7 @@ function AdminDashboard({ user }) {
                       onClick={handleLoadMore}
                       className="w-full py-4 mt-2 border border-outline-variant/30 rounded-xl text-secondary font-label-md text-label-md hover:bg-surface-container-high transition-colors"
                     >
-                      Cargar Más
+                      Cargar más ({visibleCount} de {filteredParticipants.length})
                     </button>
                   )}
                 </div>
