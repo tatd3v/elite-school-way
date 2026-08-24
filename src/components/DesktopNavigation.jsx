@@ -103,6 +103,12 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
     setIsResizing(true)
   }
 
+  const toggleTheme = () => {
+    const newDark = !isDarkTheme
+    localStorage.setItem('theme', newDark ? 'dark' : 'light')
+    document.documentElement.classList.toggle('dark', newDark)
+  }
+
   const currentWidth = isCollapsed ? COLLAPSED_WIDTH : width
 
   return (
@@ -193,12 +199,15 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
       <div className={`border-t border-outline-variant/10 ${isCollapsed ? 'p-4' : 'p-6'} space-y-3`}>
         {/* Theme Toggle */}
         <button
+          onClick={toggleTheme}
           className={`w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-primary transition-colors ${
             isCollapsed ? 'justify-center px-2' : 'px-4'
           }`}
-          title={isCollapsed ? 'Theme' : ''}
+          title={isCollapsed ? (isDarkTheme ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro') : ''}
         >
-          <span className="material-symbols-outlined text-2xl w-8 h-8 flex items-center justify-center leading-none">light_mode</span>
+          <span className="material-symbols-outlined text-2xl w-8 h-8 flex items-center justify-center leading-none">
+            {isDarkTheme ? 'light_mode' : 'dark_mode'}
+          </span>
           {!isCollapsed && <span className="font-label-md">Theme</span>}
         </button>
 
