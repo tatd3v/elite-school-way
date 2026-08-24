@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import PropTypes from 'prop-types'
+import favicon from '../assets/favicon.png'
+import longLogo from '../assets/long_logo.png'
+import longLogoDarkBg from '../assets/long_logo_dark_bg.png'
 
 function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange }) {
   const MIN_WIDTH = 200
@@ -16,8 +19,23 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
     return saved === 'true'
   })
   const [isResizing, setIsResizing] = useState(false)
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark')
+    }
+    return false
+  })
   const sidebarRef = useRef(null)
   const expandedWidthRef = useRef(width)
+
+  // Detect theme changes
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkTheme(document.documentElement.classList.contains('dark'))
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   const navItems = [
     { id: 'participants', icon: 'groups', label: 'Participantes', filled: true },
@@ -90,45 +108,56 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
   return (
     <aside
       ref={sidebarRef}
-      className="fixed left-0 top-16 h-[calc(100vh-4rem)] z-40 hidden md:flex flex-col bg-surface-container border-r border-outline-variant/10 transition-all duration-300"
+      className="fixed left-0 top-0 h-screen z-40 hidden md:flex flex-col bg-surface-container border-r border-outline-variant/10 transition-all duration-300"
       style={{ width: `${currentWidth}px` }}
     >
-      {/* Header Section with Toggle */}
-      <div
-        className={`h-24 p-3 flex items-center ${isCollapsed ? 'flex-col justify-center gap-2' : 'flex-row justify-between'}`}
-      >
-        {isCollapsed ? (
-          <>
-            <span
-              className="material-symbols-outlined text-primary text-2xl w-8 h-8 flex items-center justify-center leading-none"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              school
-            </span>
-            <button
-              onClick={toggleCollapse}
-              className="w-8 h-8 p-0 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors ring-1 ring-outline-variant/20"
-              title="Expandir"
-            >
-              <span className="material-symbols-outlined text-on-surface-variant text-2xl w-8 h-8 flex items-center justify-center leading-none">
-                chevron_right
-              </span>
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="flex-1">
-              <h2 className="text-on-surface-variant text-label-md font-bold">Administración</h2>
-            </div>
-            <button
-              onClick={toggleCollapse}
-              className="w-8 h-8 p-0 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors ml-2 ring-1 ring-outline-variant/20"
-              title="Contraer"
-            >
-              <span className="material-symbols-outlined text-primary text-2xl w-8 h-8 flex items-center justify-center leading-none">chevron_left</span>
-            </button>
-          </>
+      {/* Header Section with Logo and Toggle */}
+      <div className={`p-3 flex flex-col ${isCollapsed ? 'items-center gap-2' : 'gap-3'}`}>
+        {/* Logo */}
+        {!isCollapsed && (
+          <div className="flex items-center justify-center px-2 py-2">
+            <img 
+              src={isDarkTheme ? longLogoDarkBg : longLogo} 
+              alt="Elite Way" 
+              className="h-12 object-contain" 
+            />
+          </div>
         )}
+        
+        {/* Header with Toggle */}
+        <div className={`flex items-center ${isCollapsed ? 'flex-col justify-center gap-2' : 'flex-row justify-between'}`}>
+          {isCollapsed ? (
+            <>
+              <img
+                src={favicon}
+                alt="Elite Way"
+                className="w-16 h-16 object-contain rounded-lg"
+              />
+              <button
+                onClick={toggleCollapse}
+                className="w-8 h-8 p-0 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors ring-1 ring-outline-variant/20"
+                title="Expandir"
+              >
+                <span className="material-symbols-outlined text-on-surface-variant text-2xl w-8 h-8 flex items-center justify-center leading-none">
+                  chevron_right
+                </span>
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="flex-1">
+                <h2 className="text-on-surface-variant text-label-md font-bold">Administración</h2>
+              </div>
+              <button
+                onClick={toggleCollapse}
+                className="w-8 h-8 p-0 flex items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors ml-2 ring-1 ring-outline-variant/20"
+                title="Contraer"
+              >
+                <span className="material-symbols-outlined text-primary text-2xl w-8 h-8 flex items-center justify-center leading-none">chevron_left</span>
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <nav className="flex-1 space-y-2 px-2 overflow-y-auto">
@@ -161,7 +190,19 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
         })}
       </nav>
 
-      <div className={`border-t border-outline-variant/10 ${isCollapsed ? 'p-4' : 'p-6'}`}>
+      <div className={`border-t border-outline-variant/10 ${isCollapsed ? 'p-4' : 'p-6'} space-y-3`}>
+        {/* Theme Toggle */}
+        <button
+          className={`w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-primary transition-colors ${
+            isCollapsed ? 'justify-center px-2' : 'px-4'
+          }`}
+          title={isCollapsed ? 'Theme' : ''}
+        >
+          <span className="material-symbols-outlined text-2xl w-8 h-8 flex items-center justify-center leading-none">light_mode</span>
+          {!isCollapsed && <span className="font-label-md">Theme</span>}
+        </button>
+
+        {/* Logout Button */}
         <button
           className={`w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-error transition-colors ${
             isCollapsed ? 'justify-center px-2' : 'px-4'
