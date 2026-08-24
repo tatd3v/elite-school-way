@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 export default function CategoryCard({ category }) {
   return (
     <article 
-      className="bg-surface-container-low border border-outline-variant/20 rounded-2xl p-4 transition-all duration-300 group flex flex-col h-full relative overflow-hidden justify-around card-hover"
+      className="bg-surface-container-low border border-outline-variant/20 rounded-2xl p-4 transition-all duration-300 group flex flex-col h-full relative overflow-hidden justify-between card-hover"
       role="article"
       aria-labelledby={`category-${category.id}`}
     >
