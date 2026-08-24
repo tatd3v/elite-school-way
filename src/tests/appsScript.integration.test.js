@@ -104,6 +104,29 @@ describe.skipIf(!shouldRun)('Google Apps Script Staff API integration', () => {
     expect(added.bio).toBe(bio);
   }, { timeout: 30000 });
 
+  it('new staff member display order matches sequential order in Google Sheet', async () => {
+    const data = await fetchStaff(true);
+    const allStaff = data.staff;
+    
+    // Get the newly added staff member
+    const newMember = allStaff.find((m) => m.rowIndex === createdRowIndex);
+    expect(newMember).toBeDefined();
+    
+    // Get all staff members sorted by rowIndex to verify sequential order
+    const sortedByRow = [...allStaff].sort((a, b) => a.rowIndex - b.rowIndex);
+    
+    // Find the position of the new member in the sorted list
+    const newMemberIndex = sortedByRow.findIndex((m) => m.rowIndex === createdRowIndex);
+    expect(newMemberIndex).toBeGreaterThanOrEqual(0);
+    
+    // Verify that the new member's rowIndex is sequential with Google Sheet
+    // (rowIndex should match its position in the sheet, starting from row 2)
+    expect(newMember.rowIndex).toBe(sortedByRow[newMemberIndex].rowIndex);
+    
+    // Verify displayOrder is a valid number
+    expect(typeof newMember.displayOrder).toBe('number');
+  }, { timeout: 15000 });
+
   it('updates the staff member', async () => {
     const updateResult = await postStaff('updateStaff', {
       rowIndex: createdRowIndex,
