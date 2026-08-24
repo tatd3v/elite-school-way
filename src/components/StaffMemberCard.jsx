@@ -47,8 +47,8 @@ function StaffMemberCard({ member }) {
   })();
 
   return (
-    <article className="group flex flex-col" aria-labelledby={`staff-${id}-name`}>
-      <div className="relative mb-8 rounded-xl overflow-hidden shadow-2xl transition-all duration-500 group-hover:shadow-secondary/20 group-hover:-translate-y-2 bg-surface-container-high">
+    <article className="group flex flex-col bg-surface-container rounded-2xl overflow-hidden border border-outline-variant/30 hover:border-secondary transition-all card-hover flex flex-col h-[700px]" aria-labelledby={`staff-${id}-name`}>
+      <div className="relative mb-0 rounded-none overflow-hidden shadow-none transition-all duration-500 group-hover:shadow-none group-hover:-translate-y-0 bg-surface-container-high h-[350px] shrink-0">
         {/*
           The 4:5 ratio box below uses the classic padding-percentage trick
           (padding-top: 125% = height/width) instead of the CSS `aspect-ratio`
@@ -86,51 +86,38 @@ function StaffMemberCard({ member }) {
         <div className="absolute inset-0 border-2 border-white/10 rounded-xl pointer-events-none"></div>
       </div>
 
-      <div className="flex flex-col items-start">
-        <span className="text-secondary font-label-sm tracking-[0.3em] uppercase font-bold mb-1">
-          {role}
-        </span>
-        <h3
-          id={`staff-${id}-name`}
-          className="font-headline-md text-on-surface mb-2 tracking-tight"
-        >
-          {name}
-        </h3>
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="text-center mb-4">
+          <p className="font-label-sm text-secondary uppercase tracking-widest font-bold mb-2">
+            {role}
+          </p>
+          <h3
+            id={`staff-${id}-name`}
+            className="font-headline-md text-on-surface"
+          >
+            {name}
+          </h3>
+        </div>
         <p
-          onClick={() => shouldTruncate && setIsBioExpanded(!isBioExpanded)}
-          className={`text-on-surface-variant font-body-md leading-relaxed opacity-80 ${
-            shouldTruncate ? 'cursor-pointer' : ''
-          } ${shouldTruncate && !isBioExpanded ? 'mb-0 line-clamp-3' : 'mb-3'}`}
+          className="text-on-surface-variant font-body-md leading-relaxed opacity-90 flex-grow relative min-h-0 overflow-y-auto custom-scrollbar max-h-[200px]"
         >
           {bio || 'Confirmación Pendiente'}
         </p>
-        {(socialUrl || shouldTruncate) && (
-          <div
-            className={`w-full flex items-center ${
-              socialUrl ? 'justify-between' : 'justify-end'
-            } ${shouldTruncate ? 'mt-3' : 'mt-0'}`}
+        {socialUrl && (
+          <a
+            href={socialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-secondary text-on-secondary px-4 py-2 rounded-full font-label-sm text-label-sm uppercase font-bold tracking-wider hover:scale-105 transition-transform mt-4"
+            aria-label={`Red social de ${name}`}
           >
-            {socialUrl && (
-              <a
-                href={socialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-primary font-label-md hover:text-secondary transition-colors"
-                aria-label={`Red social de ${name}`}
-              >
-                <span>{socialHandle}</span>
-              </a>
-            )}
-            {shouldTruncate && (
-              <button
-                type="button"
-                onClick={() => setIsBioExpanded(!isBioExpanded)}
-                className="text-label-sm text-secondary uppercase font-bold tracking-widest hover:text-primary transition-colors"
-              >
-                {isBioExpanded ? 'Ver menos' : 'Ver más'}
-              </button>
-            )}
-          </div>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <span>{socialHandle}</span>
+          </a>
         )}
       </div>
     </article>
