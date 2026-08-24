@@ -115,7 +115,7 @@ npm run dev
 
 2. Open `http://localhost:3000`
 3. Click **"Inscríbete Ya!"**
-4. Fill out the form (at least one category and age ≥ 18 are required)
+4. Fill out the form (name, email, phone, entry type and age ≥ 18 are required; House/007 is optional)
 5. Optionally attach a payment screenshot
 6. Click **"Confirmar Inscripción"**
 7. Check your Google Sheet's **Registrations** tab — the registration should appear with **Status = Registrado**
@@ -147,8 +147,8 @@ Unlike a typical database, sheets/tabs in this project are created **lazily** �
 | 2 | Nombre Artístico | |
 | 3 | Email | |
 | 4 | Teléfono | Stored with a leading apostrophe so Sheets doesn't misparse `+57...` as a formula |
-| 5 | House/007 | Same apostrophe trick, preserves leading zeros like `007` |
-| 6 | Categorías | Comma-separated |
+| 5 | House/007 | Optional. Same apostrophe trick, preserves leading zeros like `007` |
+| 6 | Entrada | Selected entry type: `General` or `Personas negrxs y marronxs` |
 | 7 | Edad | |
 | 8 | Screenshot | Google Drive link to the uploaded payment proof (saved under `elite-way-school-data/PAGOS_QR`) |
 | 9 | Status | `Registrado` (default) or `Pagado` — editable from the admin dashboard |
