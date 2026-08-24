@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'preact/hooks'
 import { Router } from './components/Router'
 import { initializeTheme } from './utils/theme'
+import { getAuthUser } from './utils/auth'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import EventDetails from './components/EventDetails'
@@ -45,6 +46,17 @@ function HomePage() {
 function LoginPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [currentUser, setCurrentUser] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if user is already authenticated on mount
+    const user = getAuthUser()
+    if (user) {
+      setIsLoggedIn(true)
+      setCurrentUser(user)
+    }
+    setIsLoading(false)
+  }, [])
 
   const handleLoginSuccess = (user) => {
     setIsLoggedIn(true)
@@ -54,6 +66,12 @@ function LoginPage() {
   const handleLogout = () => {
     setIsLoggedIn(false)
     setCurrentUser(null)
+  }
+
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-background">
+      <div className="text-on-surface-variant">Cargando...</div>
+    </div>
   }
 
   if (isLoggedIn) {
