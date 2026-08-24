@@ -106,7 +106,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const [actionSuccess, setActionSuccess] = useState(null);
   const [photoErrors, setPhotoErrors] = useState({});
   const [expandedBios, setExpandedBios] = useState({});
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -115,19 +115,19 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
 
   const handleSearch = (value) => {
     setSearchQuery(value);
-    setVisibleCount(pageSize);
+    setCurrentPage(1);
   };
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + pageSize);
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
   };
 
   const handlePrevPage = () => {
-    setVisibleCount((prev) => Math.max(pageSize, prev - pageSize));
+    setCurrentPage((prev) => Math.max(1, prev - 1));
   };
 
-  const goToPage = (page, total) => {
-    setVisibleCount(Math.min(page * pageSize, total));
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
   };
 
   const loadStaff = useCallback(async () => {
@@ -322,7 +322,8 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
       )
     : staff;
   const sortedStaff = [...filteredStaff].sort((a, b) => a.displayOrder - b.displayOrder);
-  const visibleStaff = sortedStaff.slice(0, visibleCount);
+  const totalPages = Math.ceil(sortedStaff.length / pageSize) || 1;
+  const visibleStaff = sortedStaff.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
@@ -518,7 +519,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                       <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Foto</th>
-                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre o AKA</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Cargo</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Bio</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Redes Sociales</th>
@@ -544,7 +545,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                               : 'bg-surface-variant text-on-surface-variant border-outline-variant/50';
 
                           return (
-                            <tr key={member.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group ${member.isVisible ? '' : 'opacity-60'}`}>
+                            <tr key={member.id} className={`${rowBg} ${member.isVisible ? '' : 'opacity-60'}`}>
                               <td className="p-2">
                                 <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center border border-outline-variant/50 flex-shrink-0">
                                   {hasPhoto ? (
@@ -639,101 +640,80 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                   </div>
 
                   {/* Pagination footer */}
-                  {sortedStaff.length > 0 && (() => {
-                    const totalPages = Math.ceil(sortedStaff.length / pageSize);
-                    const currentPage = Math.ceil(visibleCount / pageSize);
-                    const pageNumbers = totalPages <= 4
-                      ? Array.from({ length: totalPages }, (_, i) => i + 1)
-                      : [1, 2, 3];
-
-                    return (
-                      <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4">
-                        <div className="text-label-sm text-on-surface-variant text-xs">
-                          Mostrando 1-{visibleStaff.length} de {sortedStaff.length} staff
-                        </div>
-                        <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
-                          <span className="text-label-sm text-on-surface-variant">Filas:</span>
-                          <select
-                            value={pageSize}
-                            onChange={(e) => {
-                              const next = Number(e.target.value);
-                              setPageSize(next);
-                              setVisibleCount(next);
-                            }}
-                            className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
-                          >
-                            <option value={10}>10</option>
-                            <option value={20}>20</option>
-                            <option value={50}>50</option>
-                            <option value={100}>100</option>
-                          </select>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <button
-                            type="button"
-                            onClick={handlePrevPage}
-                            disabled={currentPage <= 1}
-                            className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
-                          >
-                            <span className="material-symbols-outlined text-[18px]">chevron_left</span>
-                          </button>
-                          <div className="flex gap-0.5">
-                            {pageNumbers.map((page) => (
-                              <button
-                                key={page}
-                                type="button"
-                                onClick={() => goToPage(page, sortedStaff.length)}
-                                className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
-                                  page === currentPage
-                                    ? 'bg-primary text-on-primary'
-                                    : 'hover:bg-surface-container-highest text-on-surface-variant'
-                                }`}
-                              >
-                                {page}
-                              </button>
-                            ))}
-                            {totalPages > 4 && (
-                              <>
-                                <span className="text-on-surface-variant px-0.5 text-xs">...</span>
-                                <button
-                                  type="button"
-                                  onClick={() => goToPage(totalPages, sortedStaff.length)}
-                                  className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
-                                    totalPages === currentPage
-                                      ? 'bg-primary text-on-primary'
-                                      : 'hover:bg-surface-container-highest text-on-surface-variant'
-                                  }`}
-                                >
-                                  {totalPages}
-                                </button>
-                              </>
-                            )}
-                          </div>
-                          <button
-                            type="button"
-                            onClick={handleLoadMore}
-                            disabled={visibleCount >= sortedStaff.length}
-                            className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
-                          >
-                            <span className="material-symbols-outlined text-[18px]">chevron_right</span>
-                          </button>
-                        </div>
+                  {sortedStaff.length > 0 && (
+                    <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4">
+                      <div className="text-label-sm text-on-surface-variant text-xs">
+                        {sortedStaff.length === 0
+                          ? 'No hay staff'
+                          : `Mostrando ${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, sortedStaff.length)} de ${sortedStaff.length}`}
                       </div>
-                    );
-                  })()}
+                      <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
+                        <span className="text-label-sm text-on-surface-variant">Filas:</span>
+                        <select
+                          value={pageSize}
+                          onChange={(e) => {
+                            setPageSize(Number(e.target.value));
+                            setCurrentPage(1);
+                          }}
+                          className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
+                        >
+                          <option value={5}>5</option>
+                          <option value={10}>10</option>
+                          <option value={20}>20</option>
+                          <option value={50}>50</option>
+                          <option value={100}>100</option>
+                        </select>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={handlePrevPage}
+                          disabled={currentPage <= 1}
+                          className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                        </button>
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                            <button
+                              key={page}
+                              type="button"
+                              onClick={() => goToPage(page)}
+                              className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
+                                page === currentPage
+                                  ? 'bg-primary text-on-primary'
+                                  : 'hover:bg-surface-container-highest text-on-surface-variant'
+                              }`}
+                            >
+                              {page}
+                            </button>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleNextPage}
+                          disabled={currentPage >= totalPages}
+                          className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                     </div>
                   </div>
               </>
             )}
 
             {/* Load More Button (mobile) */}
-            {visibleCount < sortedStaff.length && (
+            {currentPage < totalPages && (
               <button
                 type="button"
-                onClick={handleLoadMore}
-                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20"
+                onClick={handleNextPage}
+                disabled={currentPage >= totalPages}
+                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50"
               >
-                Cargar más ({visibleCount} de {sortedStaff.length})
+                Cargar más (pág. {currentPage} de {totalPages})
               </button>
             )}
           </div>
