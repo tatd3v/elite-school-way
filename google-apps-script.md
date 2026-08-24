@@ -292,7 +292,6 @@ function doPost(e) {
         data.email,
         data.phone ? "'" + data.phone : '',
         data.house ? "'" + data.house : 'N/A',
-        data.categories,
         data.age,
         saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
         REGISTRATION_STATUS.REGISTERED
@@ -369,7 +368,6 @@ function updateRegistration(data) {
     data.email || '',
     data.phone ? "'" + data.phone : '',
     data.house ? "'" + data.house : 'N/A',
-    data.categories || '',
     data.age || '',
   ];
 
@@ -408,10 +406,9 @@ function getRegistrations() {
         email: row[2],
         phone: row[3],
         house: row[4],
-        categories: row[5],
-        age: row[6],
-        screenshot: row[7],
-        status: row[8] || REGISTRATION_STATUS.REGISTERED
+        age: row[5],
+        screenshot: row[6],
+        status: row[7] || REGISTRATION_STATUS.REGISTERED
       });
     }
     
@@ -629,7 +626,6 @@ function testSubmission() {
         email: 'test@example.com',
         phone: '3001234567',
         house: 'House of Testing',
-        categories: 'Realness, Face',
         age: '25',
         comments: 'This is a test submission'
       })
