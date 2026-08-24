@@ -41,8 +41,7 @@ elite-school-way/
 │   │   ├── StaffManagementSection.jsx
 │   │   ├── StaffMemberCard.jsx
 │   │   ├── StaffSection.jsx
-│   │   ├── ThemeToggle.jsx
-│   │   └── ... (other components)
+│   │   └── ThemeToggle.jsx
 │   ├── services/            # Business logic & API calls (.js)
 │   │   ├── authService.js
 │   │   └── dashboardService.js (JSONP for reads, no-cors fetch for writes)
@@ -51,14 +50,12 @@ elite-school-way/
 │   │   ├── driveImage.js
 │   │   ├── formSubmit.js
 │   │   ├── jsonp.js
-│   │   ├── theme.js
-│   │   └── ... (other utilities)
+│   │   └── theme.js
 │   ├── data/                # Static data files (.js)
 │   │   ├── categories.js
 │   │   ├── countryCodes.js
 │   │   ├── conductRules.js
-│   │   ├── dressCodes.js
-│   │   └── ... (other data)
+│   │   └── dressCodes.js
 │   ├── config/              # Configuration files (.js)
 │   │   └── constants.js
 │   ├── assets/              # Images, logos, etc.
@@ -72,8 +69,6 @@ elite-school-way/
 │   ├── App.jsx              # Main app component
 │   ├── main.jsx             # Entry point
 │   └── index.css            # Global styles
-├── src/test/                # Vitest setup & helpers
-│   └── setup.js
 ├── src/tests/               # Vitest test files (.test.js)
 │   ├── appsScript.integration.test.js
 │   └── registrations.integration.test.js
