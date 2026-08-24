@@ -35,7 +35,7 @@ export const categories = [
     id: 'best-outfit',
     icon: 'checkroom',
     iconColor: 'secondary',
-    title: 'Best Outfit',
+    title: 'BEST OUTFIT',
     dressCode: 'REALEZA DEL BAILE DE PROM',
     description: 'Welcome to the Prom, darling! La noche más esperada de The Elite Way School llega con una sola misión: descubrir quién tiene el look digno de convertirse en la realeza del baile.\n\nEsta categoría celebra la elegancia, el glamour y la creatividad de participantes negrxs, llevando la estética del Prom Royalty a otro nivel. Queremos ver coronas imaginarias, vestidos y trajes de impacto, siluetas memorables, detalles impecables y ese star quality que hace que todo el salón se detenga.'
   },
