@@ -7,7 +7,6 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
     email: '',
     phone: '',
     house: '',
-    categories: '',
     age: '',
     comments: '',
   });
@@ -19,7 +18,6 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
         email: participant.email || '',
         phone: participant.phone || '',
         house: participant.house || '',
-        categories: participant.categories || '',
         age: participant.age || '',
         comments: participant.comments || '',
       });
@@ -127,20 +125,6 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
           </div>
 
           <div>
-            <label htmlFor="participant-edit-categories" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
-              Categorías
-            </label>
-            <input
-              id="participant-edit-categories"
-              type="text"
-              value={formData.categories}
-              onChange={(e) => handleChange('categories', e.target.value)}
-              className="w-full p-3 rounded border border-outline-variant bg-surface focus:ring-1 focus:ring-primary outline-none font-body-md"
-              placeholder="Separadas por comas"
-            />
-          </div>
-
-          <div>
             <label htmlFor="participant-edit-age" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
               Edad
             </label>
@@ -196,7 +180,6 @@ ParticipantEditModal.propTypes = {
     email: PropTypes.string,
     phone: PropTypes.string,
     house: PropTypes.string,
-    categories: PropTypes.string,
     age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     comments: PropTypes.string,
   }),
