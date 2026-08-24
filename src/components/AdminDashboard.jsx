@@ -70,7 +70,7 @@ function AdminDashboard({ user }) {
   };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 3);
+    setVisibleCount((prev) => Math.min(prev + 3, pageSize));
   };
 
   const handleConfirmPayment = async (participantId) => {
@@ -352,7 +352,7 @@ function AdminDashboard({ user }) {
                     </div>
                   )}
 
-                  {visibleCount < filteredParticipants.length && (
+                  {visibleCount < Math.min(pageSize, filteredParticipants.length) && (
                     <button
                       onClick={handleLoadMore}
                       className="w-full py-4 mt-2 border border-outline-variant/30 rounded-xl text-secondary font-label-md text-label-md hover:bg-surface-container-high transition-colors"
@@ -461,7 +461,7 @@ function AdminDashboard({ user }) {
                             const rowBg = idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest/50';
 
                             return (
-                              <tr key={participant.id} className={`${rowBg} hover:bg-surface-container-highest/50 transition-colors group`}>
+                              <tr key={participant.id} className={`${rowBg}`}>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">
                                   {participant.timestamp ? new Date(participant.timestamp).toLocaleDateString() : '—'}
                                 </td>
@@ -541,15 +541,20 @@ function AdminDashboard({ user }) {
                   {/* Pagination */}
                   <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4 flex-shrink-0">
                     <div className="text-label-sm text-on-surface-variant text-xs">
-                      Mostrando 1-{visibleParticipants.length} de {filteredParticipants.length} participantes
+                      Mostrando 1-{visibleParticipants.length} de {filteredParticipants.length}
                     </div>
                     <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
                       <span className="text-label-sm text-on-surface-variant">Filas:</span>
                       <select
                         value={pageSize}
-                        onChange={(e) => setPageSize(Number(e.target.value))}
+                        onChange={(e) => {
+                          const next = Number(e.target.value);
+                          setPageSize(next);
+                          setVisibleCount(next);
+                        }}
                         className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
                       >
+                        <option value={5}>5</option>
                         <option value={10}>10</option>
                         <option value={20}>20</option>
                         <option value={50}>50</option>
