@@ -5,12 +5,12 @@ import heroBackground from '../assets/hero_background.png'
 export default function Hero({ onOpenModal }) {
   return (
     <section 
-      className="relative min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-[#000666] py-20"
+      className="relative min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-background dark:bg-[#000666] py-20"
       aria-labelledby="hero-heading"
       role="region"
     >
       <div className="absolute inset-0 z-0" aria-hidden="true">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#000666]/80 to-[#000666]/40 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 dark:from-[#000666]/80 to-background/40 dark:to-[#000666]/40 z-10"></div>
         <img 
           className="w-full h-full object-cover grayscale-[0.3] brightness-[0.4]" 
           alt="Elite Way School Hero Background" 
