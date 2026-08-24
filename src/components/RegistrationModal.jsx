@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
-import { categories as categoryData } from '../data/categories'
 import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
 import logo from '../assets/logo.png'
@@ -17,9 +16,9 @@ function CountryCodeSelect({ value, onChange }) {
 
   const filtered = (search
     ? countryCodes.filter(({ country, code }) => {
-        const query = normalize(search)
-        return normalize(country).includes(query) || normalize(code).includes(query)
-      })
+      const query = normalize(search)
+      return normalize(country).includes(query) || normalize(code).includes(query)
+    })
     : countryCodes
   ).slice().sort((a, b) => {
     if (a.country === 'Colombia') return -1
@@ -208,51 +207,33 @@ export default function RegistrationModal({ isOpen, onClose }) {
     countryCode: DEFAULT_COUNTRY_CODE,
     phone: '',
     house: '',
-    categories: [],
+    entryType: '',
     age: '',
     paymentScreenshot: '',
     paymentScreenshotName: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null)
-  const [categoryError, setCategoryError] = useState(false)
-
-  const categories = categoryData.map((category) => category.title)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleCategoryChange = (category) => {
-    setFormData(prev => ({
-      ...prev,
-      categories: prev.categories.includes(category)
-        ? prev.categories.filter(c => c !== category)
-        : [...prev.categories, category]
-    }))
-  }
-
   useEffect(() => {
     if (isOpen) {
-      setCategoryError(false)
       setSubmitStatus(null)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
     }
   }, [isOpen])
 
-  useEffect(() => {
-    if (formData.categories.length > 0) {
-      setCategoryError(false)
-    }
-  }, [formData.categories])
-
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (formData.categories.length === 0) {
-      setCategoryError(true)
-      return
-    }
 
     setIsSubmitting(true)
     setSubmitStatus(null)
@@ -271,13 +252,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
           countryCode: DEFAULT_COUNTRY_CODE,
           phone: '',
           house: '',
-          categories: [],
+          entryType: '',
           age: '',
           paymentScreenshot: '',
           paymentScreenshotName: '',
         })
         setSubmitStatus(null)
-        setCategoryError(false)
         onClose()
       }, 2000)
     } catch (error) {
@@ -330,7 +310,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
             <div className="col-span-1">
               <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
-                Nombre artístico *
+                Nombre Completo o AKA de Ballroom *
               </label>
               <input
                 className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
@@ -381,12 +361,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
             <div className="col-span-1">
               <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
-                House / 007 *
+                House / 007
               </label>
               <input
                 className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="Nombre de tu House o Independiente"
-                required
                 type="text"
                 name="house"
                 value={formData.house}
@@ -396,45 +375,39 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
             <div className="col-span-1 md:col-span-2 mt-8">
               <h3 className="font-headline-md text-headline-md text-[#fbf9f8] mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-[#c62828]">stars</span>
-                Categorías de Competición *
+                <span className="material-symbols-outlined text-[#c62828]">confirmation_number</span>
+                Entrada del Evento
               </h3>
-              <p className="font-body-md text-[#c6c5d4] mb-6">
-                Debes escoger al menos una categoría para poder continuar.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.map((category) => {
-                  const isChecked = formData.categories.includes(category)
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {['General — $20.000', 'Personas negrxs y marronxs — $15.000'].map((option) => {
+                  const isSelected = formData.entryType === option
                   return (
                     <label
-                      key={category}
-                      className={`flex items-center gap-3 cursor-pointer group p-3 border transition-all rounded-md ${
-                        isChecked
+                      key={option}
+                      className={`flex items-center gap-3 cursor-pointer group p-3 border transition-all rounded-md ${isSelected
                           ? 'bg-[#c62828]/10 border-[#c62828]/40'
                           : 'bg-surface-container-low hover:bg-surface-container-high border-outline-variant/10 hover:border-outline-variant/40'
-                      }`}
+                        }`}
                     >
                       <input
-                        className="w-5 h-5 border-2 border-outline-variant bg-transparent rounded-sm text-[#c62828] focus:ring-0"
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => handleCategoryChange(category)}
+                        className="w-5 h-5 border-2 border-outline-variant bg-transparent rounded-full text-[#c62828] focus:ring-0"
+                        type="radio"
+                        name="entryType"
+                        value={option}
+                        checked={isSelected}
+                        onChange={handleInputChange}
                       />
-                      <span className={`font-body-md transition-colors ${
-                        isChecked ? 'text-[#fbf9f8]' : 'text-[#c6c5d4] group-hover:text-[#fbf9f8]'
-                      }`}>
-                        {category}
+                      <span className={`font-body-md transition-colors ${isSelected ? 'text-[#fbf9f8]' : 'text-[#c6c5d4] group-hover:text-[#fbf9f8]'
+                        }`}>
+                        {option}
                       </span>
                     </label>
                   )
                 })}
               </div>
-              {categoryError && (
-                <p className="mt-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
-                  Debes seleccionar al menos una categoría para continuar.
-                </p>
-              )}
             </div>
+
+
 
             <div className="col-span-1 mt-6">
               <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
@@ -486,15 +459,15 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 )}
               </button>
               <p className="mt-4 text-center text-label-sm font-label-sm text-[#c6c5d4] opacity-70">
-                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball - Ballroom Bogotá.
+                Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball
               </p>
             </div>
           </div>
         </form>
 
-        <div className="mt-12 text-center pb-12">
+        <div className="mt-12 text-center">
           <p className="font-label-sm text-label-sm text-[#c6c5d4] opacity-60">
-            © 2026 ELITE WAY SCHOOL Ballroom Culture.
+            © 2026 ELITE WAY SCHOOL - Ballroom Xua & Ballroom Bogotrans..
           </p>
         </div>
       </div>
