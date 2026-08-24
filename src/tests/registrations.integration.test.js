@@ -233,3 +233,50 @@ describe.skipIf(!shouldRun)('Registrations Pagination Tests', () => {
     });
   }, { timeout: 15000 });
 });
+
+describe.skipIf(!shouldRun)('Multi-registration / Duplication', () => {
+  it('should allow more added than deleted registrations for the same email', async () => {
+    const timestamp = new Date().toISOString();
+    const base = `multi-${Date.now()}`;
+    const email = `duplicate-${base}@example.com`;
+    const added = [];
+
+    for (let i = 1; i <= 3; i++) {
+      const result = await postRegistration({
+        action: 'submitRegistration',
+        timestamp,
+        artistName: `Duplicate ${base} #${i}`,
+        email,
+        phone: `300123456${i}`,
+        house: 'House of Duplicates',
+        entryType: i === 1 ? 'General' : 'Personas negrxs y marronxs',
+        age: String(20 + i),
+        paymentScreenshot: '',
+        paymentScreenshotName: '',
+      });
+      expect(result.status).toBe('success');
+    }
+
+    await new Promise((r) => setTimeout(r, 1500));
+    const before = await fetchRegistrations();
+    const beforeDuplicates = before.registrations.filter((r) => r.email === email);
+    expect(beforeDuplicates.length).toBe(3);
+
+    // Delete only one (the highest rowIndex first so deletions don't shift remaining rows)
+    const toDelete = beforeDuplicates.sort((a, b) => b.rowIndex - a.rowIndex)[0];
+    const deleteResult = await deleteRegistration(toDelete.rowIndex);
+    expect(deleteResult.status).toBe('success');
+
+    await new Promise((r) => setTimeout(r, 1500));
+    const after = await fetchRegistrations();
+    const afterDuplicates = after.registrations.filter((r) => r.email === email);
+
+    // More added (3) than deleted (1) → 2 duplicates remain
+    expect(afterDuplicates.length).toBe(2);
+
+    // Clean up remaining duplicates
+    for (const registration of afterDuplicates) {
+      await deleteRegistration(registration.rowIndex);
+    }
+  }, { timeout: 60000 });
+});
