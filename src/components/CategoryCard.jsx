@@ -43,6 +43,7 @@ CategoryCard.propTypes = {
     icon: PropTypes.string.isRequired,
     iconColor: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    dressCode: PropTypes.string,
     description: PropTypes.string.isRequired,
   }).isRequired,
 }
