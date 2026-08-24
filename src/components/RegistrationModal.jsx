@@ -41,7 +41,7 @@ function CountryCodeSelect({ value, onChange }) {
     <div ref={selectRef} className="relative flex-shrink-0">
       <button
         type="button"
-        className="w-[4.75rem] sm:w-24 h-full bg-surface-container-low border border-outline-variant pl-3 pr-1 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all text-left"
+        className="w-[4.75rem] sm:w-24 h-full bg-surface-container-low border border-outline-variant pl-3 pr-1 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all text-left"
         onClick={() => setIsOpen(prev => !prev)}
         aria-label="Código de país"
         aria-expanded={isOpen}
@@ -55,7 +55,7 @@ function CountryCodeSelect({ value, onChange }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar país o código"
-            className="w-full bg-surface-container-high border-b border-outline-variant px-4 py-2 font-body-md text-[#fbf9f8] placeholder:text-[#c6c5d4]/60 focus:outline-none"
+            className="w-full bg-surface-container-high border-b border-outline-variant px-4 py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
             aria-label="Buscar país"
           />
           <div className="overflow-y-auto">
@@ -68,15 +68,15 @@ function CountryCodeSelect({ value, onChange }) {
                   setSearch('')
                   setIsOpen(false)
                 }}
-                className="w-full flex items-center gap-2 px-4 py-2 text-left font-body-md text-[#fbf9f8] hover:bg-surface-container-high transition-all"
+                className="w-full flex items-center gap-2 px-4 py-2 text-left font-body-md text-on-surface hover:bg-surface-container-high transition-all"
               >
                 <span className="text-base" aria-hidden="true">{flag}</span>
                 <span className="flex-1 truncate">{country}</span>
-                <span className="text-[#c6c5d4]">{code}</span>
+                <span className="text-on-surface-variant">{code}</span>
               </button>
             ))}
             {filtered.length === 0 && (
-              <p className="px-4 py-2 text-sm text-[#c6c5d4]">No se encontraron resultados</p>
+              <p className="px-4 py-2 text-sm text-on-surface-variant">No se encontraron resultados</p>
             )}
           </div>
         </div>
@@ -107,8 +107,8 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
   return (
     <div className="col-span-1 md:col-span-2 mt-10 p-6 md:p-8 bg-surface-container-low border border-outline-variant/30 rounded-lg">
       <div className="mb-6">
-        <h3 className="font-headline-md text-headline-md text-[#fbf9f8] mb-2">Pago por QR</h3>
-        <p className="font-body-md text-[#c6c5d4] text-sm md:text-xs">Escanea el código QR para realizar el pago y sube el comprobante.</p>
+        <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Pago por QR</h3>
+        <p className="font-body-md text-on-surface-variant text-sm md:text-xs">Escanea el código QR para realizar el pago y sube el comprobante.</p>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
         <div className="flex flex-col items-center gap-4">
@@ -142,14 +142,14 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
           </div>
         </div>
         <div className="flex-1 w-full min-w-0">
-          <label className="block font-label-lg text-label-lg text-[#c6c5d4] mb-2 uppercase tracking-wider">
+          <label className="block font-label-lg text-label-lg text-on-surface-variant mb-2 uppercase tracking-wider">
             {PAYMENT_SCREENSHOT_LABEL}
           </label>
-          <p className="font-body-md text-[#c6c5d4] text-sm md:text-xs mb-3">
+          <p className="font-body-md text-on-surface-variant text-sm md:text-xs mb-3">
             Debes cargar o subir el comprobante del pago para que el registro se haga efectivo.
           </p>
           <div className="flex flex-col gap-2 w-full min-w-0">
-            <label className="cursor-pointer inline-flex items-center justify-center bg-surface-container-high border border-outline-variant px-6 py-3 rounded-md font-label-sm text-[#fbf9f8] hover:bg-surface-bright hover:text-surface transition-all w-full sm:w-auto text-center whitespace-nowrap shrink-0">
+            <label className="cursor-pointer inline-flex items-center justify-center bg-surface-container-high border border-outline-variant px-6 py-3 rounded-md font-label-sm text-on-surface hover:bg-surface-bright hover:text-surface transition-all w-full sm:w-auto text-center whitespace-nowrap shrink-0">
               <span>Seleccionar archivo</span>
               <input
                 type="file"
@@ -159,7 +159,7 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
                 onChange={handleFileChange}
               />
             </label>
-            <span className="text-label-sm text-[#c6c5d4] opacity-60 truncate block w-full min-w-0">
+            <span className="text-label-sm text-on-surface-variant opacity-60 truncate block w-full min-w-0">
               {screenshotName || 'Sin archivos seleccionados'}
             </span>
           </div>
@@ -177,7 +177,7 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
           <button
             type="button"
             onClick={() => setLightboxOpen(false)}
-            className="fixed top-6 right-6 z-[130] w-12 h-12 flex items-center justify-center text-[#c6c5d4] hover:text-[#c62828] transition-all rounded-full"
+            className="fixed top-6 right-6 z-[130] w-12 h-12 flex items-center justify-center text-on-surface-variant hover:text-[#c62828] transition-all rounded-full"
             aria-label="Cerrar"
           >
             <span className="material-symbols-outlined text-4xl">close</span>
@@ -273,7 +273,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-surface">
       <button
-        className="fixed top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center bg-surface-container-high border border-outline-variant text-[#fbf9f8] hover:text-[#c62828] hover:border-[#c62828] transition-all rounded-full shadow-lg group active:scale-90"
+        className="fixed top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center bg-surface-container-high border border-outline-variant text-on-surface hover:text-[#c62828] hover:border-[#c62828] transition-all rounded-full shadow-lg group active:scale-90"
         onClick={onClose}
         aria-label="Cerrar"
       >
@@ -293,14 +293,14 @@ export default function RegistrationModal({ isOpen, onClose }) {
             src={logoDark}
           />
           <div className="flex flex-col items-center gap-1 mb-2">
-            <span className="font-headline-md text-headline-md font-bold tracking-tighter text-[#fbf9f8]">
+            <span className="font-headline-md text-headline-md font-bold tracking-tighter text-on-surface">
               ELITE WAY SCHOOL
             </span>
             <p className="font-label-sm text-label-sm text-[#c62828] uppercase tracking-[0.2em] font-bold">
               FORMULARIO DE ADMISIÓN
             </p>
           </div>
-          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-[#fbf9f8] uppercase font-extrabold tracking-tighter">
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase font-extrabold tracking-tighter">
             CONFIRMAR INSCRIPCIÓN
           </h1>
           <div className="w-16 h-1 bg-[#c62828] mx-auto mt-6"></div>
@@ -309,11 +309,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
         <form className="bg-surface-container-lowest p-6 md:p-12 border border-outline-variant/30 rounded-lg shadow-[0px_8px_48px_rgba(0,0,0,0.4)]" onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
             <div className="col-span-1">
-              <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 Nombre Completo o AKA de Ballroom *
               </label>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="Escribe tu nombre de escena"
                 required
                 type="text"
@@ -324,11 +324,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="col-span-1">
-              <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 Email *
               </label>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="ejemplo@eliteway.edu"
                 required
                 type="email"
@@ -339,7 +339,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="col-span-1">
-              <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 Teléfono *
               </label>
               <div className="flex gap-2">
@@ -348,7 +348,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                   onChange={(code) => setFormData(prev => ({ ...prev, countryCode: code }))}
                 />
                 <input
-                  className="flex-1 min-w-0 bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                  className="flex-1 min-w-0 bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                   placeholder="300 000 0000"
                   required
                   type="tel"
@@ -360,11 +360,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="col-span-1">
-              <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 House / 007
               </label>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="Nombre de tu House o Independiente"
                 type="text"
                 name="house"
@@ -374,7 +374,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="col-span-1 md:col-span-2 mt-8">
-              <h3 className="font-headline-md text-headline-md text-[#fbf9f8] mb-2 flex items-center gap-2">
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-2 flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#c62828]">confirmation_number</span>
                 Entrada del Evento
               </h3>
@@ -397,7 +397,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                         checked={isSelected}
                         onChange={handleInputChange}
                       />
-                      <span className={`font-body-md transition-colors ${isSelected ? 'text-[#fbf9f8]' : 'text-[#c6c5d4] group-hover:text-[#fbf9f8]'
+                      <span className={`font-body-md transition-colors ${isSelected ? 'text-on-surface' : 'text-on-surface-variant group-hover:text-on-surface'
                         }`}>
                         {option}
                       </span>
@@ -410,11 +410,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
 
             <div className="col-span-1 mt-6">
-              <label className="block font-label-sm text-label-sm text-[#c6c5d4] mb-2 uppercase tracking-wider">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 Edad *
               </label>
               <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-[#fbf9f8] rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
                 placeholder="18+"
                 type="number"
                 required
@@ -458,7 +458,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                   <span className="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
                 )}
               </button>
-              <p className="mt-4 text-center text-label-sm font-label-sm text-[#c6c5d4] opacity-70">
+              <p className="mt-4 text-center text-label-sm font-label-sm text-on-surface-variant opacity-70">
                 Al confirmar, aceptas las reglas y el código de conducta de Elite Way School Kiki Ball
               </p>
             </div>
@@ -466,7 +466,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
         </form>
 
         <div className="mt-12 text-center">
-          <p className="font-label-sm text-label-sm text-[#c6c5d4] opacity-60">
+          <p className="font-label-sm text-label-sm text-on-surface-variant opacity-60">
             © 2026 ELITE WAY SCHOOL - Ballroom Xua & Ballroom Bogotrans..
           </p>
         </div>
