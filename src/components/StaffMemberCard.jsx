@@ -2,9 +2,13 @@ import { useMemo, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { getDriveImageCandidates } from '../utils/driveImage';
 
+const MAX_BIO_PREVIEW = 120;
+
 function StaffMemberCard({ member }) {
   const { id, name, role, bio, photo, socialLinks, icon } = member;
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
   const hasPhoto = typeof photo === 'string' && photo.trim() !== '';
+  const shouldTruncate = (bio || '').length > MAX_BIO_PREVIEW;
 
   // Multiple candidate URLs are tried in order (Drive embeds aren't 100%
   // reliable across all sharing configs), falling back to a generated
@@ -92,19 +96,41 @@ function StaffMemberCard({ member }) {
         >
           {name}
         </h3>
-        <p className="text-on-surface-variant font-body-md leading-relaxed mb-3 opacity-80">
+        <p
+          onClick={() => shouldTruncate && setIsBioExpanded(!isBioExpanded)}
+          className={`text-on-surface-variant font-body-md leading-relaxed opacity-80 ${
+            shouldTruncate ? 'cursor-pointer' : ''
+          } ${shouldTruncate && !isBioExpanded ? 'mb-0 line-clamp-3' : 'mb-3'}`}
+        >
           {bio || 'Confirmación Pendiente'}
         </p>
-        {socialUrl && (
-          <a
-            href={socialUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-primary font-label-md hover:text-secondary transition-colors"
-            aria-label={`Red social de ${name}`}
+        {(socialUrl || shouldTruncate) && (
+          <div
+            className={`w-full flex items-center ${
+              socialUrl ? 'justify-between' : 'justify-end'
+            } ${shouldTruncate ? 'mt-3' : 'mt-0'}`}
           >
-            <span>{socialHandle}</span>
-          </a>
+            {socialUrl && (
+              <a
+                href={socialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary font-label-md hover:text-secondary transition-colors"
+                aria-label={`Red social de ${name}`}
+              >
+                <span>{socialHandle}</span>
+              </a>
+            )}
+            {shouldTruncate && (
+              <button
+                type="button"
+                onClick={() => setIsBioExpanded(!isBioExpanded)}
+                className="text-label-sm text-secondary uppercase font-bold tracking-widest hover:text-primary transition-colors"
+              >
+                {isBioExpanded ? 'Ver menos' : 'Ver más'}
+              </button>
+            )}
+          </div>
         )}
       </div>
     </article>
