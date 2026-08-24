@@ -95,7 +95,7 @@ const defaultStaff = [
     },
   ];
 
-function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = false }) {
+function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = false, autoOpenAdd = false, onAutoOpenAdd }) {
   const [staff, setStaff] = useState(initialStaff);
   const [isLoading, setIsLoading] = useState(!initialStaff || initialStaff.length === 0);
   const [editingMember, setEditingMember] = useState(null);
@@ -189,6 +189,13 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
       isVisible: false,
     });
   };
+
+  useEffect(() => {
+    if (autoOpenAdd && canEdit) {
+      handleAddClick()
+      if (onAutoOpenAdd) onAutoOpenAdd()
+    }
+  }, [autoOpenAdd])
 
   const handleSaveEdit = async (updated) => {
     setIsSubmitting(true);
@@ -745,6 +752,8 @@ StaffManagementSection.propTypes = {
   onUpdate: PropTypes.func,
   staff: PropTypes.array,
   canEdit: PropTypes.bool,
+  autoOpenAdd: PropTypes.bool,
+  onAutoOpenAdd: PropTypes.func,
 };
 
 export default StaffManagementSection;
