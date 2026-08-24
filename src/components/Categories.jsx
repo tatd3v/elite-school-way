@@ -9,7 +9,7 @@ export default function Categories() {
       aria-labelledby="categories-heading"
     >
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-        <div className="mb-16">
+        <div className="mb-8">
           <h2
             id="categories-heading"
             className="font-headline-lg text-headline-lg text-on-surface uppercase text-left border-l-8 border-secondary pl-6"

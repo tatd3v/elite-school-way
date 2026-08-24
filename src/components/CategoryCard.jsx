@@ -2,27 +2,38 @@ import PropTypes from 'prop-types'
 
 export default function CategoryCard({ category }) {
   return (
-    <div 
-      className="bg-surface-container-lowest border border-outline-variant/20 p-8 flex flex-col items-center text-center card-hover rounded-xl"
+    <article 
+      className="glass-effect rounded-lg p-4 glow-hover transition-all duration-300 group flex flex-col h-full relative overflow-hidden justify-around"
       role="article"
       aria-labelledby={`category-${category.id}`}
     >
-      <span 
-        className={`material-symbols-outlined text-4xl text-${category.iconColor} mb-4`}
-        aria-hidden="true"
-      >
-        {category.icon}
-      </span>
-      <h4 
-        id={`category-${category.id}`}
-        className="font-headline text-headline-md text-on-surface mb-2"
-      >
-        {category.title}
-      </h4>
-      <p className="font-body text-body-md text-on-surface-variant">
-        {category.description}
-      </p>
-    </div>
+      <div className="flex items-center gap-4 mb-6 relative z-10">
+        <div className="w-12 h-12 rounded-full bg-surface-container-high border border-outline flex items-center justify-center shrink-0">
+          <span className={`material-symbols-outlined text-${category.iconColor}`}>{category.icon}</span>
+        </div>
+        <div>
+          <h4
+            id={`category-${category.id}`}
+            className="font-headline-md text-headline-md md:text-body-md text-on-surface"
+          >
+            {category.title}
+          </h4>
+        </div>
+      </div>
+      
+      <div className="mb-6 relative z-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface-container-high rounded border border-tertiary/20">
+          <span className="material-symbols-outlined text-secondary text-sm">styler</span>
+          <p className="font-label-md text-label-md text-secondary">{category.dressCode || 'Dress Code'}</p>
+        </div>
+      </div>
+      
+      <div className="prose prose-invert max-w-none relative z-10 min-h-[200px] max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-secondary/20 scrollbar-track-transparent">
+        <p className="font-body-md text-body-md md:text-sm text-on-surface-variant leading-relaxed whitespace-pre-wrap">
+          {category.description}
+        </p>
+      </div>
+    </article>
   )
 }
 
