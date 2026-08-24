@@ -112,6 +112,7 @@ npm run test:ui          # Interactive UI
 ### Tests Disponibles
 
 - Fetch registrations
+- Add/delete registrations
 - Fetch staff
 - Add staff member
 - Update staff member
@@ -191,11 +192,10 @@ Las inscripciones se guardan en la hoja `Registrations` con las columnas:
 2. Nombre Artístico
 3. Email
 4. Teléfono
-5. House/007
-6. Categorías
+5. House/007 (opcional)
+6. Entrada
 7. Edad
 8. Screenshot
-9. Status (Registrado / Pagado)
 
 El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-data/PAGOS_QR` y solo se escribe el enlace en la hoja.
 
