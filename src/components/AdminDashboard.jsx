@@ -472,9 +472,6 @@ function AdminDashboard({ user }) {
                                 </td>
                                 <td className="p-2">
                                   <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full border border-outline-variant/50 overflow-hidden bg-surface-container-high flex items-center justify-center flex-shrink-0">
-                                      <span className="font-label-sm text-on-surface font-semibold text-xs">{getInitials(participant.name)}</span>
-                                    </div>
                                     <span className="font-label-sm text-on-background text-sm">{participant.name}</span>
                                   </div>
                                 </td>
