@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
 import { toDirectImageUrl } from '../utils/driveImage';
 import StaffEditModal from './StaffEditModal';
+import SearchBar from './SearchBar';
 
 const MAX_BIO_PREVIEW = 80;
 
@@ -105,24 +106,28 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const [actionSuccess, setActionSuccess] = useState(null);
   const [photoErrors, setPhotoErrors] = useState({});
   const [expandedBios, setExpandedBios] = useState({});
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [visibleCount, setVisibleCount] = useState(10);
   const [pageSize, setPageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const toggleBio = (id) =>
     setExpandedBios((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  const PAGE_SIZE = 4;
+  const handleSearch = (value) => {
+    setSearchQuery(value);
+    setVisibleCount(pageSize);
+  };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + PAGE_SIZE);
+    setVisibleCount((prev) => prev + pageSize);
   };
 
   const handlePrevPage = () => {
-    setVisibleCount((prev) => Math.max(PAGE_SIZE, prev - PAGE_SIZE));
+    setVisibleCount((prev) => Math.max(pageSize, prev - pageSize));
   };
 
   const goToPage = (page, total) => {
-    setVisibleCount(Math.min(page * PAGE_SIZE, total));
+    setVisibleCount(Math.min(page * pageSize, total));
   };
 
   const loadStaff = useCallback(async () => {
@@ -308,57 +313,51 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
     return 'secondary';
   };
 
-  const sortedStaff = [...staff].sort((a, b) => a.displayOrder - b.displayOrder);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredStaff = normalizedQuery
+    ? staff.filter((m) =>
+        [m.name, m.role, m.bio, m.socialLinks].some((field) =>
+          String(field || '').toLowerCase().includes(normalizedQuery)
+        )
+      )
+    : staff;
+  const sortedStaff = [...filteredStaff].sort((a, b) => a.displayOrder - b.displayOrder);
   const visibleStaff = sortedStaff.slice(0, visibleCount);
 
   return (
-    <section className="mb-section-gap-mobile">
-      <div className="luxury-card rounded-xl overflow-hidden">
+    <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
+      {actionError && (
+        <div className="p-3 rounded bg-error-container text-error text-sm font-body-md flex-shrink-0" role="alert">
+          {actionError}
+        </div>
+      )}
+      {actionSuccess && (
+        <div className="p-3 rounded bg-primary-fixed text-on-primary-fixed text-sm font-body-md flex-shrink-0" role="status">
+          {actionSuccess}
+        </div>
+      )}
 
-        <div className="p-5">
-          {actionError && (
-            <div className="mb-4 p-3 rounded bg-error-container text-error text-sm font-body-md" role="alert">
-              {actionError}
-            </div>
-          )}
-          {actionSuccess && (
-            <div className="mb-4 p-3 rounded bg-primary-fixed text-on-primary-fixed text-sm font-body-md" role="status">
-              {actionSuccess}
-            </div>
-          )}
+      <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3">
+        <div className="flex-1">
+          <SearchBar
+            onSearch={handleSearch}
+            placeholder="Buscar miembro..."
+          />
+        </div>
+        <button
+          type="button"
+          onClick={loadStaff}
+          className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+          aria-label="Actualizar datos"
+        >
+          <span className="material-symbols-outlined text-[20px]">refresh</span>
+        </button>
+      </div>
 
-          <div className="space-y-4">
+      <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0">
             <div className="md:hidden flex items-center justify-between mb-2">
               <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
               <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
-            </div>
-
-            {/* Controls: Refresh and Filas por página */}
-            <div className="hidden md:flex items-center gap-3 mb-4">
-              {/* Refresh Button */}
-              <button
-                type="button"
-                onClick={loadStaff}
-                className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
-                aria-label="Actualizar datos"
-              >
-                <span className="material-symbols-outlined text-[20px]">refresh</span>
-              </button>
-
-              {/* Filas por página dropdown */}
-              <div className="flex items-center bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/50 gold-border-focus gap-2">
-                <span className="text-label-sm text-on-surface-variant">Filas:</span>
-                <select
-                  value={pageSize}
-                  onChange={(e) => setPageSize(Number(e.target.value))}
-                  className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
-                >
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
-              </div>
             </div>
 
             {isLoading ? (
@@ -369,7 +368,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
             ) : (
               <>
                 {/* Mobile card list */}
-                <div className="md:hidden space-y-4">
+                <div className="md:hidden space-y-3 flex-1 overflow-y-auto">
                   {visibleStaff.map((member) => {
                     const color = getRoleColor(member.role);
                     const isBusy = togglingId === member.id || deletingId === member.id;
@@ -495,10 +494,10 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                 </div>
 
                 {/* Desktop table */}
-                <div className="hidden md:block bg-surface-container-low rounded-xl card-outline overflow-hidden">
-                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar">
+                <div className="hidden md:flex flex-col bg-surface-container-low rounded-xl card-outline overflow-hidden flex-1 min-h-0">
+                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
                     <table className="w-full min-w-full text-left border-collapse">
-                      <thead>
+                      <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Foto</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Nombre</th>
@@ -513,7 +512,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-outline-variant/20">
-                        {visibleStaff.map((member, idx) => {
+                        {visibleStaff.length > 0 ? (visibleStaff.map((member, idx) => {
                           const color = getRoleColor(member.role);
                           const isBusy = togglingId === member.id || deletingId === member.id;
                           const hasPhoto =
@@ -555,10 +554,10 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                               <td className="p-2 font-label-sm text-on-surface-variant max-w-xs truncate text-xs">
                                 {member.bio ? member.bio.substring(0, 50) + '...' : '—'}
                               </td>
-                              <td className="p-2 font-label-sm text-tertiary text-xs">
+                              <td className="p-2 font-label-sm text-on-surface-variant text-xs">
                                 {member.socialLinks ? getSocialHandle(member.socialLinks) : '—'}
                               </td>
-                              <td className="p-2 font-label-sm text-tertiary text-xs">
+                              <td className="p-2 font-label-sm text-on-surface-variant text-xs">
                                 {member.displayOrder ?? '—'}
                               </td>
                               <td className="p-2">
@@ -574,8 +573,8 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                                 </span>
                               </td>
                               {canEdit && (
-                                <td className="p-2 text-right">
-                                  <div className="flex justify-end gap-1">
+                                <td className="p-2 text-center">
+                                  <div className="flex justify-center gap-1">
                                     <button
                                       type="button"
                                       onClick={() => handleToggleVisibility(member)}
@@ -610,15 +609,21 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                               )}
                             </tr>
                           );
-                        })}
+                        })) : (
+                        <tr>
+                          <td colSpan={canEdit ? 8 : 7} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
+                            No se encontraron miembros del staff
+                          </td>
+                        </tr>
+                      )}
                       </tbody>
                     </table>
                   </div>
 
                   {/* Pagination footer */}
                   {sortedStaff.length > 0 && (() => {
-                    const totalPages = Math.ceil(sortedStaff.length / PAGE_SIZE);
-                    const currentPage = Math.ceil(visibleCount / PAGE_SIZE);
+                    const totalPages = Math.ceil(sortedStaff.length / pageSize);
+                    const currentPage = Math.ceil(visibleCount / pageSize);
                     const pageNumbers = totalPages <= 4
                       ? Array.from({ length: totalPages }, (_, i) => i + 1)
                       : [1, 2, 3];
@@ -627,6 +632,23 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                       <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4">
                         <div className="text-label-sm text-on-surface-variant text-xs">
                           Mostrando 1-{visibleStaff.length} de {sortedStaff.length} staff
+                        </div>
+                        <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
+                          <span className="text-label-sm text-on-surface-variant">Filas:</span>
+                          <select
+                            value={pageSize}
+                            onChange={(e) => {
+                              const next = Number(e.target.value);
+                              setPageSize(next);
+                              setVisibleCount(next);
+                            }}
+                            className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
+                          >
+                            <option value={10}>10</option>
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={100}>100</option>
+                          </select>
                         </div>
                         <div className="flex items-center gap-1">
                           <button
@@ -696,9 +718,6 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
               </button>
             )}
           </div>
-
-        </div>
-      </div>
 
       {canEdit && editingMember && (
         <StaffEditModal
