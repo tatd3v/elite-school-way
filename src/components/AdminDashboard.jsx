@@ -132,7 +132,6 @@ function AdminDashboard({ user }) {
   const handleDeleteClick = (participant) => {
     if (!isAdmin) return;
     setDeletingParticipant(participant);
-    setOpenMenuId(null);
   };
 
   const handleConfirmDelete = async () => {
@@ -338,16 +337,7 @@ function AdminDashboard({ user }) {
 
                           <div className="h-[1px] w-full bg-tertiary/10"></div>
 
-                          {isAdmin && (
-                            <div className="flex justify-end">
-                              <button
-                                onClick={(e) => toggleMenu(participant.id, e)}
-                                className="material-symbols-outlined text-on-surface-variant hover:text-primary flex-shrink-0"
-                              >
-                                more_vert
-                              </button>
-                            </div>
-                          )}
+
                         </div>
                       );
                     })
@@ -450,7 +440,7 @@ function AdminDashboard({ user }) {
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Screenshot</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Status</th>
                           {isAdmin && (
-                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-right">Acciones</th>
+                            <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Acciones</th>
                           )}
                         </tr>
                       </thead>
@@ -504,7 +494,7 @@ function AdminDashboard({ user }) {
                                           className="text-on-surface-variant hover:text-primary transition-colors"
                                           aria-label="Confirmar pago"
                                         >
-                                          <span className="material-symbols-outlined text-[16px]">paid</span>
+                                          <span className="material-symbols-outlined text-2xl">paid</span>
                                         </button>
                                       )}
                                       <button
@@ -513,7 +503,7 @@ function AdminDashboard({ user }) {
                                         className="text-on-surface-variant hover:text-primary transition-colors"
                                         aria-label="Editar participante"
                                       >
-                                        <span className="material-symbols-outlined text-[16px]">edit</span>
+                                        <span className="material-symbols-outlined text-2xl">edit</span>
                                       </button>
                                       <button
                                         type="button"
@@ -521,7 +511,7 @@ function AdminDashboard({ user }) {
                                         className="text-on-surface-variant hover:text-error transition-colors"
                                         aria-label="Eliminar participante"
                                       >
-                                        <span className="material-symbols-outlined text-[16px]">delete</span>
+                                        <span className="material-symbols-outlined text-2xl">delete</span>
                                       </button>
                                     </div>
                                   </td>
