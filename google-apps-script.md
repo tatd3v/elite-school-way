@@ -286,13 +286,17 @@ function doPost(e) {
       // formula (a leading "+" like "+57 300..." would otherwise trigger
       // Sheets' formula parser and show #ERROR!) or a number that drops
       // leading zeros (e.g. 007 becoming 7).
+      const rawEntry = data.entryType || '';
+      const entryDigits = String(rawEntry).replace(/\D/g, '');
+      const entryType = entryDigits ? Number(entryDigits) : 'N/A';
+
       const rowData = [
         new Date(data.timestamp),
         data.artistName,
         data.email,
         data.phone ? "'" + data.phone : '',
         data.house ? "'" + data.house : 'N/A',
-        data.entryType || 'N/A',
+        entryType,
         data.age,
         saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
         REGISTRATION_STATUS.REGISTERED
