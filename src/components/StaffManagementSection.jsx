@@ -173,10 +173,9 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   };
 
   const handleAddClick = useCallback(() => {
-    const visibleOrders = staff
-      .filter((m) => m.isVisible)
-      .map((m) => Number(m.displayOrder) || 0);
-    const nextOrder = visibleOrders.length > 0 ? Math.max(...visibleOrders) + 1 : 1;
+    // Get the highest displayOrder from ALL staff (not just visible)
+    const allOrders = staff.map((m) => Number(m.displayOrder) || 0);
+    const nextOrder = allOrders.length > 0 ? Math.max(...allOrders) + 1 : 1;
 
     setEditingMember({
       isNew: true,
