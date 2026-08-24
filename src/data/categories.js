@@ -3,7 +3,7 @@ export const categories = [
     id: 'realness',
     icon: 'verified',
     iconColor: 'secondary',
-    title: 'REALNESS',
+    title: 'REALNESS\n(FQ, BQ, TM, DG, Butch, TW)',
     dressCode: 'PROFE DE INGLÉS',
     description: 'Welcome to English class! En esta categoría, REALNESS se trata de encarnar al típico profesor de inglés de The Elite Way School: actitud, porte, estética y presencia de docente que entra al salón y automáticamente takes control of the class.\n\nPrepárate para servir desde el English teacher realness, interpretando el personaje a través de tu look, actitud y performance. Ya seas the cool teacher, el profe estricto, el favorito de los estudiantes o quien definitivamente tiene más drama que toda la institución junta… convéncenos de que tú das la clase.'
   },
