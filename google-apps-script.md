@@ -127,7 +127,7 @@ function initializeSheet() {
       'Email',
       'Teléfono',
       'House/007',
-      'Categorías',
+      'Entrada',
       'Edad',
       'Screenshot',
       'Status'
@@ -292,6 +292,7 @@ function doPost(e) {
         data.email,
         data.phone ? "'" + data.phone : '',
         data.house ? "'" + data.house : 'N/A',
+        data.entryType || 'N/A',
         data.age,
         saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
         REGISTRATION_STATUS.REGISTERED
@@ -363,11 +364,15 @@ function updateRegistration(data) {
     throw new Error('Invalid row index');
   }
 
+  const currentRow = sheet.getRange(rowIndex, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const currentEntryType = currentRow[5] || '';
+
   const row = [
     data.name || '',
     data.email || '',
     data.phone ? "'" + data.phone : '',
     data.house ? "'" + data.house : 'N/A',
+    data.entryType !== undefined ? data.entryType : currentEntryType,
     data.age || '',
   ];
 
@@ -406,9 +411,10 @@ function getRegistrations() {
         email: row[2],
         phone: row[3],
         house: row[4],
-        age: row[5],
-        screenshot: row[6],
-        status: row[7] || REGISTRATION_STATUS.REGISTERED
+        entryType: row[5],
+        age: row[6],
+        screenshot: row[7],
+        status: row[8] || REGISTRATION_STATUS.REGISTERED
       });
     }
     
