@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    background-color: #0c1030;
+    background-color: #fbf9f8;
     overflow-x: hidden;
     width: 100%;
   }
@@ -13,8 +13,8 @@
     font-family: 'Hanken Grotesk', sans-serif;
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
-    background-color: #0c1030;
-    color: #dfe0ff;
+    background-color: #fbf9f8;
+    color: #1b1c1c;
     overflow-x: hidden;
     width: 100%;
   }
