@@ -494,8 +494,8 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                 </div>
 
                 {/* Desktop table */}
-                <div className="hidden md:flex flex-col bg-surface-container-low rounded-xl card-outline overflow-hidden flex-1 min-h-0">
-                  <div className="sticky top-0 z-20 flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low border-b border-outline-variant/20">
+                <div className="hidden md:flex flex-col flex-1 min-h-0 w-full gap-3">
+                  <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0 bg-surface-container-low rounded-xl card-outline">
                     <div className="flex-1">
                       <SearchBar
                         onSearch={handleSearch}
@@ -511,7 +511,9 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                       <span className="material-symbols-outlined text-[20px]">refresh</span>
                     </button>
                   </div>
-                  <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
+
+                  <div className="bg-surface-container-low rounded-xl card-outline overflow-hidden flex-col flex-1 min-h-0 w-full flex">
+                    <div className="overflow-x-auto overflow-y-auto custom-scrollbar flex-1">
                     <table className="w-full min-w-full text-left border-collapse">
                       <thead className="sticky top-0 z-10">
                         <tr className="bg-surface-container-high border-b border-outline-variant/20">
@@ -719,7 +721,8 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                       </div>
                     );
                   })()}
-                </div>
+                    </div>
+                  </div>
               </>
             )}
 
