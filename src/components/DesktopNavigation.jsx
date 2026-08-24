@@ -4,7 +4,7 @@ import favicon from '../assets/favicon.png'
 import longLogo from '../assets/long_logo.png'
 import longLogoDarkBg from '../assets/long_logo_dark_bg.png'
 
-function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange }) {
+function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange, onNewStaff }) {
   const MIN_WIDTH = 200
   const MAX_WIDTH = 400
   const DEFAULT_WIDTH = 288 // 72 * 4 (w-72)
@@ -197,10 +197,29 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
       </nav>
 
       <div className={`border-t border-outline-variant/10 ${isCollapsed ? 'p-4' : 'p-6'} space-y-3`}>
+        {/* New Staff Button */}
+        <button
+          type="button"
+          onClick={() => {
+            if (onNewStaff) {
+              onNewStaff();
+            } else if (onTabChange) {
+              onTabChange('faculty');
+            }
+          }}
+          className={`w-full flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors ${
+            isCollapsed ? 'justify-center px-2' : 'px-4'
+          }`}
+          title={isCollapsed ? 'Nuevo Staff' : ''}
+        >
+          <span className="material-symbols-outlined text-2xl w-8 h-8 flex items-center justify-center leading-none">person_add</span>
+          {!isCollapsed && <span className="font-label-md">Nuevo Staff</span>}
+        </button>
+
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className={`w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-primary transition-colors ${
+          className={`w-full flex items-center gap-3 text-on-surface-variant hover:text-primary transition-colors ${
             isCollapsed ? 'justify-center px-2' : 'px-4'
           }`}
           title={isCollapsed ? (isDarkTheme ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro') : ''}
@@ -213,7 +232,7 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
 
         {/* Logout Button */}
         <button
-          className={`w-full flex items-center gap-3 py-3 text-on-surface-variant hover:text-error transition-colors ${
+          className={`w-full flex items-center gap-3 text-on-surface-variant hover:text-error transition-colors ${
             isCollapsed ? 'justify-center px-2' : 'px-4'
           }`}
           title={isCollapsed ? 'Cerrar Sesión' : ''}
@@ -241,6 +260,7 @@ DesktopNavigation.propTypes = {
   activeTab: PropTypes.string,
   onTabChange: PropTypes.func,
   onWidthChange: PropTypes.func,
+  onNewStaff: PropTypes.func,
 }
 
 export default DesktopNavigation
