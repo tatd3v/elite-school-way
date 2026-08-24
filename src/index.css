@@ -284,4 +284,35 @@
   .dark .conduct-list li + li {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
+
+  /* Glass effect for category cards */
+  .glass-effect {
+    background: rgba(22, 27, 61, 0.6);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(175, 141, 17, 0.2);
+  }
+
+  .glow-hover:hover {
+    box-shadow: 0 0 15px rgba(233, 195, 73, 0.15);
+    border-color: rgba(233, 195, 73, 0.4);
+  }
+
+  /* Scrollbar styling for prose containers */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(233, 195, 73, 0.2);
+    border-radius: 2px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(233, 195, 73, 0.4);
+  }
 }
