@@ -28,6 +28,7 @@ function AdminDashboard({ user }) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
+  const [pendingAddStaff, setPendingAddStaff] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -187,10 +188,14 @@ function AdminDashboard({ user }) {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onWidthChange={setSidebarWidth}
+        onNewStaff={() => {
+          setActiveTab('faculty')
+          setPendingAddStaff(true)
+        }}
       />
 
       <main
-        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile linen-texture md:ml-[var(--sidebar-width)] md:pt-0"
+        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile pt-4 linen-texture md:ml-[var(--sidebar-width)] md:pt-0"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
         <div className="w-full h-full flex flex-col space-y-3 py-3 md:space-y-2 md:py-2 gap-3">
@@ -589,7 +594,13 @@ function AdminDashboard({ user }) {
 
               {/* Staff Section */}
               {activeTab === 'faculty' && (
-                <StaffManagementSection onUpdate={handleStaffUpdate} staff={staff} canEdit={isAdmin} />
+                <StaffManagementSection
+                  onUpdate={handleStaffUpdate}
+                  staff={staff}
+                  canEdit={isAdmin}
+                  autoOpenAdd={pendingAddStaff}
+                  onAutoOpenAdd={() => setPendingAddStaff(false)}
+                />
               )}
             </>
           )}
