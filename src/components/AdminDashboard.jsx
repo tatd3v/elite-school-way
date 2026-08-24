@@ -29,6 +29,7 @@ function AdminDashboard({ user }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     loadDashboardData();
@@ -198,7 +199,7 @@ function AdminDashboard({ user }) {
     return matchesSearch && matchesStatus;
   });
 
-  const visibleParticipants = filteredParticipants.slice(0, visibleCount);
+  const visibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize));
 
   const getInitials = (name) => {
     if (!name) return '';
@@ -262,6 +263,31 @@ function AdminDashboard({ user }) {
                 <div className="flex items-center gap-3 mb-6 flex-shrink-0 md:mb-4">
                   <div className="flex-1">
                     <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
+                  </div>
+
+                  {/* Refresh Button */}
+                  <button
+                    type="button"
+                    onClick={loadDashboardData}
+                    className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                    aria-label="Actualizar datos"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">refresh</span>
+                  </button>
+
+                  {/* Filas por página dropdown */}
+                  <div className="hidden md:flex items-center bg-surface-container-low rounded-lg px-3 py-2 border border-outline-variant/50 gold-border-focus gap-2">
+                    <span className="text-label-sm text-on-surface-variant">Filas:</span>
+                    <select
+                      value={pageSize}
+                      onChange={(e) => setPageSize(Number(e.target.value))}
+                      className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
+                    >
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
                   </div>
 
                   <div className="relative">
