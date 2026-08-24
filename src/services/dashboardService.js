@@ -168,7 +168,6 @@ class DashboardService {
         email: participant.email,
         phone: participant.phone,
         house: participant.house,
-        categories: participant.categories,
         age: participant.age,
       });
       return { success: result?.status === 'success', data: result };
