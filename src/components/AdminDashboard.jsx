@@ -173,11 +173,6 @@ function AdminDashboard({ user }) {
 
   const visibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize));
 
-  const getInitials = (name) => {
-    if (!name) return '';
-    return name.split(' ').map((w) => w[0]).join('').substring(0, 2).toUpperCase();
-  };
-
   const getCleanHouse = (house) => {
     if (!house) return '—';
     return String(house).replace(/^'/, '');
@@ -240,10 +235,10 @@ function AdminDashboard({ user }) {
                   <button
                     type="button"
                     onClick={loadDashboardData}
-                    className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                    className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
                     aria-label="Actualizar datos"
                   >
-                    <span className="material-symbols-outlined text-[20px]">refresh</span>
+                    <span className="material-symbols-outlined text-primary">refresh</span>
                   </button>
 
                   <div className="relative">
@@ -299,7 +294,7 @@ function AdminDashboard({ user }) {
                 </div>
 
                 {/* Participantes Card List (mobile) */}
-                <div className="md:hidden flex flex-col gap-4 pb-20">
+                <div className="md:hidden flex flex-col gap-4 pb-32">
                   {visibleParticipants.length > 0 ? (
                     visibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
@@ -458,10 +453,10 @@ function AdminDashboard({ user }) {
                     <button
                       type="button"
                       onClick={loadDashboardData}
-                      className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                      className="flex items-center justify-center order-last p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
                       aria-label="Actualizar datos"
                     >
-                      <span className="material-symbols-outlined text-[20px]">refresh</span>
+                      <span className="material-symbols-outlined text-primary">refresh</span>
                     </button>
 
                     <div className="relative">
