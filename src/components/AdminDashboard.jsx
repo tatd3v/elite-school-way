@@ -28,6 +28,7 @@ function AdminDashboard({ user }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [pendingAddStaff, setPendingAddStaff] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -58,6 +59,7 @@ function AdminDashboard({ user }) {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    setCurrentPage(1);
   };
 
   const handleStaffUpdate = async () => {
@@ -76,6 +78,18 @@ function AdminDashboard({ user }) {
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => Math.min(prev + 3, pageSize));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages, prev + 1));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(1, prev - 1));
+  };
+
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(1, page), totalPages));
   };
 
   const handleConfirmPayment = async (participantId) => {
@@ -172,7 +186,14 @@ function AdminDashboard({ user }) {
     return matchesSearch && matchesStatus;
   });
 
-  const visibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize));
+  const totalPages = Math.ceil(filteredParticipants.length / pageSize) || 1;
+  // Desktop table uses real page-based pagination.
+  const desktopVisibleParticipants = filteredParticipants.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+  // Mobile card list keeps its own incremental "load more" behavior.
+  const mobileVisibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize));
 
   const getCleanHouse = (house) => {
     if (!house) return '—';
@@ -275,6 +296,7 @@ function AdminDashboard({ user }) {
                               key={option.id}
                               onClick={() => {
                                 setStatusFilter(option.id);
+                                setCurrentPage(1);
                                 setIsFilterOpen(false);
                               }}
                               className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
@@ -297,8 +319,8 @@ function AdminDashboard({ user }) {
 
                 {/* Participantes Card List (mobile) */}
                 <div className="md:hidden flex flex-col gap-4 pb-32">
-                  {visibleParticipants.length > 0 ? (
-                    visibleParticipants.map((participant) => {
+                  {mobileVisibleParticipants.length > 0 ? (
+                    mobileVisibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
                       const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
                       const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
@@ -493,6 +515,7 @@ function AdminDashboard({ user }) {
                                 key={option.id}
                                 onClick={() => {
                                   setStatusFilter(option.id);
+                                  setCurrentPage(1);
                                   setIsFilterOpen(false);
                                 }}
                                 className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
@@ -532,8 +555,8 @@ function AdminDashboard({ user }) {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-outline-variant/20">
-                        {visibleParticipants.length > 0 ? (
-                          visibleParticipants.map((participant, idx) => {
+                        {desktopVisibleParticipants.length > 0 ? (
+                          desktopVisibleParticipants.map((participant, idx) => {
                             const isPaid = participant.status === REGISTRATION_STATUS.PAID;
                             const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
                             const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
@@ -620,16 +643,17 @@ function AdminDashboard({ user }) {
                   {/* Pagination */}
                   <div className="flex flex-col md:flex-row justify-between items-center p-2 border-t border-outline-variant/20 gap-4 flex-shrink-0">
                     <div className="text-label-sm text-on-surface-variant text-xs">
-                      Mostrando 1-{visibleParticipants.length} de {filteredParticipants.length}
+                      {filteredParticipants.length === 0
+                        ? 'No se encontraron participantes'
+                        : `Mostrando ${(currentPage - 1) * pageSize + 1}-${Math.min(currentPage * pageSize, filteredParticipants.length)} de ${filteredParticipants.length}`}
                     </div>
                     <div className="flex items-center bg-surface-container-low rounded-lg px-2 py-1 border border-outline-variant/50 gold-border-focus gap-2">
                       <span className="text-label-sm text-on-surface-variant">Filas:</span>
                       <select
                         value={pageSize}
                         onChange={(e) => {
-                          const next = Number(e.target.value);
-                          setPageSize(next);
-                          setVisibleCount(next);
+                          setPageSize(Number(e.target.value));
+                          setCurrentPage(1);
                         }}
                         className="bg-transparent border-none outline-none text-label-sm text-on-background focus:ring-0 cursor-pointer"
                       >
@@ -642,19 +666,33 @@ function AdminDashboard({ user }) {
                     </div>
                     <div className="flex items-center gap-1">
                       <button
-                        disabled
+                        type="button"
+                        onClick={handlePrevPage}
+                        disabled={currentPage <= 1}
                         className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
                         <span className="material-symbols-outlined text-[18px]">chevron_left</span>
                       </button>
                       <div className="flex gap-0.5">
-                        <button className="w-6 h-6 flex items-center justify-center rounded bg-primary text-on-primary font-label-sm text-xs">1</button>
-                        <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-sm text-xs transition-colors">2</button>
-                        <button className="w-6 h-6 flex items-center justify-center rounded hover:bg-surface-container-highest text-on-surface-variant font-label-sm text-xs transition-colors">3</button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                          <button
+                            key={page}
+                            type="button"
+                            onClick={() => goToPage(page)}
+                            className={`w-6 h-6 flex items-center justify-center rounded font-label-sm text-xs transition-colors ${
+                              page === currentPage
+                                ? 'bg-primary text-on-primary'
+                                : 'hover:bg-surface-container-highest text-on-surface-variant'
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        ))}
                       </div>
                       <button
-                        onClick={handleLoadMore}
-                        disabled={visibleCount >= filteredParticipants.length}
+                        type="button"
+                        onClick={handleNextPage}
+                        disabled={currentPage >= totalPages}
                         className="p-1 rounded hover:bg-surface-container-highest transition-colors text-on-surface-variant disabled:opacity-50"
                       >
                         <span className="material-symbols-outlined text-[18px]">chevron_right</span>
