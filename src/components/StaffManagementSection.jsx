@@ -201,6 +201,27 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
     setActionError(null);
 
     try {
+      // Check if the desired displayOrder is already taken by a different member
+      const desiredOrder = Number(updated.displayOrder) || 0;
+      const currentMemberOldOrder = Number(editingMember?.displayOrder) || 0;
+      const existingMember = staff.find(
+        (m) => Number(m.displayOrder) === desiredOrder && m.id !== updated.id
+      );
+
+      if (existingMember) {
+        // Simple swap: give the existing member the current member's old order
+        const updateResult = await dashboardService.updateStaff({
+          ...existingMember,
+          displayOrder: currentMemberOldOrder,
+        });
+
+        if (!updateResult.success) {
+          showError('No se pudo reorganizar los órdenes');
+          return;
+        }
+      }
+
+      // Now update the current member with the desired order
       const result = await dashboardService.updateStaff(updated);
 
       if (result.success) {
@@ -224,6 +245,28 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
     setActionError(null);
 
     try {
+      // Check if the desired displayOrder is already taken
+      const desiredOrder = Number(data.displayOrder) || 0;
+      const existingMember = staff.find((m) => Number(m.displayOrder) === desiredOrder);
+
+      if (existingMember) {
+        // Find the next available order
+        const allOrders = staff.map((m) => Number(m.displayOrder) || 0);
+        const nextAvailable = allOrders.length > 0 ? Math.max(...allOrders) + 1 : 1;
+
+        // Update the existing member with the next available order
+        const updateResult = await dashboardService.updateStaff({
+          ...existingMember,
+          displayOrder: nextAvailable,
+        });
+
+        if (!updateResult.success) {
+          showError('No se pudo reorganizar los órdenes');
+          return;
+        }
+      }
+
+      // Now add the new staff member with the desired order
       const result = await dashboardService.addStaff(data);
 
       if (result.success) {
