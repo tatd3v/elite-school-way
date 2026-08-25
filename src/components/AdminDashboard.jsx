@@ -29,6 +29,8 @@ function AdminDashboard({ user }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [pageSize, setPageSize] = useState(10);
   const [pendingAddStaff, setPendingAddStaff] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [menuPosition, setMenuPosition] = useState(null);
 
   useEffect(() => {
     loadDashboardData();
@@ -296,7 +298,7 @@ function AdminDashboard({ user }) {
                 </div>
 
                 {/* Participantes Card List (mobile) */}
-                <div className="md:hidden flex flex-col gap-4 pb-2">
+                <div className="md:hidden flex flex-col gap-4 pb-32">
                   {visibleParticipants.length > 0 ? (
                     visibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
@@ -309,18 +311,13 @@ function AdminDashboard({ user }) {
                       return (
                         <div
                           key={participant.id}
-                          className="glass-panel rounded-xl p-4 flex flex-col gap-3 relative overflow-hidden"
+                          className="glass-panel rounded-xl p-5 flex flex-col gap-4 relative overflow-visible border border-outline-variant/20"
                         >
                           <div className="absolute top-0 right-0 w-24 h-24 bg-primary-container/5 rounded-bl-full blur-xl pointer-events-none"></div>
 
-                          <div className="flex justify-between items-start">
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className="h-12 w-12 rounded-full overflow-hidden border border-outline-variant/30 shrink-0 bg-surface-container-high flex items-center justify-center">
-                                <span className="font-body-md text-on-surface font-semibold">
-                                  {getInitials(participant.name)}
-                                </span>
-                              </div>
-                              <div className="min-w-0">
+                          <div className="flex items-center justify-between relative z-10 gap-3">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className="flex-1 min-w-0">
                                 <h3 className="font-headline-md text-[18px] leading-tight text-on-surface truncate">
                                   {participant.name}
                                 </h3>
@@ -329,15 +326,98 @@ function AdminDashboard({ user }) {
                                 </p>
                               </div>
                             </div>
-                            <div className={`flex items-center gap-1 px-2 py-1 rounded-full border flex-shrink-0 ${statusClass}`}>
-                              <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></div>
-                              <span className="font-label-sm text-label-sm">{statusLabel}</span>
+                            <div className="flex flex-col items-end gap-2 shrink-0">
+                              <div className="flex items-center gap-2 relative">
+                                <div className={`flex items-center gap-1 px-2 py-1 rounded-full border flex-shrink-0 ${statusClass}`}>
+                                  <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></div>
+                                  <span className="font-label-sm text-label-sm">{statusLabel}</span>
+                                </div>
+                                <button
+                                  onClick={(e) => {
+                                    if (openMenuId === participant.id) {
+                                      setOpenMenuId(null);
+                                      setMenuPosition(null);
+                                    } else {
+                                      const rect = e.currentTarget.getBoundingClientRect();
+                                      setMenuPosition({
+                                        top: rect.bottom + window.scrollY + 4,
+                                        right: window.innerWidth - rect.right - window.scrollX,
+                                      });
+                                      setOpenMenuId(participant.id);
+                                    }
+                                  }}
+                                  className="text-on-surface-variant hover:text-secondary transition-colors"
+                                  aria-label="Menú de opciones"
+                                >
+                                  <span className="material-symbols-outlined">more_vert</span>
+                                </button>
+
+                                {openMenuId === participant.id && menuPosition && createPortal(
+                                  <>
+                                    <div
+                                      className="fixed inset-0 z-40"
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        setMenuPosition(null);
+                                      }}
+                                    ></div>
+                                    <div
+                                      className="absolute bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-2xl z-[60] min-w-max"
+                                      style={{ top: `${menuPosition.top}px`, right: `${menuPosition.right}px` }}
+                                    >
+                                      {!isPaid && (
+                                        <button
+                                          onClick={() => {
+                                            handleConfirmPayment(participant.id);
+                                            setOpenMenuId(null);
+                                            setMenuPosition(null);
+                                          }}
+                                          className="w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-2 text-sm"
+                                        >
+                                          <span className="material-symbols-outlined text-sm">paid</span>
+                                          Confirmar Pago
+                                        </button>
+                                      )}
+                                      <button
+                                        onClick={() => {
+                                          handleEditClick(participant);
+                                          setOpenMenuId(null);
+                                          setMenuPosition(null);
+                                        }}
+                                        className={`w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-2 text-sm ${!isPaid ? 'border-t border-outline-variant/20' : ''}`}
+                                      >
+                                        <span className="material-symbols-outlined text-sm">edit</span>
+                                        Editar
+                                      </button>
+                                      <button
+                                        onClick={() => {
+                                          handleDeleteClick(participant);
+                                          setOpenMenuId(null);
+                                          setMenuPosition(null);
+                                        }}
+                                        className="w-full text-left px-4 py-2 text-error hover:bg-surface-container-highest transition-colors flex items-center gap-2 text-sm border-t border-outline-variant/20"
+                                      >
+                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  </>,
+                                  document.body
+                                )}
+                              </div>
+                              {participant.screenshot && (
+                                <a
+                                  href={participant.screenshot}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 text-secondary font-label-md hover:opacity-80 transition-opacity"
+                                >
+                                  <span className="material-symbols-outlined text-sm">qr_code_2</span>
+                                  QR
+                                </a>
+                              )}
                             </div>
                           </div>
-
-                          <div className="h-[1px] w-full bg-tertiary/10"></div>
-
-
                         </div>
                       );
                     })
