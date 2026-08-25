@@ -400,27 +400,30 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </div>
       )}
 
-      <div className="md:hidden flex items-center justify-between mb-4 flex-shrink-0">
-        <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
-        <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
-        <ThemeToggle />
-      </div>
-
-      <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
-        <div className="flex-1">
-          <SearchBar
-            onSearch={handleSearch}
-            placeholder="Buscar miembro..."
-          />
+      {/* Header Section (mobile only, sticky so it stays visible while the list scrolls) */}
+      <div className="md:hidden sticky top-0 z-10 bg-background flex-shrink-0">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
+          <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
+          <ThemeToggle />
         </div>
-        <button
-          type="button"
-          onClick={loadStaff}
-          className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
-          aria-label="Actualizar datos"
-        >
-          <span className="material-symbols-outlined text-primary">refresh</span>
-        </button>
+
+        <div className="flex items-center gap-3 mb-4">
+          <div className="flex-1">
+            <SearchBar
+              onSearch={handleSearch}
+              placeholder="Buscar miembro..."
+            />
+          </div>
+          <button
+            type="button"
+            onClick={loadStaff}
+            className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
+            aria-label="Actualizar datos"
+          >
+            <span className="material-symbols-outlined text-primary">refresh</span>
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0 pb-32 md:pb-0">
