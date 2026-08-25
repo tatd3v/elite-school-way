@@ -208,12 +208,13 @@ describe.skipIf(!shouldRun)('Staff Pagination Tests', () => {
     expect(data.staff.length).toBeGreaterThan(0);
   }, { timeout: 15000 });
 
-  it('should support pagination with initial load of 4 items', async () => {
+  it('should support pagination with initial load of 15 items', async () => {
     const data = await fetchStaff(true);
     const allStaff = data.staff;
     
-    // Simulate pagination: first page shows 4 items
-    const pageSize = 4;
+    // Simulate pagination: first page shows 15 items (matches the mobile
+    // "Cargar más" initial load size in StaffManagementSection.jsx)
+    const pageSize = 15;
     const firstPage = allStaff.slice(0, pageSize);
     
     expect(firstPage.length).toBeLessThanOrEqual(pageSize);
@@ -224,18 +225,18 @@ describe.skipIf(!shouldRun)('Staff Pagination Tests', () => {
     const data = await fetchStaff(true);
     const allStaff = data.staff;
     
-    if (allStaff.length <= 4) {
-      // Skip test if there are 4 or fewer staff members
-      expect(allStaff.length).toBeLessThanOrEqual(4);
+    if (allStaff.length <= 15) {
+      // Skip test if there are 15 or fewer staff members
+      expect(allStaff.length).toBeLessThanOrEqual(15);
       return;
     }
     
-    // Simulate pagination: first page (4 items)
-    const pageSize = 4;
+    // Simulate pagination: first page (15 items)
+    const pageSize = 15;
     const firstPage = allStaff.slice(0, pageSize);
     expect(firstPage.length).toBe(pageSize);
     
-    // Simulate loading more: second page (next 4 items)
+    // Simulate loading more: second page (next 15 items)
     const secondPage = allStaff.slice(pageSize, pageSize * 2);
     expect(secondPage.length).toBeGreaterThan(0);
     expect(secondPage.length).toBeLessThanOrEqual(pageSize);
@@ -251,13 +252,13 @@ describe.skipIf(!shouldRun)('Staff Pagination Tests', () => {
     const data = await fetchStaff(true);
     const allStaff = data.staff;
     
-    if (allStaff.length <= 4) {
-      expect(allStaff.length).toBeLessThanOrEqual(4);
+    if (allStaff.length <= 15) {
+      expect(allStaff.length).toBeLessThanOrEqual(15);
       return;
     }
     
     // Check that displayOrder is consistent across pages
-    const pageSize = 4;
+    const pageSize = 15;
     const firstPage = allStaff.slice(0, pageSize);
     const secondPage = allStaff.slice(pageSize, pageSize * 2);
     

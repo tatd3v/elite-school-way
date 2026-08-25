@@ -167,12 +167,13 @@ describe.skipIf(!shouldRun)('Registrations Pagination Tests', () => {
     expect(Array.isArray(data.registrations)).toBe(true);
   }, { timeout: 15000 });
 
-  it('should support pagination with initial load of 3 items', async () => {
+  it('should support pagination with initial load of 15 items', async () => {
     const data = await fetchRegistrations();
     const allRegistrations = data.registrations;
     
-    // Simulate pagination: first page shows 3 items
-    const pageSize = 3;
+    // Simulate pagination: first page shows 15 items (matches the mobile
+    // "Cargar más" initial load size in AdminDashboard.jsx)
+    const pageSize = 15;
     const firstPage = allRegistrations.slice(0, pageSize);
     
     expect(firstPage.length).toBeLessThanOrEqual(pageSize);
@@ -182,18 +183,18 @@ describe.skipIf(!shouldRun)('Registrations Pagination Tests', () => {
     const data = await fetchRegistrations();
     const allRegistrations = data.registrations;
     
-    if (allRegistrations.length <= 3) {
-      // Skip test if there are 3 or fewer registrations
-      expect(allRegistrations.length).toBeLessThanOrEqual(3);
+    if (allRegistrations.length <= 15) {
+      // Skip test if there are 15 or fewer registrations
+      expect(allRegistrations.length).toBeLessThanOrEqual(15);
       return;
     }
     
-    // Simulate pagination: first page (3 items)
-    const pageSize = 3;
+    // Simulate pagination: first page (15 items)
+    const pageSize = 15;
     const firstPage = allRegistrations.slice(0, pageSize);
     expect(firstPage.length).toBe(pageSize);
     
-    // Simulate loading more: second page (next 3 items)
+    // Simulate loading more: second page (next 15 items)
     const secondPage = allRegistrations.slice(pageSize, pageSize * 2);
     expect(secondPage.length).toBeGreaterThan(0);
     expect(secondPage.length).toBeLessThanOrEqual(pageSize);
@@ -209,13 +210,13 @@ describe.skipIf(!shouldRun)('Registrations Pagination Tests', () => {
     const data = await fetchRegistrations();
     const allRegistrations = data.registrations;
     
-    if (allRegistrations.length <= 3) {
-      expect(allRegistrations.length).toBeLessThanOrEqual(3);
+    if (allRegistrations.length <= 15) {
+      expect(allRegistrations.length).toBeLessThanOrEqual(15);
       return;
     }
     
     // Check that each registration has required fields
-    const pageSize = 3;
+    const pageSize = 15;
     const firstPage = allRegistrations.slice(0, pageSize);
     const secondPage = allRegistrations.slice(pageSize, pageSize * 2);
     
