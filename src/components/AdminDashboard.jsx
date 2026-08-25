@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect, useRef } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
@@ -31,6 +31,7 @@ function AdminDashboard({ user }) {
   const [pendingAddStaff, setPendingAddStaff] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [menuPosition, setMenuPosition] = useState(null);
+  const loadMoreBtnRef = useRef(null);
 
   useEffect(() => {
     loadDashboardData();
@@ -298,7 +299,7 @@ function AdminDashboard({ user }) {
                 </div>
 
                 {/* Participantes Card List (mobile) */}
-                <div className="md:hidden flex flex-col gap-4 pb-32">
+                <div className="md:hidden flex flex-col gap-4 pb-20">
                   {visibleParticipants.length > 0 ? (
                     visibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
@@ -429,8 +430,17 @@ function AdminDashboard({ user }) {
 
                   {visibleCount < Math.min(pageSize, filteredParticipants.length) && (
                     <button
-                      onClick={handleLoadMore}
-                      className="w-full py-4 mt-2 border border-outline-variant/30 rounded-xl text-secondary font-label-md text-label-md hover:bg-surface-container-high transition-colors"
+                      ref={loadMoreBtnRef}
+                      onClick={() => {
+                        handleLoadMore();
+                        // Ensure the button stays visible above the fixed mobile
+                        // bottom nav (h-20 = 80px) once new cards render below it.
+                        // scroll-mb-24 (96px) keeps a safe clearance margin.
+                        requestAnimationFrame(() => {
+                          loadMoreBtnRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                        });
+                      }}
+                      className="w-full py-4 mt-2 border border-outline-variant/30 rounded-xl text-secondary font-label-md text-label-md hover:bg-surface-container-high transition-colors scroll-mb-24"
                     >
                       Cargar más ({visibleCount} de {filteredParticipants.length})
                     </button>
