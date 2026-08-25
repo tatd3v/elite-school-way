@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useRef } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
 import { toDirectImageUrl } from '../utils/driveImage';
 import StaffEditModal from './StaffEditModal';
 import SearchBar from './SearchBar';
+import ThemeToggle from './ThemeToggle';
 
 const MAX_BIO_PREVIEW = 80;
 
@@ -109,6 +110,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  const loadMoreBtnRef = useRef(null);
 
   const toggleBio = (id) =>
     setExpandedBios((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -389,7 +391,8 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
 
       <div className="md:hidden flex items-center justify-between mb-4 flex-shrink-0">
         <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
-        <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
+        <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
+        <ThemeToggle />
       </div>
 
       <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
@@ -409,7 +412,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </button>
       </div>
 
-      <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0">
+      <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0 pb-32 md:pb-0">
             {isLoading ? (
               <div className="py-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
@@ -754,10 +757,19 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
             {/* Load More Button (mobile) */}
             {currentPage < totalPages && (
               <button
+                ref={loadMoreBtnRef}
                 type="button"
-                onClick={handleNextPage}
+                onClick={() => {
+                  handleNextPage();
+                  // Ensure the button stays visible above the fixed mobile
+                  // bottom nav (h-20 = 80px) once new members render below it.
+                  // scroll-mb-24 (96px) keeps a safe clearance margin.
+                  requestAnimationFrame(() => {
+                    loadMoreBtnRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                  });
+                }}
                 disabled={currentPage >= totalPages}
-                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50"
+                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50 scroll-mb-24"
               >
                 Cargar más (pág. {currentPage} de {totalPages})
               </button>
