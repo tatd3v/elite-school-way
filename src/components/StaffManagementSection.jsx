@@ -387,6 +387,11 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </div>
       )}
 
+      <div className="md:hidden flex items-center justify-between mb-4 flex-shrink-0">
+        <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
+        <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
+      </div>
+
       <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
         <div className="flex-1">
           <SearchBar
@@ -397,19 +402,14 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         <button
           type="button"
           onClick={loadStaff}
-          className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+          className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
           aria-label="Actualizar datos"
         >
-          <span className="material-symbols-outlined text-[20px]">refresh</span>
+          <span className="material-symbols-outlined text-primary">refresh</span>
         </button>
       </div>
 
       <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0">
-            <div className="md:hidden flex items-center justify-between mb-2">
-              <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
-              <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
-            </div>
-
             {isLoading ? (
               <div className="py-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
@@ -555,10 +555,10 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                     <button
                       type="button"
                       onClick={loadStaff}
-                      className="flex items-center justify-center bg-surface-container-low rounded-lg p-2 border border-outline-variant/50 text-on-surface-variant hover:text-primary hover:bg-surface-container-highest transition-colors duration-300 cursor-pointer active:opacity-70 gold-border-focus"
+                      className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
                       aria-label="Actualizar datos"
                     >
-                      <span className="material-symbols-outlined text-[20px]">refresh</span>
+                      <span className="material-symbols-outlined text-primary">refresh</span>
                     </button>
                   </div>
 
