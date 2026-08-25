@@ -9,6 +9,7 @@ import StaffManagementSection from './StaffManagementSection';
 import BottomNavigation from './BottomNavigation';
 import DesktopNavigation from './DesktopNavigation';
 import ParticipantEditModal from './ParticipantEditModal';
+import ThemeToggle from './ThemeToggle';
 
 const ADMIN_ROLE = 'admin';
 
@@ -223,7 +224,8 @@ function AdminDashboard({ user }) {
                 {/* Header Section (mobile only) */}
                 <div className="md:hidden flex items-center justify-between mb-6 flex-shrink-0">
                   <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
-                  <div className="h-px flex-1 bg-outline-variant/30 ml-4"></div>
+                  <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
+                  <ThemeToggle />
                 </div>
 
                 <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
