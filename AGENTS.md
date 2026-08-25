@@ -145,12 +145,9 @@ Key sheets (auto-created lazily on first use, not up front):
 - **Mobile horizontal overflow**: `html`/`body` in `src/index.css` have `overflow-x: hidden` as a safety net. When adding new large headings, always step down font size responsively (see `Hero.jsx`'s `text-3xl md:text-display-lg-mobile lg:text-display-lg` pattern) rather than using bare `text-display-lg`, since 56px headings can overflow narrow viewports.
 
 ## Pagination
-- **AdminDashboard (Participants)**: Uses proper `currentPage`/`pageSize` pagination (state: `currentPage`, `pageSize`)
-- **StaffManagementSection (Staff)**: Uses proper `currentPage`/`pageSize` pagination (state: `currentPage`, `pageSize`)
-- Both use `.slice((currentPage - 1) * pageSize, currentPage * pageSize)` to display the active page
-- `Filas` selector updates `pageSize` and resets to page 1
-- Page number buttons, previous/next chevrons navigate `currentPage`
-- Text shows: `Mostrando {start}-{end} de {total}`
+- **AdminDashboard (Participants) — desktop table**: Uses proper `currentPage`/`pageSize` pagination (state: `currentPage`, `pageSize`), sliced via `desktopVisibleParticipants = filteredParticipants.slice((currentPage - 1) * pageSize, currentPage * pageSize)`. `Filas` selector updates `pageSize` and resets to page 1. Page number buttons and previous/next chevrons navigate `currentPage`. Text shows `Mostrando {start}-{end} de {total}`.
+- **AdminDashboard (Participants) — mobile card list**: Intentionally kept as a separate, simpler incremental "load more" pattern (state: `visibleCount`), NOT the `currentPage` pagination above — `mobileVisibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize))`, grown by 3 via `handleLoadMore`/"Cargar más" button. Do not merge this into the desktop `currentPage` scheme without explicit approval — they were deliberately decoupled so fixing desktop pagination wouldn't change mobile UX.
+- **StaffManagementSection (Staff)**: Uses proper `currentPage`/`pageSize` pagination on both desktop and mobile (state: `currentPage`, `pageSize`), sliced via `.slice((currentPage - 1) * pageSize, currentPage * pageSize)`. Same `Filas`/page button/chevron/`Mostrando` conventions as above.
 
 ## Conventions
 - Spanish UI copy throughout (site is for a Spanish-speaking ballroom community in Bogotá, Colombia).
