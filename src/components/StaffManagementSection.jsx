@@ -110,6 +110,9 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState('');
+  // Mobile card list uses its own incremental "load more" count, independent
+  // of the desktop table's currentPage/pageSize.
+  const [mobileVisibleCount, setMobileVisibleCount] = useState(15);
   const loadMoreBtnRef = useRef(null);
 
   const toggleBio = (id) =>
@@ -118,6 +121,11 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const handleSearch = (value) => {
     setSearchQuery(value);
     setCurrentPage(1);
+    setMobileVisibleCount(15);
+  };
+
+  const handleLoadMoreMobile = () => {
+    setMobileVisibleCount((prev) => prev + 15);
   };
 
   const handleNextPage = () => {
@@ -374,7 +382,10 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
     : staff;
   const sortedStaff = [...filteredStaff].sort((a, b) => a.displayOrder - b.displayOrder);
   const totalPages = Math.ceil(sortedStaff.length / pageSize) || 1;
+  // Desktop table uses real page-based pagination.
   const visibleStaff = sortedStaff.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  // Mobile card list keeps its own incremental "load more" behavior.
+  const mobileVisibleStaff = sortedStaff.slice(0, mobileVisibleCount);
 
   return (
     <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
@@ -422,7 +433,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
               <>
                 {/* Mobile card list */}
                 <div className="md:hidden space-y-3 flex-1 overflow-y-auto">
-                  {visibleStaff.map((member) => {
+                  {mobileVisibleStaff.map((member) => {
                     const color = getRoleColor(member.role);
                     const isBusy = togglingId === member.id || deletingId === member.id;
                     const hasPhoto =
@@ -755,12 +766,12 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
             )}
 
             {/* Load More Button (mobile) */}
-            {currentPage < totalPages && (
+            {mobileVisibleCount < sortedStaff.length && (
               <button
                 ref={loadMoreBtnRef}
                 type="button"
                 onClick={() => {
-                  handleNextPage();
+                  handleLoadMoreMobile();
                   // Ensure the button stays visible above the fixed mobile
                   // bottom nav (h-20 = 80px) once new members render below it.
                   // scroll-mb-24 (96px) keeps a safe clearance margin.
@@ -768,10 +779,9 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                     loadMoreBtnRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
                   });
                 }}
-                disabled={currentPage >= totalPages}
                 className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50 scroll-mb-24"
               >
-                Cargar más (pág. {currentPage} de {totalPages})
+                Cargar más ({mobileVisibleCount} de {sortedStaff.length})
               </button>
             )}
           </div>
