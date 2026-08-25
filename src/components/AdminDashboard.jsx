@@ -243,79 +243,81 @@ function AdminDashboard({ user }) {
               {/* Participantes Section */}
               {activeTab === 'participants' && (
               <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
-                {/* Header Section (mobile only) */}
-                <div className="md:hidden flex items-center justify-between mb-6 flex-shrink-0">
-                  <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
-                  <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
-                  <ThemeToggle />
-                </div>
-
-                <div className="flex items-center gap-3 mb-4 flex-shrink-0 md:mb-3 md:hidden">
-                  <div className="flex-1">
-                    <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
+                {/* Header Section (mobile only, sticky so it stays visible while the list scrolls) */}
+                <div className="md:hidden sticky top-0 z-10 bg-background flex-shrink-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
+                    <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
+                    <ThemeToggle />
                   </div>
 
-                  {/* Refresh Button */}
-                  <button
-                    type="button"
-                    onClick={loadDashboardData}
-                    className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
-                    aria-label="Actualizar datos"
-                  >
-                    <span className="material-symbols-outlined text-primary">refresh</span>
-                  </button>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex-1">
+                      <SearchBar onSearch={handleSearch} placeholder="Buscar por nombre o casa..." />
+                    </div>
 
-                  <div className="relative">
+                    {/* Refresh Button */}
                     <button
                       type="button"
-                      onClick={() => setIsFilterOpen((prev) => !prev)}
-                      className={`flex items-center justify-center p-3 rounded-lg border transition-colors active:bg-surface-container ${
-                        statusFilter !== 'all'
-                          ? 'border-primary bg-primary/10'
-                          : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container'
-                      }`}
-                      aria-label="Filtrar por estado"
-                      aria-haspopup="true"
-                      aria-expanded={isFilterOpen}
+                      onClick={loadDashboardData}
+                      className="flex items-center justify-center order-last p-3 md:p-2 rounded-lg border border-outline-variant bg-surface-container-lowest hover:bg-surface-container active:bg-surface-container text-on-surface-variant hover:text-primary transition-colors"
+                      aria-label="Actualizar datos"
                     >
-                      <span className="material-symbols-outlined text-primary">filter_list</span>
+                      <span className="material-symbols-outlined text-primary">refresh</span>
                     </button>
 
-                    {isFilterOpen && (
-                      <>
-                        <div
-                          className="fixed inset-0 z-10"
-                          onClick={() => setIsFilterOpen(false)}
-                        />
-                        <div className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg z-20 overflow-hidden">
-                          {[
-                            { id: 'all', label: 'Todos' },
-                            { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
-                            { id: 'paid', label: REGISTRATION_STATUS.PAID },
-                          ].map((option) => (
-                            <button
-                              key={option.id}
-                              onClick={() => {
-                                setStatusFilter(option.id);
-                                setCurrentPage(1);
-                                setVisibleCount(15);
-                                setIsFilterOpen(false);
-                              }}
-                              className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
-                                statusFilter === option.id
-                                  ? 'text-primary bg-primary/10'
-                                  : 'text-on-surface hover:bg-surface-container-highest'
-                              }`}
-                            >
-                              {option.label}
-                              {statusFilter === option.id && (
-                                <span className="material-symbols-outlined text-sm">check</span>
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                      </>
-                    )}
+                    <div className="relative">
+                      <button
+                        type="button"
+                        onClick={() => setIsFilterOpen((prev) => !prev)}
+                        className={`flex items-center justify-center p-3 rounded-lg border transition-colors active:bg-surface-container ${
+                          statusFilter !== 'all'
+                            ? 'border-primary bg-primary/10'
+                            : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container'
+                        }`}
+                        aria-label="Filtrar por estado"
+                        aria-haspopup="true"
+                        aria-expanded={isFilterOpen}
+                      >
+                        <span className="material-symbols-outlined text-primary">filter_list</span>
+                      </button>
+
+                      {isFilterOpen && (
+                        <>
+                          <div
+                            className="fixed inset-0 z-10"
+                            onClick={() => setIsFilterOpen(false)}
+                          />
+                          <div className="absolute right-0 mt-2 w-48 bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-lg z-20 overflow-hidden">
+                            {[
+                              { id: 'all', label: 'Todos' },
+                              { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
+                              { id: 'paid', label: REGISTRATION_STATUS.PAID },
+                            ].map((option) => (
+                              <button
+                                key={option.id}
+                                onClick={() => {
+                                  setStatusFilter(option.id);
+                                  setCurrentPage(1);
+                                  setVisibleCount(15);
+                                  setIsFilterOpen(false);
+                                }}
+                                className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
+                                  statusFilter === option.id
+                                    ? 'text-primary bg-primary/10'
+                                    : 'text-on-surface hover:bg-surface-container-highest'
+                                }`}
+                              >
+                                {option.label}
+                                {statusFilter === option.id && (
+                                  <span className="material-symbols-outlined text-sm">check</span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
 
