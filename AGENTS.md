@@ -211,6 +211,7 @@ Key sheets (auto-created lazily on first use, not up front):
 
 ## Conversation Memory & Token Efficiency
 - Before asking clarifying questions or re-asking for information, review the existing conversation context (chat memory) and this `AGENTS.md` file.
+- **Use chat memory first; avoid unnecessary token spend.** Answer from conversation context and existing `AGENTS.md` knowledge whenever possible. Only invoke tools or searches when the required information is not already in memory and is truly needed to proceed.
 - Before creating, moving, or referencing files, always check the **Project Folder Structure** diagram above and the current `src/` layout.
 - Avoid redundant actions: don't re-read files that were just read, and don't re-run commands (builds, tests, searches) whose outputs are already known.
 - Prefer targeted `read`/`grep`/`code_search` over re-explaining the codebase to answer follow-ups.
