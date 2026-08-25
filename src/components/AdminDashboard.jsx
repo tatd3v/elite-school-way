@@ -21,7 +21,7 @@ function AdminDashboard({ user }) {
   const [staff, setStaff] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(3);
+  const [visibleCount, setVisibleCount] = useState(15);
   const [sidebarWidth, setSidebarWidth] = useState(288);
   const [editingParticipant, setEditingParticipant] = useState(null);
   const [deletingParticipant, setDeletingParticipant] = useState(null);
@@ -60,6 +60,7 @@ function AdminDashboard({ user }) {
   const handleSearch = (term) => {
     setSearchTerm(term);
     setCurrentPage(1);
+    setVisibleCount(15);
   };
 
   const handleStaffUpdate = async () => {
@@ -77,7 +78,7 @@ function AdminDashboard({ user }) {
   };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => Math.min(prev + 3, pageSize));
+    setVisibleCount((prev) => prev + 15);
   };
 
   const handleNextPage = () => {
@@ -193,7 +194,7 @@ function AdminDashboard({ user }) {
     currentPage * pageSize
   );
   // Mobile card list keeps its own incremental "load more" behavior.
-  const mobileVisibleParticipants = filteredParticipants.slice(0, Math.min(visibleCount, pageSize));
+  const mobileVisibleParticipants = filteredParticipants.slice(0, visibleCount);
 
   const getCleanHouse = (house) => {
     if (!house) return '—';
@@ -297,6 +298,7 @@ function AdminDashboard({ user }) {
                               onClick={() => {
                                 setStatusFilter(option.id);
                                 setCurrentPage(1);
+                                setVisibleCount(15);
                                 setIsFilterOpen(false);
                               }}
                               className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
@@ -447,7 +449,7 @@ function AdminDashboard({ user }) {
                     </div>
                   )}
 
-                  {visibleCount < Math.min(pageSize, filteredParticipants.length) && (
+                  {visibleCount < filteredParticipants.length && (
                     <button
                       ref={loadMoreBtnRef}
                       onClick={() => {
@@ -516,6 +518,7 @@ function AdminDashboard({ user }) {
                                 onClick={() => {
                                   setStatusFilter(option.id);
                                   setCurrentPage(1);
+                                  setVisibleCount(15);
                                   setIsFilterOpen(false);
                                 }}
                                 className={`w-full px-4 py-3 text-left font-label-md text-label-md transition-colors flex items-center justify-between ${
