@@ -136,4 +136,44 @@ describe('AdminDashboard Participantes pagination', () => {
     expect(stickyWrapper).toBeTruthy();
     expect(stickyWrapper.className).toContain('top-0');
   });
+
+  it('does not let Participantes and Staff share a single scroll container on mobile', async () => {
+    dashboardService.fetchRegistrations.mockResolvedValue(buildParticipants(40));
+    dashboardService.fetchStaff.mockResolvedValue([
+      { id: 's-1', rowIndex: 2, name: 'Staff One', role: 'Bailarín', displayOrder: 1, isVisible: true },
+    ]);
+    await act(async () => {
+      render(h(AdminDashboard, { user: { role: 'admin' } }), container);
+    });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+
+    // main must not be its own mobile scroll container — each tab owns its
+    // own bounded overflow-y-auto region instead, so switching tabs can't
+    // leak scrollTop from one list into the other.
+    const main = container.querySelector('main');
+    expect(main.className).not.toContain('overflow-y-auto');
+
+    const participantsScroller = findByText(container, 'h2', 'Participantes')
+      .closest('section')
+      .querySelector('.overflow-y-auto');
+    expect(participantsScroller).toBeTruthy();
+    participantsScroller.scrollTop = 500;
+
+    // Switch to the Staff tab.
+    const staffTabButton = findByText(container, 'button', 'Staff');
+    await act(async () => {
+      click(staffTabButton);
+    });
+
+    const staffScroller = [...container.querySelectorAll('.overflow-y-auto')].find((el) =>
+      el.querySelector('.glass-card')
+    );
+    expect(staffScroller).toBeTruthy();
+    // A freshly-mounted, independent scroll container always starts at 0 —
+    // it must not inherit the Participantes list's scroll position.
+    expect(staffScroller.scrollTop).toBe(0);
+  });
 });
