@@ -105,7 +105,7 @@ function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
   }
 
   return (
-    <div className="col-span-1 md:col-span-2 mt-10 p-6 md:p-8 bg-surface-container-low border border-outline-variant/30 rounded-lg">
+    <div className="col-span-1 md:col-span-2 p-6 md:p-8 bg-surface-container-low border border-outline-variant/30 rounded-lg">
       <div className="mb-6">
         <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Pago por QR</h3>
         <p className="font-body-md text-on-surface-variant text-sm md:text-xs">Escanea el código QR para realizar el pago y sube el comprobante.</p>
@@ -373,6 +373,22 @@ export default function RegistrationModal({ isOpen, onClose }) {
               />
             </div>
 
+            <div className="col-span-1 mt-6">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
+                Edad *
+              </label>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="18+"
+                type="number"
+                required
+                min="18"
+                name="age"
+                value={formData.age}
+                onChange={handleInputChange}
+              />
+            </div>
+
             <div className="col-span-1 md:col-span-2 mt-8">
               <h3 className="font-headline-md text-headline-md text-on-surface mb-2 flex items-center gap-2">
                 <span className="material-symbols-outlined text-[#c62828]">confirmation_number</span>
@@ -407,22 +423,13 @@ export default function RegistrationModal({ isOpen, onClose }) {
               </div>
             </div>
 
-
-
-            <div className="col-span-1 mt-6">
-              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
-                Edad *
-              </label>
-              <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="18+"
-                type="number"
-                required
-                min="18"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-              />
+            <div className="col-span-1 md:col-span-2 mb-4 px-2">
+              <div className="flex items-start gap-2 text-on-surface-variant opacity-80">
+                <span className="material-symbols-outlined text-label-sm">info</span>
+                <p className="text-sm font-bold leading-relaxed">
+                  El pago inmediato no es requisito, pero el día del evento el costo de la entrada será de $5,000 adicionales.
+                </p>
+              </div>
             </div>
 
             <QrPayment
