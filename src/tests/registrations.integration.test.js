@@ -68,7 +68,13 @@ function buildRegistration(index) {
     email: `test${suffix}@example.com`,
     phone: '3001234567',
     house: 'House of Testing',
-    entryType: 'General',
+    // The real form (formSubmit.js) never sends the raw category label —
+    // it extracts the price digits from an option like "General — $20.000"
+    // and sends the resulting Number (see RegistrationModal.jsx's entryType
+    // options). The backend's own doPost handler does the same digit
+    // extraction again and falls back to 'N/A' for non-numeric input, so a
+    // plain label like 'General' here would silently become 'N/A'.
+    entryType: 20000,
     age: '25',
     paymentScreenshot: '',
     paymentScreenshotName: '',
@@ -144,7 +150,7 @@ describe.skipIf(!shouldRun)('Google Apps Script Registration API integration', (
       expect(registration.email).toBeDefined();
       expect(String(registration.phone)).toMatch(/3001234567/);
       expect(String(registration.house)).toMatch(/House of Testing/);
-      expect(registration.entryType).toBe('General');
+      expect(registration.entryType).toBe(20000);
       expect(String(registration.age)).toBe('25');
 
       // Verify it's one of the remaining ones (not deleted)
@@ -249,7 +255,7 @@ describe.skipIf(!shouldRun)('Multi-registration / Duplication', () => {
         email,
         phone: `300123456${i}`,
         house: 'House of Duplicates',
-        entryType: i === 1 ? 'General' : 'Personas negrxs y marronxs',
+        entryType: i === 1 ? 20000 : 15000, // matches the real form's price-based entryType (see buildRegistration above)
         age: String(20 + i),
         paymentScreenshot: '',
         paymentScreenshotName: '',
