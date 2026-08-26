@@ -427,7 +427,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               <div className="flex items-start gap-2 text-on-surface-variant opacity-80">
                 <span className="material-symbols-outlined text-label-sm">info</span>
                 <p className="text-sm font-bold leading-relaxed">
-                  El pago inmediato no es requisito, pero el día del evento el costo de la entrada será de $5,000 adicionales.
+                  Si no se confirma el pago con el comprobante antes del 15 de Octbre, no se podra pagar el precio de preventa en taquilla. El día del evento el costo de la entrada será de $5,000 adicionales.
                 </p>
               </div>
             </div>
