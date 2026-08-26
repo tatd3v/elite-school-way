@@ -214,8 +214,11 @@ function AdminDashboard({ user }) {
         }}
       />
 
+      {/* main itself never scrolls — each tab below owns its own independent
+          scroll container so Participantes/Staff scroll positions can't
+          bleed into each other when switching tabs. */}
       <main
-        className="flex-1 overflow-y-auto md:overflow-hidden px-margin-mobile pt-4 linen-texture md:ml-[var(--sidebar-width)] md:pt-0"
+        className="flex-1 overflow-hidden px-margin-mobile pt-4 linen-texture md:ml-[var(--sidebar-width)] md:pt-0"
         style={{ '--sidebar-width': `${sidebarWidth}px` }}
       >
         <div className="w-full h-full flex flex-col space-y-3 py-3 md:space-y-2 md:py-2 gap-3">
@@ -242,9 +245,14 @@ function AdminDashboard({ user }) {
             <>
               {/* Participantes Section */}
               {activeTab === 'participants' && (
-              <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
-                {/* Header Section (mobile only, sticky so it stays visible while the list scrolls) */}
-                <div className="md:hidden sticky top-0 z-10 bg-background flex-shrink-0">
+              <section className="flex flex-col flex-1 min-h-0 md:overflow-hidden w-full">
+                {/* Header Section (mobile only, sticky so it stays visible while the list scrolls).
+                    isolate + translateZ(0) force this onto its own compositing layer above the
+                    fully-opaque bg-background, so it stays correctly stacked in front of the
+                    scrolling .glass-panel cards — some mobile browsers otherwise paint
+                    backdrop-filter/blur cards (see .glass-panel in index.css) above sticky
+                    elements, letting card content bleed through the header while scrolling. */}
+                <div className="md:hidden sticky top-0 z-30 isolate bg-background flex-shrink-0 [transform:translateZ(0)]">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="font-headline-md text-headline-md text-on-surface">Participantes</h2>
                     <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
@@ -321,8 +329,9 @@ function AdminDashboard({ user }) {
                   </div>
                 </div>
 
-                {/* Participantes Card List (mobile) */}
-                <div className="md:hidden flex flex-col gap-4 pb-32">
+                {/* Participantes Card List (mobile) — its own bounded, independent
+                    scroll region so it never shares scroll state with Staff. */}
+                <div className="md:hidden flex flex-col flex-1 min-h-0 overflow-y-auto gap-4 pb-32">
                   {mobileVisibleParticipants.length > 0 ? (
                     mobileVisibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
