@@ -388,7 +388,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
   const mobileVisibleStaff = sortedStaff.slice(0, mobileVisibleCount);
 
   return (
-    <section className="flex flex-col md:flex-1 md:min-h-0 md:overflow-hidden w-full">
+    <section className="flex flex-col flex-1 min-h-0 md:overflow-hidden w-full">
       {actionError && (
         <div className="p-3 rounded bg-error-container text-error text-sm font-body-md flex-shrink-0" role="alert">
           {actionError}
@@ -400,8 +400,13 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </div>
       )}
 
-      {/* Header Section (mobile only, sticky so it stays visible while the list scrolls) */}
-      <div className="md:hidden sticky top-0 z-10 bg-background flex-shrink-0">
+      {/* Header Section (mobile only, sticky so it stays visible while the list scrolls).
+          isolate + translateZ(0) force this onto its own compositing layer above the
+          fully-opaque bg-background, so it stays correctly stacked in front of the
+          scrolling .glass-card members — some mobile browsers otherwise paint
+          backdrop-filter/blur cards (see .dark .glass-card in index.css) above sticky
+          elements, letting card content bleed through the header while scrolling. */}
+      <div className="md:hidden sticky top-0 z-30 isolate bg-background flex-shrink-0 [transform:translateZ(0)]">
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-headline-md text-headline-md text-on-surface">Staff</h2>
           <div className="h-px flex-1 bg-outline-variant/30 ml-4 mr-2"></div>
@@ -426,7 +431,7 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-1 md:min-h-0 space-y-3 md:space-y-0 pb-32 md:pb-0">
+      <div className="flex flex-col flex-1 min-h-0 space-y-3 md:space-y-0">
             {isLoading ? (
               <div className="py-8 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto mb-2"></div>
@@ -434,8 +439,9 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
               </div>
             ) : (
               <>
-                {/* Mobile card list */}
-                <div className="md:hidden space-y-3 flex-1 overflow-y-auto">
+                {/* Mobile card list — its own bounded, independent scroll region
+                    so it never shares scroll state with Participantes. */}
+                <div className="md:hidden space-y-3 flex-1 min-h-0 overflow-y-auto pb-32">
                   {mobileVisibleStaff.map((member) => {
                     const color = getRoleColor(member.role);
                     const isBusy = togglingId === member.id || deletingId === member.id;
@@ -558,6 +564,27 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                       </div>
                     );
                   })}
+
+                  {/* Load More Button (mobile) — lives inside the scrollable
+                      list itself so it appears after the last card while scrolling. */}
+                  {mobileVisibleCount < sortedStaff.length && (
+                    <button
+                      ref={loadMoreBtnRef}
+                      type="button"
+                      onClick={() => {
+                        handleLoadMoreMobile();
+                        // Ensure the button stays visible above the fixed mobile
+                        // bottom nav (h-20 = 80px) once new members render below it.
+                        // scroll-mb-24 (96px) keeps a safe clearance margin.
+                        requestAnimationFrame(() => {
+                          loadMoreBtnRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+                        });
+                      }}
+                      className="w-full mt-2 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50 scroll-mb-24"
+                    >
+                      Cargar más ({mobileVisibleCount} de {sortedStaff.length})
+                    </button>
+                  )}
                 </div>
 
                 {/* Desktop table */}
@@ -766,26 +793,6 @@ function StaffManagementSection({ onUpdate, staff: initialStaff = [], canEdit = 
                     </div>
                   </div>
               </>
-            )}
-
-            {/* Load More Button (mobile) */}
-            {mobileVisibleCount < sortedStaff.length && (
-              <button
-                ref={loadMoreBtnRef}
-                type="button"
-                onClick={() => {
-                  handleLoadMoreMobile();
-                  // Ensure the button stays visible above the fixed mobile
-                  // bottom nav (h-20 = 80px) once new members render below it.
-                  // scroll-mb-24 (96px) keeps a safe clearance margin.
-                  requestAnimationFrame(() => {
-                    loadMoreBtnRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
-                  });
-                }}
-                className="md:hidden w-full mt-6 py-3 px-4 bg-outline/10 text-primary font-label-md text-label-md rounded-lg hover:bg-outline/20 transition-colors uppercase tracking-widest border border-outline/20 disabled:opacity-50 scroll-mb-24"
-              >
-                Cargar más ({mobileVisibleCount} de {sortedStaff.length})
-              </button>
             )}
           </div>
 
