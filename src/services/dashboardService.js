@@ -170,6 +170,7 @@ class DashboardService {
         house: participant.house,
         entryType: participant.entryType,
         age: participant.age,
+        paymentScreenshot: participant.paymentScreenshot || '',
       });
       return { success: result?.status === 'success', data: result };
     } catch (error) {
