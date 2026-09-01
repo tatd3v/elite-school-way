@@ -39,6 +39,14 @@ function AdminDashboard({ user }) {
     loadDashboardData();
   }, []);
 
+  // Scopes the dashboard's own light palette (see .admin-theme in index.css).
+  // Applied on <html> rather than the root div so modals/menus rendered through
+  // createPortal into document.body inherit it too.
+  useEffect(() => {
+    document.documentElement.classList.add('admin-theme');
+    return () => document.documentElement.classList.remove('admin-theme');
+  }, []);
+
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
@@ -331,15 +339,17 @@ function AdminDashboard({ user }) {
 
                 {/* Participantes Card List (mobile) — its own bounded, independent
                     scroll region so it never shares scroll state with Staff. */}
-                <div className="md:hidden flex flex-col flex-1 min-h-0 overflow-y-auto gap-4 pb-32">
+                <div className="md:hidden flex flex-col flex-1 min-h-0 overflow-y-auto gap-4 pb-20">
                   {mobileVisibleParticipants.length > 0 ? (
                     mobileVisibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
                       const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
-                      const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
+                      const statusDot = isPaid
+                        ? 'bg-emerald-500 dark:bg-green-400 dark:animate-pulse'
+                        : 'bg-amber-500 dark:bg-secondary';
                       const statusClass = isPaid
-                        ? 'bg-green-900/30 border-green-500/20 text-green-300'
-                        : 'bg-secondary/20 border-secondary/20 text-secondary';
+                        ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-green-900/30 dark:border-green-500/20 dark:text-green-300'
+                        : 'bg-amber-100 border-amber-200 text-amber-800 dark:bg-secondary/20 dark:border-secondary/20 dark:text-secondary';
 
                       return (
                         <div
