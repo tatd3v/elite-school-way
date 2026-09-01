@@ -9,6 +9,8 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
     house: '',
     age: '',
     comments: '',
+    paymentScreenshot: '',
+    paymentScreenshotName: '',
   });
 
   useEffect(() => {
@@ -20,6 +22,8 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
         house: participant.house || '',
         age: participant.age || '',
         comments: participant.comments || '',
+        paymentScreenshot: participant.screenshot || '',
+        paymentScreenshotName: participant.screenshotName || '',
       });
     }
   }, [participant]);
@@ -27,6 +31,30 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFormData((prev) => ({
+        ...prev,
+        paymentScreenshot: reader.result,
+        paymentScreenshotName: file.name,
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleScreenshotUrlChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      paymentScreenshot: e.target.value,
+      paymentScreenshotName: '',
+    }));
+  };
+
+  const isDataUrlScreenshot = formData.paymentScreenshot.startsWith('data:');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -150,6 +178,33 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
             />
           </div>
 
+          <div>
+            <label className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
+              Comprobante de pago
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={isDataUrlScreenshot ? (formData.paymentScreenshotName || 'Archivo adjunto') : formData.paymentScreenshot}
+                onChange={handleScreenshotUrlChange}
+                placeholder="URL del comprobante o archivo..."
+                className="flex-1 min-w-0 p-3 rounded border border-outline-variant bg-surface focus:ring-1 focus:ring-primary outline-none font-body-md"
+              />
+              <label
+                className="cursor-pointer inline-flex items-center justify-center shrink-0 p-3 rounded bg-surface-container-high border border-outline-variant text-on-surface hover:bg-surface-bright hover:text-surface transition-colors"
+                title="Seleccionar archivo"
+              >
+                <span className="material-symbols-outlined">upload</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+              </label>
+            </div>
+          </div>
+
           <div className="flex gap-3 pt-4">
             <button
               type="button"
@@ -182,6 +237,8 @@ ParticipantEditModal.propTypes = {
     house: PropTypes.string,
     age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     comments: PropTypes.string,
+    screenshot: PropTypes.string,
+    screenshotName: PropTypes.string,
   }),
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
