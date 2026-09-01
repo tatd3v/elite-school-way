@@ -358,7 +358,7 @@ function deleteRegistration(data) {
 }
 
 /**
- * Update a registration row (does not touch Timestamp, Screenshot or Status)
+ * Update a registration row (does not touch Timestamp or Status)
  */
 function updateRegistration(data) {
   const sheet = initializeSheet();
@@ -381,6 +381,14 @@ function updateRegistration(data) {
   ];
 
   sheet.getRange(rowIndex, 2, 1, row.length).setValues([row]);
+
+  // Update the Screenshot column if a new value was provided (URL or base64 upload)
+  if (data.paymentScreenshot) {
+    const screenshotUrl = data.paymentScreenshot.startsWith('data:')
+      ? saveScreenshotToDrive(data.paymentScreenshot, data.name || ' participante')
+      : data.paymentScreenshot;
+    sheet.getRange(rowIndex, 8).setValue(screenshotUrl);
+  }
 
   return { status: 'success', message: 'Registration updated' };
 }
