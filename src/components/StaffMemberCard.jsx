@@ -83,7 +83,7 @@ function StaffMemberCard({ member }) {
         <div className="absolute inset-0 border-2 border-white/10 rounded-xl pointer-events-none"></div>
       </div>
 
-      <div className="p-6 flex flex-col flex-grow justify-between">
+      <div className="p-6 flex flex-col flex-grow justify-evenly md:justify-between">
         <div className="text-center mb-4">
           <p className="font-label-sm text-secondary uppercase tracking-widest font-bold mb-2 line-clamp-2">
             {role}
@@ -100,7 +100,7 @@ function StaffMemberCard({ member }) {
         >
           {bio || 'Confirmación Pendiente'}
         </p>
-        {socialUrl && (
+        {socialUrl ? (
           <a
             href={socialUrl}
             target="_blank"
@@ -115,6 +115,21 @@ function StaffMemberCard({ member }) {
             </svg>
             <span className="truncate">{socialHandle}</span>
           </a>
+        ) : (
+          // No social link — keep an invisible placeholder of the same size
+          // so the bio/description sits at the same height across all
+          // cards, instead of stretching down into this button's space.
+          <div
+            className="invisible inline-flex items-center gap-2 self-start px-4 py-2 rounded-full font-label-sm text-label-sm uppercase font-bold tracking-wider mt-0 min-w-0"
+            aria-hidden="true"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+            <span className="truncate">placeholder</span>
+          </div>
         )}
       </div>
     </article>
