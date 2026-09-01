@@ -117,7 +117,68 @@
   
   /* Override surface tint in dark mode */
   .dark .text-surface-tint { color: #ffb4ac !important; }
-  
+
+  /* Admin dashboard light palette (participants + staff).
+     Scoped to .admin-theme (toggled on <html> while AdminDashboard is mounted)
+     so the public landing page keeps its own navy/red branding.
+     Deliberately NOT using !important: the .dark rules above are !important, so
+     dark mode always wins and stays untouched by these light-only overrides. */
+  .admin-theme .bg-primary { background-color: #b91d20; }
+  .admin-theme .bg-primary\/10 { background-color: rgba(185, 29, 32, 0.1); }
+  .admin-theme .text-primary { color: #b91d20; }
+  .admin-theme .border-primary { border-color: #b91d20; }
+  .admin-theme .border-primary\/20 { border-color: rgba(185, 29, 32, 0.2); }
+  .admin-theme .ring-primary { --tw-ring-color: #b91d20; }
+
+  .admin-theme .bg-primary-container { background-color: #c62828; }
+  .admin-theme .bg-primary-container\/5 { background-color: rgba(198, 40, 40, 0.05); }
+  .admin-theme .text-on-primary-container { color: #ffffff; }
+  .admin-theme .bg-primary-fixed { background-color: #ffdad6; }
+  .admin-theme .text-on-primary-fixed { color: #410003; }
+
+  .admin-theme .bg-secondary { background-color: #765b00; }
+  .admin-theme .bg-secondary\/10 { background-color: rgba(118, 91, 0, 0.1); }
+  .admin-theme .bg-secondary\/20 { background-color: rgba(118, 91, 0, 0.2); }
+  .admin-theme .bg-secondary\/30 { background-color: rgba(118, 91, 0, 0.3); }
+  .admin-theme .bg-secondary\/50 { background-color: rgba(118, 91, 0, 0.5); }
+  .admin-theme .bg-secondary\/90 { background-color: rgba(118, 91, 0, 0.9); }
+  .admin-theme .text-secondary { color: #765b00; }
+  .admin-theme .border-secondary { border-color: #765b00; }
+  .admin-theme .border-secondary\/20 { border-color: rgba(118, 91, 0, 0.2); }
+  /* focus-within is the one variant Tailwind doesn't derive from the base rule above */
+  .admin-theme .focus-within\:text-secondary:focus-within { color: #765b00; }
+  .admin-theme .ring-secondary { --tw-ring-color: #765b00; }
+
+  .admin-theme .bg-outline { background-color: #857371; }
+  .admin-theme .bg-outline\/10 { background-color: rgba(133, 115, 113, 0.1); }
+  .admin-theme .bg-outline\/20 { background-color: rgba(133, 115, 113, 0.2); }
+  .admin-theme .text-outline { color: #857371; }
+  .admin-theme .border-outline\/20 { border-color: rgba(133, 115, 113, 0.2); }
+
+  .admin-theme .bg-outline-variant { background-color: #d7c1c0; }
+  .admin-theme .bg-outline-variant\/30 { background-color: rgba(215, 193, 192, 0.3); }
+  .admin-theme .border-outline-variant { border-color: #d7c1c0; }
+  .admin-theme .border-outline-variant\/10 { border-color: rgba(215, 193, 192, 0.1); }
+  .admin-theme .border-outline-variant\/20 { border-color: rgba(215, 193, 192, 0.2); }
+  .admin-theme .border-outline-variant\/30 { border-color: rgba(215, 193, 192, 0.3); }
+  .admin-theme .border-outline-variant\/50 { border-color: rgba(215, 193, 192, 0.5); }
+  .admin-theme .divide-outline-variant\/20 > :not([hidden]) ~ :not([hidden]) { border-color: rgba(215, 193, 192, 0.2); }
+  .admin-theme .ring-outline-variant\/20 { --tw-ring-color: rgba(215, 193, 192, 0.2); }
+
+  .admin-theme .bg-surface-variant { background-color: #f4dddb; }
+  .admin-theme .bg-surface-variant\/30 { background-color: rgba(244, 221, 219, 0.3); }
+  .admin-theme .bg-surface-container { background-color: #f0eeec; }
+  .admin-theme .bg-surface-container-high { background-color: #e8e6e6; }
+  .admin-theme .bg-surface-container-highest { background-color: #e3e2e2; }
+
+  .admin-theme .text-on-surface { color: #1c1b1b; }
+  .admin-theme .text-on-background { color: #1c1b1b; }
+  .admin-theme .text-on-surface-variant { color: #524342; }
+
+  /* Only used via state variants (hover:/active:), but declared in their base form
+     because Tailwind derives the `.admin-theme .hover\:x:hover` rules from these. */
+  .admin-theme .bg-primary\/90 { background-color: rgba(185, 29, 32, 0.9); }
+  .admin-theme .border-outline-variant\/40 { border-color: rgba(215, 193, 192, 0.4); }
 }
 
 @layer components {
@@ -150,8 +211,14 @@
   }
 
   .glass-panel {
-    background: rgba(22, 27, 61, 0.7);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .dark .glass-panel {
+    background: rgba(22, 27, 61, 0.7);
     border: 1px solid rgba(171, 137, 133, 0.1);
   }
 
