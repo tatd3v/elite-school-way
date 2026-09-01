@@ -77,8 +77,9 @@ export function getDriveImageCandidates(url) {
   if (!fileId) return [trimmed];
 
   return [
-    trimmed,
     `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`,
+    `https://drive.google.com/thumbnail?id=${fileId}&sz=s1000`,
+    `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`,
     `https://drive.google.com/uc?id=${fileId}`,
     `https://drive.google.com/uc?export=download&id=${fileId}`,
     `https://drive.google.com/uc?export=view&id=${fileId}`,
