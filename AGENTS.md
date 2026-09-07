@@ -170,7 +170,7 @@ Key sheets (auto-created lazily on first use, not up front):
 ## Public site navigation (`Header.jsx`)
 - Section links live in a single `NAV_LINKS` array (`#event`, `#staff`, `#categories`, `#dresscode`, `#rules`) shared by both the desktop `nav` and the mobile dropdown menu — add new section links there once, not in two places.
 - Mobile (`md:hidden`) has a hamburger button that toggles a dropdown panel with the same links, plus an **"Inscríbete Ya!"** CTA button as the first item that calls `onOpenModal` (opens `RegistrationModal`) — this CTA is mobile-only by design, not part of `NAV_LINKS`/the desktop nav.
-- The logo links to `/` and, since `Header` only ever renders on the home page, intercepts the click to smooth-scroll to the top instead of reloading.
+- The logo links to `/` and intercepts the click: always `preventDefault()`s, explicitly resets the URL to `/` via `history.pushState` (clearing any leftover section hash like `#rules` from a previous nav click — without this the address bar keeps the old hash even after scrolling away, making the click look like it did nothing), then smooth-scrolls to the top.
 - Anchor targets need `scroll-mt-20` to clear the fixed header — see the "Nav anchors" gotcha above.
 
 ## Conventions
