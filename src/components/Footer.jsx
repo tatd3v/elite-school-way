@@ -1,21 +1,21 @@
 export default function Footer() {
   return (
-    <footer className="bg-surface-container-lowest py-4 border-t border-outline-variant/10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto items-center">
+    <footer className="bg-surface-container-lowest py-4 border-t border-outline-variant/10 flex items-center md:block">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-8 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto items-center w-full">
         {/* Branding */}
-        <div className="text-center">
+        <div className="text-center order-2 md:order-none">
           {/* <span className="font-headline-md text-headline-md font-bold text-primary">
             ELITE WAY SCHOOL
           </span> */}
-          <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
+          <p className="mt-0 md:mt-4 font-label-sm text-label-sm text-on-surface-variant">
             Ballroom Xua & Ballroom Bogotrans. 2026.
           </p>
         </div>
 
         {/* Contact */}
-        <div className="text-center">
+        <div className="text-center order-1 md:order-none">
           <h4 className="font-label-lg text-label-lg text-secondary uppercase mb-1">Contacto</h4>
-          <ul className="space-y-2">
+          <ul className="space-y-1 md:space-y-2">
             <li className="font-label-sm text-label-sm text-on-surface-variant hover:translate-x-1 transition-transform duration-200">
               <a
                 href="https://www.instagram.com/theeliteway_b"
@@ -53,13 +53,13 @@ export default function Footer() {
         </div> */}
 
         {/* Logo & Copyright */}
-        <div className="text-left flex flex-col items-center justify-center">
+        <div className="text-left flex flex-col items-center justify-center order-3 md:order-none">
           {/* <img
             alt="Footer Logo"
             className="h-16 w-auto opacity-50 grayscale hover:grayscale-0 transition-all"
             src={logo}
           /> */}
-          <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
+          <p className="mt-0 md:mt-4 font-label-sm text-label-sm text-on-surface-variant">
             © 2026 ELITE WAY SCHOOL KIKI BALL. Todos los derechos reservados.
           </p>
         </div>
