@@ -1,12 +1,12 @@
 export default function Footer() {
   return (
-    <footer className="bg-surface-container-lowest py-16 border-t border-outline-variant/10">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto">
+    <footer className="bg-surface-container-lowest py-4 border-t border-outline-variant/10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto items-center">
         {/* Branding */}
         <div className="text-center">
-          <span className="font-headline-md text-headline-md font-bold text-primary">
+          {/* <span className="font-headline-md text-headline-md font-bold text-primary">
             ELITE WAY SCHOOL
-          </span>
+          </span> */}
           <p className="mt-4 font-label-sm text-label-sm text-on-surface-variant">
             Ballroom Xua & Ballroom Bogotrans. 2026.
           </p>
@@ -14,7 +14,7 @@ export default function Footer() {
 
         {/* Contact */}
         <div className="text-center">
-          <h4 className="font-label-lg text-label-lg text-secondary uppercase mb-4">Contacto</h4>
+          <h4 className="font-label-lg text-label-lg text-secondary uppercase mb-1">Contacto</h4>
           <ul className="space-y-2">
             <li className="font-label-sm text-label-sm text-on-surface-variant hover:translate-x-1 transition-transform duration-200">
               <a
