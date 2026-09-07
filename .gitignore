@@ -46,6 +46,9 @@ google-credentials*.json
 .firebase
 .wrangler
 
+# AI agent notes
+AGENTS.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
