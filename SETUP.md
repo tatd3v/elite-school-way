@@ -122,7 +122,7 @@ npm run dev
 
 ### Step 7: Set up the Admin Dashboard (optional but recommended)
 
-The admin dashboard (`/admin`) lets you manage registrations and staff. See **[`ADMIN_SETUP.md`](./ADMIN_SETUP.md)** for:
+The admin dashboard (`/login`) lets you manage registrations and staff. See **[`ADMIN_SETUP.md`](./ADMIN_SETUP.md)** for:
 - Creating your first admin login
 - The difference between `admin` (full access) and `viewer` (read-only) roles
 - Managing the **Staff** directory shown on the public site
@@ -148,53 +148,51 @@ Unlike a typical database, sheets/tabs in this project are created **lazily** �
 | 3 | Email | |
 | 4 | Teléfono | Stored with a leading apostrophe so Sheets doesn't misparse `+57...` as a formula |
 | 5 | House/007 | Optional. Same apostrophe trick, preserves leading zeros like `007` |
-| 6 | Entrada | Selected entry type: `General` or `Personas negrxs y marronxs` |
+| 6 | Entrada | Numeric price (`20000` or `15000`) extracted from the selected entry type label by `formSubmit.js` — **not** the label text itself (e.g. `General — $20.000` becomes `20000`). Falls back to `N/A` if no digits are found. |
 | 7 | Edad | |
 | 8 | Screenshot | Google Drive link to the uploaded payment proof (saved under `elite-way-school-data/PAGOS_QR`) |
 | 9 | Status | `Registrado` (default) or `Pagado` — editable from the admin dashboard |
 
 ---
 
-## 🌐 Part 3: Deploy to Netlify (Free)
+## 🌐 Part 3: Deploy to Vercel
 
-### Step 1: Build Production Version
+This project already includes `vercel.json` (rewrites every path to `index.html`, required for the client-side router in `src/components/Router.jsx` to work correctly on page refresh/direct links).
+
+### Step 1: Build Production Version (optional, for a local sanity check)
 
 ```bash
 npm run build
 ```
 
-This creates a `dist/` folder with optimized files.
+This creates a `dist/` folder with optimized files. Vercel runs this build itself, so you don't need to upload `dist/` manually.
 
-### Step 2: Deploy to Netlify
+### Step 2: Deploy to Vercel
 
-#### Option A: Drag & Drop (Easiest)
+#### Option A: Vercel CLI
 
-1. Go to [Netlify Drop](https://app.netlify.com/drop)
-2. Drag the `dist` folder into the upload area
-3. Wait for deployment to complete
-4. Copy your site URL (e.g., `https://your-site.netlify.app`)
-
-> Note: with drag & drop, environment variables must be baked in at build time (i.e. run `npm run build` locally with your real `.env` in place) since there's no separate build step on Netlify's side to inject them.
+```bash
+npx vercel        # first deploy, follow the prompts
+npx vercel --prod # promote to production
+```
 
 #### Option B: GitHub Integration (Recommended)
 
 1. Push your code to GitHub
-2. Go to [Netlify](https://app.netlify.com)
-3. Click **"Add new site"** → **"Import an existing project"**
-4. Choose **GitHub** and select your repository
-5. Configure build settings:
+2. Go to [Vercel](https://vercel.com) → **Add New...** → **Project**
+3. Import your repository
+4. Framework preset should auto-detect as **Vite**; leave build settings as:
    - **Build command:** `npm run build`
-   - **Publish directory:** `dist`
-6. Click **"Add environment variables"**
-7. Add: `VITE_GOOGLE_SCRIPT_URL` with your Google Script URL
-8. Click **"Deploy site"**
+   - **Output directory:** `dist`
+5. Add the environment variable `VITE_GOOGLE_SCRIPT_URL` with your Google Script URL
+6. Click **"Deploy"**
 
 ### Step 3: Configure Custom Domain (Optional)
 
 1. Purchase a domain (e.g., from Namecheap, GoDaddy)
-2. In Netlify, go to **Site settings** → **Domain management**
-3. Click **"Add custom domain"**
-4. Follow the instructions to update your DNS settings
+2. In Vercel, go to your project → **Settings** → **Domains**
+3. Add your custom domain and follow the instructions to update your DNS/nameservers
+4. **Registrar-side gotcha (Namecheap specifically):** if the domain ever stops resolving entirely with nameservers changed to something like `verify-contact-details.namecheap.com` / `failed-whois-verification.namecheap.com`, that's an ICANN-mandated WHOIS contact-verification suspension, not a Vercel/DNS-config issue on your end. Log into Namecheap → Domain List → resend/complete the registrant email verification (the confirmation links expire quickly, sometimes within a week) — Namecheap restores the real nameservers automatically once verified.
 
 ---
 
@@ -270,7 +268,7 @@ For issues:
 - [ ] `.env` file configured
 - [ ] Test form submission successful (Status = Registrado appears in the sheet)
 - [ ] Admin dashboard set up (see `ADMIN_SETUP.md`)
-- [ ] Site deployed to Netlify
+- [ ] Site deployed to Vercel
 - [ ] Custom domain configured (optional)
 
 **Your Elite Way School registration site is now live! 🎉**
