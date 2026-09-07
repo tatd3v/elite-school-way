@@ -7,12 +7,17 @@ export default function RulesSection() {
   return (
     <section
       className="py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-background"
-      id="rules"
       aria-labelledby="rules-heading"
     >
       <div className="grid grid-cols-1 gap-16">
-        <DressCode dressCodes={dressCodes} />
-        <CodeOfConduct rules={conductRules} pledge={elitePledge} />
+        {/* scroll-mt-20 keeps each anchor's title clear of the fixed header
+            (h-16) when jumped to directly from the nav menu. */}
+        <div id="dresscode" className="scroll-mt-20">
+          <DressCode dressCodes={dressCodes} />
+        </div>
+        <div id="rules" className="scroll-mt-20">
+          <CodeOfConduct rules={conductRules} pledge={elitePledge} />
+        </div>
       </div>
     </section>
   );
