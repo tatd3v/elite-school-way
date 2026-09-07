@@ -25,11 +25,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200"
+      className="flex items-center justify-center w-10 h-10 text-on-surface-variant hover:text-primary transition-colors duration-200"
       aria-label="Toggle theme"
       title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
-      <span className="material-symbols-outlined">
+      <span className="material-symbols-outlined text-2xl">
         {isDark ? 'light_mode' : 'dark_mode'}
       </span>
     </button>

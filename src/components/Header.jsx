@@ -3,8 +3,17 @@ import ThemeToggle from './ThemeToggle'
 import longLogo from '../assets/long_logo.png'
 import longLogoDark from '../assets/long_logo_dark_bg.png'
 
+const NAV_LINKS = [
+  { href: '#event', label: 'EVENTO' },
+  { href: '#staff', label: 'STAFF' },
+  { href: '#categories', label: 'CATEGORÍAS' },
+  { href: '#dresscode', label: 'DRESS CODE' },
+  { href: '#rules', label: 'REGLAMENTO' },
+]
+
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,6 +22,15 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Close the mobile menu whenever the route/hash changes (e.g. tapping a link)
+  // and prevent background scroll while it's open.
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [isMobileMenuOpen])
 
   return (
     <header
@@ -38,36 +56,51 @@ export default function Header() {
         </div>
 
         <nav className="hidden md:flex gap-8">
-          <a
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
-            href="#event"
-          >
-            EVENTO
-          </a>
-          <a
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
-            href="#staff"
-          >
-            STAFF
-          </a>
-          <a
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
-            href="#categories"
-          >
-            CATEGORÍAS
-          </a>
-          <a
-            className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
-            href="#rules"
-          >
-            REGLAMENTO
-          </a>
+          {NAV_LINKS.map(({ href, label }) => (
+            <a
+              key={href}
+              className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
+              href={href}
+            >
+              {label}
+            </a>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <ThemeToggle />
+          <button
+            type="button"
+            className="md:hidden flex items-center justify-center w-10 h-10 text-on-surface-variant hover:text-secondary transition-colors"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-nav-menu"
+          >
+            <span className="material-symbols-outlined text-2xl">
+              {isMobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
         </div>
       </div>
+
+      {isMobileMenuOpen && (
+        <nav
+          id="mobile-nav-menu"
+          className="md:hidden flex flex-col bg-surface border-t border-outline-variant/30 px-margin-mobile py-4 gap-1 shadow-md dark:shadow-2xl"
+        >
+          {NAV_LINKS.map(({ href, label }) => (
+            <a
+              key={href}
+              className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors py-3 px-2 rounded-md"
+              href={href}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      )}
     </header>
   )
 }
