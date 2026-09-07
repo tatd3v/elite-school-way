@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks'
+import PropTypes from 'prop-types'
 import ThemeToggle from './ThemeToggle'
 import longLogo from '../assets/long_logo.png'
 import longLogoDark from '../assets/long_logo_dark_bg.png'
@@ -11,7 +12,7 @@ const NAV_LINKS = [
   { href: '#rules', label: 'REGLAMENTO' },
 ]
 
-export default function Header() {
+export default function Header({ onOpenModal }) {
   const [scrolled, setScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -39,7 +40,25 @@ export default function Header() {
       }`}
     >
       <div className="flex justify-between items-center h-16 px-margin-mobile md:px-8 mx-auto">
-        <div className="flex items-center gap-3">
+        <a
+          href="/"
+          className="flex items-center gap-3"
+          aria-label="Elite Way School — Inicio"
+          onClick={(e) => {
+            // The header only ever renders on the home page, so clicking the
+            // logo should just scroll back to the top instead of reloading.
+            // Also explicitly reset the URL to "/" — without this, a
+            // previously clicked section link (e.g. "#rules") stays in the
+            // address bar even though we scroll away from it, making it
+            // look like the click "did nothing".
+            e.preventDefault()
+            if (window.location.pathname !== '/' || window.location.hash) {
+              window.history.pushState(null, '', '/')
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            setIsMobileMenuOpen(false)
+          }}
+        >
           <img
             alt="Elite Way School Logo"
             className="h-12 w-auto block dark:hidden"
@@ -53,7 +72,7 @@ export default function Header() {
           {/* <span className="font-headline-md text-headline-md font-bold tracking-tighter text-primary">
             ELITE WAY SCHOOL
           </span> */}
-        </div>
+        </a>
 
         <nav className="hidden md:flex gap-8">
           {NAV_LINKS.map(({ href, label }) => (
@@ -89,6 +108,17 @@ export default function Header() {
           id="mobile-nav-menu"
           className="md:hidden flex flex-col bg-surface border-t border-outline-variant/30 px-margin-mobile py-4 gap-1 shadow-md dark:shadow-2xl"
         >
+          <button
+            type="button"
+            className="bg-secondary text-on-secondary font-label-lg text-label-lg uppercase tracking-widest py-3 px-2 mb-2 rounded-md hover:bg-secondary/90 transition-colors"
+            onClick={() => {
+              setIsMobileMenuOpen(false)
+              onOpenModal()
+            }}
+            aria-label="Abrir formulario de inscripción"
+          >
+            Inscríbete Ya!
+          </button>
           {NAV_LINKS.map(({ href, label }) => (
             <a
               key={href}
@@ -103,4 +133,8 @@ export default function Header() {
       )}
     </header>
   )
+}
+
+Header.propTypes = {
+  onOpenModal: PropTypes.func.isRequired,
 }
