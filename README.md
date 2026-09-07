@@ -1,51 +1,51 @@
 # Elite Way School - Ballroom Colombia 2026
 
-SPA moderna para el evento Elite Way School Kiki Ball. Incluye landing pública, formulario de inscripción con pago por QR/screenshot, panel de administración con autenticación Google Sheets, y directorio de staff.
+Modern SPA for the Elite Way School Kiki Ball event. Includes a public landing page, registration form with QR/screenshot payment, an admin panel with Google Sheets authentication, and a staff directory.
 
-## Características
+## Features
 
-- **SPA con Preact + Vite** — Build rápida y ligera.
-- **Diseño responsivo** — Mobile-first, modo oscuro por defecto.
-- **Inscripción con Google Sheets** — Formulario que guarda en Google Sheets vía Apps Script.
-- **Pago por QR** — Muestra QR de pago y permite subir comprobante (screenshot).
-- **Selector de código de país** — Con buscador y Colombia como opción destacada.
-- **Código de conducta** — Sección en español con reglas del evento.
-- **Directorio de Staff** — Carga staff visible desde Google Sheets con fotos, roles y redes.
-- **Panel de administración** — Login con hash SHA-256, roles `admin` / `viewer`, gestión de inscripciones y staff.
-- **Calidad de código** — ESLint, Prettier, PropTypes, DRY, SOLID principles.
+- **SPA with Preact + Vite** — Fast, lightweight build.
+- **Responsive design** — Mobile-first, dark mode by default.
+- **Registration via Google Sheets** — Form that saves to Google Sheets through Apps Script.
+- **QR payment** — Shows a payment QR code and lets users upload proof (screenshot).
+- **Country code selector** — With search and Colombia as a featured option.
+- **Code of conduct** — Spanish section with the event rules.
+- **Staff directory** — Loads visible staff from Google Sheets with photos, roles and socials.
+- **Admin panel** — Login with SHA-256 hash, `admin` / `viewer` roles, registration and staff management.
+- **Code quality** — ESLint, Prettier, PropTypes, DRY, SOLID principles.
 
 ## Tech Stack
 
 - **Framework:** Preact 10.19+
 - **Build Tool:** Vite 8+
 - **Styling:** Tailwind CSS 3.4+
-- **Backend:** Google Apps Script (sin servidor propio)
-- **Hosting:** Vercel (ver `vercel.json`)
+- **Backend:** Google Apps Script (no dedicated server)
+- **Hosting:** Vercel (see `vercel.json`)
 
-## Instalación
+## Installation
 
 ```bash
-# Clonar el repositorio
+# Clone the repository
 git clone https://github.com/yourusername/elite-school-way.git
 cd elite-school-way
 
-# Instalar dependencias
+# Install dependencies
 npm install
 
-# Iniciar servidor de desarrollo
+# Start the development server
 npm run dev
 ```
 
-Visita `http://localhost:3000` (puerto configurado en `vite.config.js`).
+Visit `http://localhost:3000` (port configured in `vite.config.js`).
 
-## Scripts disponibles
+## Available scripts
 
 ```bash
 npm run dev         # Dev server
-npm run build       # Build de producción
-npm run preview     # Previsualizar build
+npm run build       # Production build
+npm run preview     # Preview build
 npm run lint        # ESLint
-npm run lint:fix    # ESLint con auto-fix
+npm run lint:fix    # ESLint with auto-fix
 npm run format      # Prettier
 npm run format:check
 npm run test        # Vitest - run all tests
@@ -53,54 +53,54 @@ npm run test:watch  # Vitest - watch mode
 npm run test:ui     # Vitest - interactive UI
 ```
 
-## 📚 Documentación
+## 📚 Documentation
 
-### Setup Inicial
-- **[SETUP.md](./SETUP.md)** — Guía completa de configuración (Google Sheets, Apps Script, variables de entorno)
-- **[ADMIN_SETUP.md](./ADMIN_SETUP.md)** — Configuración del panel de administración y usuarios
+### Initial Setup
+- **[SETUP.md](./SETUP.md)** — Complete setup guide (Google Sheets, Apps Script, environment variables)
+- **[ADMIN_SETUP.md](./ADMIN_SETUP.md)** — Admin panel and user configuration
 
 ### Testing
-- **[TEST.md](./TEST.md)** — Guía de testing con Vitest
+- **[TEST.md](./TEST.md)** — Testing guide with Vitest
 
-### Referencia Técnica
-- **[AGENTS.md](./AGENTS.md)** — Notas para agentes de IA (arquitectura, gotchas, convenciones, DRY, SOLID, folder structure)
-- **[google-apps-script.md](./google-apps-script.md)** — Código fuente del backend (Apps Script)
+### Technical Reference
+- **[AGENTS.md](./AGENTS.md)** — Notes for AI agents (architecture, gotchas, conventions, DRY, SOLID, folder structure)
+- **[google-apps-script.md](./google-apps-script.md)** — Backend source code (Apps Script)
 
-## Configuración
+## Configuration
 
 ### 1. Google Apps Script
 
-La guía completa está en [`SETUP.md`](./SETUP.md). Los pasos rápidos son:
+The full guide is in [`SETUP.md`](./SETUP.md). The quick steps are:
 
-1. Crear una hoja de Google Sheets.
-2. Abrir **Extensions → Apps Script**.
-3. Copiar el contenido de [`google-apps-script.md`](./google-apps-script.md).
-4. Desplegar como **Web app** con **Execute as: Me** y **Who has access: Anyone**.
-5. Copiar la URL del deployment.
+1. Create a Google Sheet.
+2. Open **Extensions → Apps Script**.
+3. Copy the contents of [`google-apps-script.md`](./google-apps-script.md).
+4. Deploy as **Web app** with **Execute as: Me** and **Who has access: Anyone**.
+5. Copy the deployment URL.
 
-### 2. Variables de entorno
+### 2. Environment variables
 
 ```bash
 cp .env.example .env
 ```
 
-Edita `.env`:
+Edit `.env`:
 
 ```env
 VITE_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
-### 3. Panel de administración
+### 3. Admin panel
 
-Para crear/ver usuarios admin, ver [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
+To create/view admin users, see [`ADMIN_SETUP.md`](./ADMIN_SETUP.md).
 
-Credenciales por defecto:
+Default credentials:
 - **Email:** `admin@elite.com`
 - **Password:** `admin123`
 
 ## Testing
 
-### Ejecutar Tests
+### Running Tests
 
 ```bash
 npm run test              # Run all tests
@@ -108,36 +108,36 @@ npm run test:watch       # Watch mode (re-run on changes)
 npm run test:ui          # Interactive UI
 ```
 
-### Tests Disponibles
+### Available Tests
 
-- **Integración (backend real)** — requieren `VITE_GOOGLE_SCRIPT_URL` en `.env`, si no están configuradas se saltan automáticamente:
+- **Integration (real backend)** — require `VITE_GOOGLE_SCRIPT_URL` in `.env`; they skip automatically if not configured:
   - Fetch/add/delete registrations
   - Fetch/add/update/delete staff members
-  - Paginación (backend)
-- **Componentes (jsdom, sin backend)** — renderizan los componentes reales con `dashboardService` mockeado:
-  - Paginación y header sticky de `AdminDashboard` (Participantes)
-  - Paginación y header sticky de `StaffManagementSection` (Staff)
+  - Pagination (backend)
+- **Components (jsdom, no backend)** — render the real components with a mocked `dashboardService`:
+  - `AdminDashboard` pagination and sticky header (Participants)
+  - `StaffManagementSection` pagination and sticky header (Staff)
 
-Ver [TEST.md](./TEST.md) para más detalles.
+See [TEST.md](./TEST.md) for more details.
 
-## Build y Deploy
+## Build & Deploy
 
 ```bash
 npm run build
 ```
 
-El proyecto se despliega en **Vercel** (`vercel.json` incluye el rewrite de SPA necesario para que el routing del lado del cliente funcione). Conecta el repositorio en [vercel.com](https://vercel.com) y configura:
+The project deploys on **Vercel** (`vercel.json` includes the SPA rewrite needed for client-side routing to work). Connect the repository on [vercel.com](https://vercel.com) and configure:
 
 - Build command: `npm run build`
 - Output directory: `dist`
 - Environment variable: `VITE_GOOGLE_SCRIPT_URL`
 
-## Estructura del proyecto
+## Project structure
 
 ```
 elite-school-way/
 ├── src/
-│   ├── components/          # Componentes de Preact
+│   ├── components/          # Preact components
 │   │   ├── Hero.jsx
 │   │   ├── EventDetails.jsx
 │   │   ├── Categories.jsx / CategoryCard.jsx
@@ -151,12 +151,12 @@ elite-school-way/
 │   │   ├── AdminLogin.jsx / AdminPanel.jsx / AdminDashboard.jsx / DashboardHeader.jsx
 │   │   ├── StaffManagementSection.jsx / StaffEditModal.jsx / ParticipantEditModal.jsx
 │   │   └── ...
-│   ├── data/                # Contenido estático
+│   ├── data/                # Static content
 │   │   ├── categories.js
 │   │   ├── conductRules.js
 │   │   ├── countryCodes.js
 │   │   └── dressCodes.js
-│   ├── services/            # Llamadas al backend
+│   ├── services/            # Backend calls
 │   │   ├── authService.js
 │   │   └── dashboardService.js
 │   ├── utils/               # Helpers
@@ -165,13 +165,13 @@ elite-school-way/
 │   │   ├── driveImage.js
 │   │   ├── auth.js
 │   │   └── theme.js
-│   ├── config/              # Configuración
+│   ├── config/              # Configuration
 │   │   └── constants.js
-│   ├── assets/              # Imágenes y logos
+│   ├── assets/              # Images and logos
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-├── src/tests/               # Vitest — ver TEST.md para el detalle de cada archivo
+├── src/tests/               # Vitest — see TEST.md for details on each file
 │
 ├── .env.example
 ├── .eslintrc.cjs
@@ -179,44 +179,44 @@ elite-school-way/
 ├── tailwind.config.js
 ├── vite.config.js
 ├── vitest.config.js
-├── vercel.json              # Config de despliegue en Vercel
-├── google-apps-script.md    # Backend de Apps Script
-├── SETUP.md                 # Guía de setup
-├── ADMIN_SETUP.md           # Guía del panel admin
-├── TEST.md                  # Guía de testing
-├── AGENTS.md                # Notas para agentes de IA
+├── vercel.json              # Vercel deployment config
+├── google-apps-script.md    # Apps Script backend
+├── SETUP.md                 # Setup guide
+├── ADMIN_SETUP.md           # Admin panel guide
+├── TEST.md                  # Testing guide
+├── AGENTS.md                # AI agent notes
 └── README.md
 ```
 
-## Datos del formulario
+## Form data
 
-Las inscripciones se guardan en la hoja `Registrations` con las columnas:
+Registrations are saved to the `Registrations` sheet with the columns:
 
 1. Timestamp
-2. Nombre Artístico
+2. Nombre Artístico (stage name)
 3. Email
-4. Teléfono
-5. House/007 (opcional)
-6. Entrada — precio numérico (`20000` o `15000`) extraído de la opción elegida, o `N/A`. **No** se guarda el texto de la etiqueta (ej. "General — $20.000"); ver `formSubmit.js`.
-7. Edad
+4. Teléfono (phone)
+5. House/007 (optional)
+6. Entrada — numeric price (`20000` or `15000`) extracted from the chosen option, or `N/A`. The label text is **not** stored (e.g. "General — $20.000"); see `formSubmit.js`.
+7. Edad (age)
 8. Screenshot
-9. Status (`Registrado` o `Pagado`)
+9. Status (`Registrado` or `Pagado`)
 
-El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-data/PAGOS_QR` y solo se escribe el enlace en la hoja.
+The payment proof (screenshot) is saved to the `elite-way-school-data/PAGOS_QR` Drive folder and only its link is written to the sheet.
 
-## Información del evento
+## Event information
 
-- **Evento:** Elite Way School Kiki Ball 2026
-- **Fecha:** 17 de octubre de 2026
-- **Hora:** 6:00 PM
-- **Lugar:** The Game Dance Studio
-- **Dirección:** Kr 13 #56-72, Chapinero, Bogotá
+- **Event:** Elite Way School Kiki Ball 2026
+- **Date:** October 17, 2026
+- **Time:** 6:00 PM
+- **Venue:** The Game Dance Studio
+- **Address:** Kr 13 #56-72, Chapinero, Bogotá
 
-## Contacto
+## Contact
 
 - **Instagram:** [@theeliteway_b](https://www.instagram.com/theeliteway_b)
-- **Teléfono:** [+57 333 738 0581](tel:+573337380581)
+- **Phone:** [+57 333 738 0581](tel:+573337380581)
 
-## Licencia
+## License
 
-© 2026 Elite Way School Ballroom Bogotá. Todos los derechos reservados.
+© 2026 Elite Way School Ballroom Bogotá. All rights reserved.
