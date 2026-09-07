@@ -28,7 +28,7 @@ function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+      <Header onOpenModal={toggleModal} />
       <main>
         <Hero onOpenModal={toggleModal} />
         <EventDetails />
