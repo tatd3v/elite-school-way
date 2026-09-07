@@ -20,7 +20,7 @@ SPA moderna para el evento Elite Way School Kiki Ball. Incluye landing pública,
 - **Build Tool:** Vite 8+
 - **Styling:** Tailwind CSS 3.4+
 - **Backend:** Google Apps Script (sin servidor propio)
-- **Hosting:** Netlify (o cualquier static host)
+- **Hosting:** Vercel (ver `vercel.json`)
 
 ## Instalación
 
@@ -36,7 +36,7 @@ npm install
 npm run dev
 ```
 
-Visita `http://localhost:5173`.
+Visita `http://localhost:3000` (puerto configurado en `vite.config.js`).
 
 ## Scripts disponibles
 
@@ -65,7 +65,6 @@ npm run test:ui     # Vitest - interactive UI
 ### Referencia Técnica
 - **[AGENTS.md](./AGENTS.md)** — Notas para agentes de IA (arquitectura, gotchas, convenciones, DRY, SOLID, folder structure)
 - **[google-apps-script.md](./google-apps-script.md)** — Código fuente del backend (Apps Script)
-- **[ROW_INSERTION_LOGIC.md](./ROW_INSERTION_LOGIC.md)** — Explicación visual de la lógica de inserción de filas
 
 ## Configuración
 
@@ -111,12 +110,13 @@ npm run test:ui          # Interactive UI
 
 ### Tests Disponibles
 
-- Fetch registrations
-- Add/delete registrations
-- Fetch staff
-- Add staff member
-- Update staff member
-- Delete staff member
+- **Integración (backend real)** — requieren `VITE_GOOGLE_SCRIPT_URL` en `.env`, si no están configuradas se saltan automáticamente:
+  - Fetch/add/delete registrations
+  - Fetch/add/update/delete staff members
+  - Paginación (backend)
+- **Componentes (jsdom, sin backend)** — renderizan los componentes reales con `dashboardService` mockeado:
+  - Paginación y header sticky de `AdminDashboard` (Participantes)
+  - Paginación y header sticky de `StaffManagementSection` (Staff)
 
 Ver [TEST.md](./TEST.md) para más detalles.
 
@@ -126,10 +126,10 @@ Ver [TEST.md](./TEST.md) para más detalles.
 npm run build
 ```
 
-Sube la carpeta `dist/` a Netlify Drop, o conecta el repositorio a Netlify y configura:
+El proyecto se despliega en **Vercel** (`vercel.json` incluye el rewrite de SPA necesario para que el routing del lado del cliente funcione). Conecta el repositorio en [vercel.com](https://vercel.com) y configura:
 
 - Build command: `npm run build`
-- Publish directory: `dist`
+- Output directory: `dist`
 - Environment variable: `VITE_GOOGLE_SCRIPT_URL`
 
 ## Estructura del proyecto
@@ -146,8 +146,10 @@ elite-school-way/
 │   │   ├── StaffSection.jsx / StaffMemberCard.jsx
 │   │   ├── Footer.jsx
 │   │   ├── Header.jsx / DesktopNavigation.jsx / BottomNavigation.jsx
+│   │   ├── ThemeToggle.jsx
 │   │   ├── RegistrationModal.jsx
-│   │   ├── AdminLogin.jsx / AdminPanel.jsx / AdminDashboard.jsx
+│   │   ├── AdminLogin.jsx / AdminPanel.jsx / AdminDashboard.jsx / DashboardHeader.jsx
+│   │   ├── StaffManagementSection.jsx / StaffEditModal.jsx / ParticipantEditModal.jsx
 │   │   └── ...
 │   ├── data/                # Contenido estático
 │   │   ├── categories.js
@@ -160,26 +162,28 @@ elite-school-way/
 │   ├── utils/               # Helpers
 │   │   ├── formSubmit.js
 │   │   ├── jsonp.js
-│   │   └── driveImage.js
+│   │   ├── driveImage.js
+│   │   ├── auth.js
+│   │   └── theme.js
 │   ├── config/              # Configuración
 │   │   └── constants.js
 │   ├── assets/              # Imágenes y logos
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
-
+├── src/tests/               # Vitest — ver TEST.md para el detalle de cada archivo
+│
 ├── .env.example
 ├── .eslintrc.cjs
 ├── .prettierrc.json
 ├── tailwind.config.js
 ├── vite.config.js
 ├── vitest.config.js
+├── vercel.json              # Config de despliegue en Vercel
 ├── google-apps-script.md    # Backend de Apps Script
 ├── SETUP.md                 # Guía de setup
 ├── ADMIN_SETUP.md           # Guía del panel admin
-├── TEST_INSTRUCTIONS.md     # Testing guide
-├── STAFF_TESTING.md         # Staff testing details
-├── QUICK_TEST.md            # Quick test reference
+├── TEST.md                  # Guía de testing
 ├── AGENTS.md                # Notas para agentes de IA
 └── README.md
 ```
@@ -193,9 +197,10 @@ Las inscripciones se guardan en la hoja `Registrations` con las columnas:
 3. Email
 4. Teléfono
 5. House/007 (opcional)
-6. Entrada
+6. Entrada — precio numérico (`20000` o `15000`) extraído de la opción elegida, o `N/A`. **No** se guarda el texto de la etiqueta (ej. "General — $20.000"); ver `formSubmit.js`.
 7. Edad
 8. Screenshot
+9. Status (`Registrado` o `Pagado`)
 
 El comprobante (screenshot) se guarda en la carpeta de Drive `elite-way-school-data/PAGOS_QR` y solo se escribe el enlace en la hoja.
 
