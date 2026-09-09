@@ -67,9 +67,9 @@ export const categories = [
     id: 'triple-threat',
     icon: 'stars',
     iconColor: 'secondary',
-    title: 'TRIPLE THREAT PERFORMANCE',
+    title: 'TRIPLE THREAT OLDWAY',
     dressCode: 'MEAN GIRLS',
-    description: 'POP • SPIN & DIP • EXCALIBUR • POSING\n\n“On Wednesdays, we serve PINK… but today, we serve BATTLE!”\n\nEn el Elite Way School, las Mean Girls no necesitan presentación. Son las que dominan los pasillos, conocen todos los secretos y convierten cada entrada en un momento de protagonismo.\n\nEn esta categoría Triple Threat Performance, cada participante deberá demostrar que puede manejar POP, SPIN & DIP, EXCALIBUR y POSING con seguridad, precisión y actitud.'
+    description: 'POP, SPIN & DIP • FACE WITH PERFORMANCE •  EXCALIBUR\n\n“On Wednesdays, we serve PINK… but today, we serve BATTLE!”\n\nEn el Elite Way School, las Mean Girls no necesitan presentación. Son las que dominan los pasillos, controlan cada mirada y convierten su presencia en una lección ejecutiva de actitud, precisión y simetría.\n\nEn esta categoría Triple Old Way, cada participante deberá adueñarse del floor dominando tres pilares fundamentales: POP, SPIN & DIP, FACE WITH PERFORMANCE y EXCALIBUR. Muestra líneas limpias, entrega facial intocable y la elegancia tajante del estilo clásico.\n\nAunque la regla icónica sea vestir de rosa, en esta batalla adaptarás toda la estética Mean Girls: uniformes, faldas a cuadros, cárdigans o estilo Y2K, exclusivamente con los colores oficiales de la Ball.'
   },
   {
     id: 'femme-queen',
