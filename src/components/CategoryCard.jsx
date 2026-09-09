@@ -7,14 +7,14 @@ export default function CategoryCard({ category }) {
       role="article"
       aria-labelledby={`category-${category.id}`}
     >
-      <div className="flex items-center gap-4 justify-around mb-2 relative z-10">
+      <div className="flex items-center gap-4 justify-start mb-2 relative z-10">
         <div className="w-12 h-12 rounded-full bg-surface-container-high border border-outline flex items-center justify-center shrink-0">
           <span className={`material-symbols-outlined text-${category.iconColor}`}>{category.icon}</span>
         </div>
         <div>
           <h4
             id={`category-${category.id}`}
-            className="font-headline-md text-headline-md md:text-body-md text-on-surface whitespace-pre-wrap text-center"
+            className="font-headline-md text-headline-md md:text-body-md text-on-surface whitespace-pre-wrap text-left"
           >
             {category.title}
           </h4>
