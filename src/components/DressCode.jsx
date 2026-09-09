@@ -6,17 +6,19 @@ export default function DressCode({ dressCodes }) {
     <>
       {/* Mobile Card (Old Design) */}
       <div className="md:hidden p-10 border border-primary-container/30 bg-surface-container-lowest shadow-xl relative overflow-hidden rounded-2xl">
-        <div 
-          className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 -mr-16 -mt-16 rounded-full" 
-          aria-hidden="true"
-        ></div>
         <ShareButton label="Dress Code Académico" sectionId="dresscode" />
 
-        <h3 className="font-headline-lg text-headline-lg text-secondary uppercase mb-8">
-          DRESS CODE ACADÉMICO
-        </h3>
-        
-        <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">
+        <div className="text-center mb-8">
+          <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
+            Normativa Oficial
+          </span>
+          <h3 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight">
+            DRESS CODE ACADÉMICO
+          </h3>
+          <div className="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+        </div>
+
+        <p className="font-body-lg text-body-lg text-on-surface-variant mb-8 text-center">
           La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
         </p>
 
@@ -46,10 +48,14 @@ export default function DressCode({ dressCodes }) {
       <div className="relative hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-0">
         <ShareButton label="Dress Code Académico" sectionId="dresscode" />
         <div className="text-center mb-16">
-          <h3 className="font-headline-lg text-headline-lg text-secondary uppercase tracking-[0.2em]">
+          <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
+            Normativa Oficial
+          </span>
+          <h3 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight">
             DRESS CODE ACADÉMICO
           </h3>
-          <p className="text-on-surface-variant mt-4 max-w-2xl mx-auto text-lg">
+          <div className="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+          <p className="text-on-surface-variant mt-4 max-w-2xl mx-auto text-lg font-body-lg">
             La paleta oficial es obligatoria para todxs lxs estudiantxs. Garantiza la excelencia estética y la cohesión visual de la institución.
           </p>
         </div>
