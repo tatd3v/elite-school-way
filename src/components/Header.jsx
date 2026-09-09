@@ -33,6 +33,23 @@ export default function Header({ onOpenModal }) {
     }
   }, [isMobileMenuOpen])
 
+  // Section links (#event, #staff, etc.) are all anchors on the same "/"
+  // page. Letting the browser handle the click natively appends the
+  // fragment to the address bar (e.g. "/#categories"). We intercept it
+  // instead: scroll to the target manually, then reset the URL back to a
+  // clean "/" via history.pushState so the hash never shows up.
+  const handleNavClick = (e, href) => {
+    e.preventDefault()
+    const target = document.querySelector(href)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+    if (window.location.pathname !== '/' || window.location.hash) {
+      window.history.pushState(null, '', '/')
+    }
+    setIsMobileMenuOpen(false)
+  }
+
   return (
     <header
       className={`fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 shadow-sm dark:shadow-lg transition-shadow ${
@@ -80,6 +97,7 @@ export default function Header({ onOpenModal }) {
               key={href}
               className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary transition-colors"
               href={href}
+              onClick={(e) => handleNavClick(e, href)}
             >
               {label}
             </a>
@@ -124,7 +142,7 @@ export default function Header({ onOpenModal }) {
               key={href}
               className="font-label-lg text-label-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors py-3 px-2 rounded-md"
               href={href}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavClick(e, href)}
             >
               {label}
             </a>
