@@ -52,7 +52,7 @@ export default function EventDetails() {
               href="https://maps.app.goo.gl/GPzLik5eJuqEryjk9" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="h-24 w-full bg-surface-variant/50 flex items-center justify-center rounded hover:bg-surface-variant transition-colors cursor-pointer"
+              className="flex-1 min-h-24 w-full bg-surface-variant/50 flex items-center justify-center rounded hover:bg-surface-variant transition-colors cursor-pointer"
             >
               <span className="material-symbols-outlined text-primary text-4xl">map</span>
               <span className="ml-2 font-label-lg">Ver en Mapa</span>
