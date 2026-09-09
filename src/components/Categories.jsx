@@ -11,14 +11,18 @@ export default function Categories() {
     >
       <ShareButton label="Currículo de Categorías" sectionId="categories" />
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
-        <div className="mb-8">
+        <div className="text-center mb-8">
+          <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
+            Currículo Oficial
+          </span>
           <h2
             id="categories-heading"
-            className="font-headline-lg text-headline-lg text-on-surface uppercase text-left border-l-8 border-secondary pl-6"
+            className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight"
           >
-            CURRÍCULO DE CATEGORIAS
+            CATEGORIAS
           </h2>
-          <p className="text-on-surface-variant mt-4 pl-8 max-w-2xl">
+          <div className="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+          <p className="text-on-surface-variant mt-4 max-w-2xl mx-auto font-body-lg">
             Doce disciplinas para demostrar el linaje y el talento. Solo los más aptos alcanzarán la
             excelencia académica en la pasarela.
           </p>

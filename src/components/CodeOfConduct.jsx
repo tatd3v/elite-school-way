@@ -11,12 +11,15 @@ export default function CodeOfConduct({ rules, pledge }) {
       <ShareButton label="Código de Conducta" sectionId="rules" />
 
       <div className="max-w-3xl mx-auto">
-        <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-10 text-center">
-          KIKI BALL — CÓDIGO DE CONDUCTA
-        </h3>
-        <p className="font-label-lg text-label-lg text-secondary uppercase tracking-widest mb-8 text-center">
-          DISCIPLINA • CULTURA • RESPETO • LEGADO
-        </p>
+        <div className="text-center mb-10">
+          <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
+            Disciplina • Cultura • Respeto • Legado
+          </span>
+          <h3 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight">
+            KIKI BALL — CÓDIGO DE CONDUCTA
+          </h3>
+          <div className="w-24 h-1 bg-secondary mx-auto mt-4"></div>
+        </div>
 
         <ul className="conduct-list space-y-10 hidden md:block">
           {rules.map((rule) => (
