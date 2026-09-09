@@ -361,11 +361,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
             <div className="col-span-1">
               <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
-                House / 007
+                House / 007 / Espectadorx
               </label>
               <input
                 className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="Nombre de tu House o Independiente"
+                placeholder="House, 007 o espectadorx"
                 type="text"
                 name="house"
                 value={formData.house}
