@@ -147,6 +147,7 @@ elite-school-way/
 │   │   ├── Footer.jsx
 │   │   ├── Header.jsx / DesktopNavigation.jsx / BottomNavigation.jsx
 │   │   ├── ThemeToggle.jsx
+│   │   ├── ShareButton.jsx
 │   │   ├── RegistrationModal.jsx
 │   │   ├── AdminLogin.jsx / AdminPanel.jsx / AdminDashboard.jsx / DashboardHeader.jsx
 │   │   ├── StaffManagementSection.jsx / StaffEditModal.jsx / ParticipantEditModal.jsx
