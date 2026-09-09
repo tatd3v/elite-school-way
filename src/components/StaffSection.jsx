@@ -25,7 +25,7 @@ function StaffSection() {
 
   return (
     <section
-      className="relative py-12 md:py-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container"
+      className="relative py-12 md:py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container border-b border-outline-variant/20"
       id="staff"
       aria-labelledby="staff-heading"
     >

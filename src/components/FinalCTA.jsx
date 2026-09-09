@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 export default function FinalCTA({ onOpenModal }) {
   return (
-    <section className="py-12 md:py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container text-on-surface relative overflow-hidden border-t border-outline-variant/10">
+    <section className="py-12 md:py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container text-on-surface relative overflow-hidden border-b border-outline-variant/20">
       <div className="max-w-2xl mx-auto text-center relative z-10">
         <h2 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg mb-6 uppercase text-primary leading-tight">
           ¿LISTX PARA MOSTRAR TU TALENTO?

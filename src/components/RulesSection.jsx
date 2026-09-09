@@ -6,7 +6,7 @@ import { conductRules, elitePledge } from '../data/conductRules'
 export default function RulesSection() {
   return (
     <section
-      className="py-12 md:py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container"
+      className="py-12 md:py-section-gap-desktop px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container border-b border-outline-variant/20"
       aria-labelledby="rules-heading"
     >
       <div className="grid grid-cols-1 gap-16">

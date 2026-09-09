@@ -5,7 +5,7 @@ import heroBackground from '../assets/hero_background.png'
 export default function Hero({ onOpenModal }) {
   return (
     <section 
-      className="relative min-h-[85vh] md:min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-background dark:bg-[#000666] py-20"
+      className="relative min-h-[85vh] md:min-h-screen h-auto md:h-[90vh] flex items-center justify-center overflow-hidden bg-background dark:bg-[#000666] py-20 border-b border-outline-variant/20"
       aria-labelledby="hero-heading"
       role="region"
     >
