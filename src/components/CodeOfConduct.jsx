@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import ShareButton from './ShareButton'
 
 export default function CodeOfConduct({ rules, pledge }) {
   return (
@@ -7,6 +8,7 @@ export default function CodeOfConduct({ rules, pledge }) {
         className="absolute top-0 right-0 w-96 h-96 bg-secondary/5 -mr-48 -mt-48 rounded-full blur-3xl"
         aria-hidden="true"
       ></div>
+      <ShareButton label="Código de Conducta" sectionId="rules" />
 
       <div className="max-w-3xl mx-auto">
         <h3 className="font-headline-lg text-headline-lg text-primary uppercase mb-10 text-center">

@@ -1,13 +1,15 @@
 import CategoryCard from './CategoryCard'
+import ShareButton from './ShareButton'
 import { categories } from '../data/categories'
 
 export default function Categories() {
   return (
     <section
-      className="py-section-gap-desktop bg-surface-container-high"
+      className="relative py-section-gap-desktop bg-surface-container-high"
       id="categories"
       aria-labelledby="categories-heading"
     >
+      <ShareButton label="Currículo de Categorías" sectionId="categories" />
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
         <div className="mb-8">
           <h2

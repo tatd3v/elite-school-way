@@ -2,6 +2,7 @@ import { Fragment } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { dashboardService } from '../services/dashboardService';
 import StaffMemberCard from './StaffMemberCard';
+import ShareButton from './ShareButton';
 
 function StaffSection() {
   const [staff, setStaff] = useState([]);
@@ -24,10 +25,11 @@ function StaffSection() {
 
   return (
     <section
-      className="py-12 md:py-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container"
+      className="relative py-12 md:py-16 px-margin-mobile md:px-margin-desktop max-w-7xl mx-auto bg-surface-container-low dark:bg-surface-container"
       id="staff"
       aria-labelledby="staff-heading"
     >
+      <ShareButton label="Staff Elite Way School" sectionId="staff" />
       <div className="text-center mb-6">
         <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
           Facultad de Excelencia

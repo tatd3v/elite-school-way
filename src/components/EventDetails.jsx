@@ -1,6 +1,9 @@
+import ShareButton from './ShareButton'
+
 export default function EventDetails() {
   return (
-    <section className="py-section-gap-desktop bg-surface-container-low border-b border-outline-variant/20" id="event">
+    <section className="relative py-section-gap-desktop bg-surface-container-low border-b border-outline-variant/20" id="event">
+      <ShareButton label="Evento Elite Way School" sectionId="event" />
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
           

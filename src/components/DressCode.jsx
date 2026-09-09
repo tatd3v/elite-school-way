@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import ShareButton from './ShareButton'
 
 export default function DressCode({ dressCodes }) {
   return (
@@ -9,7 +10,8 @@ export default function DressCode({ dressCodes }) {
           className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 -mr-16 -mt-16 rounded-full" 
           aria-hidden="true"
         ></div>
-        
+        <ShareButton label="Dress Code Académico" sectionId="dresscode" />
+
         <h3 className="font-headline-lg text-headline-lg text-secondary uppercase mb-8">
           DRESS CODE ACADÉMICO
         </h3>
@@ -17,7 +19,7 @@ export default function DressCode({ dressCodes }) {
         <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">
           La paleta oficial es obligatoria para garantizar la cohesión visual del evento.
         </p>
-        
+
         <div className="space-y-6">
           {dressCodes.map((dress) => (
             <div key={dress.name} className="flex items-center gap-4">
@@ -41,7 +43,8 @@ export default function DressCode({ dressCodes }) {
       </div>
 
       {/* Desktop Grid (New Design) */}
-      <div className="hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-0">
+      <div className="relative hidden md:block mb-20 bg-surface-container-low dark:bg-surface-container rounded-3xl p-12 md:p-0">
+        <ShareButton label="Dress Code Académico" sectionId="dresscode" />
         <div className="text-center mb-16">
           <h3 className="font-headline-lg text-headline-lg text-secondary uppercase tracking-[0.2em]">
             DRESS CODE ACADÉMICO
