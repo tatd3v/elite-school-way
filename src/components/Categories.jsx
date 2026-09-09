@@ -5,7 +5,7 @@ import { categories } from '../data/categories'
 export default function Categories() {
   return (
     <section
-      className="relative py-section-gap-desktop bg-surface-container-high"
+      className="relative py-12 md:py-section-gap-desktop bg-surface-container-high"
       id="categories"
       aria-labelledby="categories-heading"
     >

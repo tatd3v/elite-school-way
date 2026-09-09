@@ -2,9 +2,19 @@ import ShareButton from './ShareButton'
 
 export default function EventDetails() {
   return (
-    <section className="relative py-section-gap-desktop bg-surface-container-low border-b border-outline-variant/20" id="event">
+    <section className="relative py-12 md:py-section-gap-desktop bg-surface-container-low border-b border-outline-variant/20" id="event">
       <ShareButton label="Evento Elite Way School" sectionId="event" />
       <div className="max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop">
+        <div className="text-center mb-12 relative">
+          <span className="text-secondary font-label-sm text-label-sm tracking-[0.3em] uppercase font-bold mb-2 block">
+            Información Oficial
+          </span>
+          <h2 className="font-headline-lg text-headline-lg md:text-display-lg text-primary uppercase tracking-tight">
+            DATOS DEL EVENTO
+          </h2>
+          <div className="w-16 h-1 bg-secondary mx-auto mt-4"></div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
           
           {/* Date Card */}
