@@ -15,7 +15,7 @@ export default function CodeOfConduct({ rules, pledge }) {
           <span className="text-secondary font-label-lg text-label-lg tracking-[0.4em] uppercase mb-2 block">
             Disciplina • Cultura • Respeto • Legado
           </span>
-          <h3 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary uppercase leading-tight">
+          <h3 className="font-display-lg text-3xl md:text-display-lg-mobile lg:text-display-lg text-primary dark:!text-white uppercase leading-tight">
             KIKI BALL — CÓDIGO DE CONDUCTA
           </h3>
           <div className="w-24 h-1 bg-secondary mx-auto mt-4"></div>
@@ -25,15 +25,15 @@ export default function CodeOfConduct({ rules, pledge }) {
           {rules.map((rule) => (
             <li key={rule.id}>
               <div className="flex-1 text-justify">
-                <h5 className="font-headline-md text-on-surface mb-2">{rule.title}</h5>
-                <p className="text-on-surface-variant leading-relaxed">{rule.content}</p>
+                <h5 className="font-headline-md text-on-surface dark:!text-white mb-2">{rule.title}</h5>
+                <p className="text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed">{rule.content}</p>
                 {rule.extraContent && (
-                  <p className="text-on-surface-variant leading-relaxed mt-2">
+                  <p className="text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed mt-2">
                     {rule.extraContent}
                   </p>
                 )}
                 {rule.footerContent && (
-                  <p className="text-on-surface-variant leading-relaxed mt-2">
+                  <p className="text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed mt-2">
                     {rule.footerContent}
                   </p>
                 )}
@@ -47,29 +47,29 @@ export default function CodeOfConduct({ rules, pledge }) {
           {rules.map((rule, index) => (
             <article
               key={rule.id}
-              className="bg-surface-container-lowest border border-outline-variant/40 rounded-DEFAULT p-6 relative overflow-hidden group transition-all duration-300 hover:shadow-sm"
+              className="bg-surface-container-lowest dark:!bg-[#151939] border border-outline-variant/40 dark:border-[#2e3253]/80 rounded-DEFAULT p-6 relative overflow-hidden group transition-all duration-300 hover:shadow-sm dark:hover:border-[#b52617]/50"
             >
               <div
-                className="absolute top-0 left-0 w-1 h-full bg-secondary scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500"
+                className="absolute top-0 left-0 w-1 h-full bg-secondary dark:!bg-[#b52617] scale-y-0 group-hover:scale-y-100 origin-top transition-transform duration-500"
                 aria-hidden="true"
               ></div>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                  <span className="bg-primary text-white font-bold px-2 py-1 rounded text-label-sm">
+                  <span className="bg-primary dark:!bg-[#b52617] text-white font-bold px-2 py-1 rounded text-label-sm">
                     {String(index + 1).padStart(2, '0')}
                   </span>
-                  <h5 className="font-label-lg text-label-lg text-primary uppercase tracking-tight font-bold">
+                  <h5 className="font-label-lg text-label-lg text-primary dark:!text-white uppercase tracking-tight font-bold">
                     {rule.title}
                   </h5>
                 </div>
-                <p className="text-body-md text-on-surface-variant leading-relaxed">{rule.content}</p>
+                <p className="text-body-md text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed">{rule.content}</p>
                 {rule.extraContent && (
-                  <p className="text-body-md text-on-surface-variant leading-relaxed">
+                  <p className="text-body-md text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed">
                     {rule.extraContent}
                   </p>
                 )}
                 {rule.footerContent && (
-                  <p className="text-body-md text-on-surface-variant leading-relaxed">
+                  <p className="text-body-md text-on-surface-variant dark:!text-[#c6c5d4] leading-relaxed">
                     {rule.footerContent}
                   </p>
                 )}
