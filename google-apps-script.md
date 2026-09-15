@@ -34,6 +34,8 @@ const REGISTRATION_ACTIONS = {
   UPDATE_STATUS: 'updateRegistrationStatus',
   DELETE: 'deleteRegistration',
   UPDATE_REGISTRATION: 'updateRegistration',
+  CHECK_EXISTS: 'checkRegistrationExists',
+  ATTACH_SCREENSHOT: 'attachPaymentScreenshot',
 };
 
 /**
@@ -190,6 +192,7 @@ function saveScreenshotToDrive(dataUrl, artistName) {
   const blob = Utilities.newBlob(bytes, mimeType, fileName);
   const file = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  console.log('saveScreenshotToDrive: created ' + fileName + ' (' + mimeType + ') in PAGOS_QR');
   return file.getUrl();
 }
 
@@ -274,6 +277,8 @@ function doPost(e) {
       result = updateRegistrationStatus(data);
     } else if (data.action === REGISTRATION_ACTIONS.UPDATE_REGISTRATION) {
       result = updateRegistration(data);
+    } else if (data.action === REGISTRATION_ACTIONS.ATTACH_SCREENSHOT) {
+      result = attachPaymentScreenshot(data);
     } else if (data.action === REGISTRATION_ACTIONS.DELETE) {
       result = deleteRegistration(data);
     } else {
@@ -391,6 +396,93 @@ function updateRegistration(data) {
   }
 
   return { status: 'success', message: 'Registration updated' };
+}
+
+/**
+ * Check whether a registration already exists for the given email and/or
+ * phone (case-insensitive; digits-only for phone). Either one matching is
+ * enough. Used by the public registration form to detect duplicates before
+ * creating a new row, so it can offer to attach a payment screenshot to the
+ * existing registration instead of creating a second one.
+ */
+function checkRegistrationExists(email, phone) {
+  const sheet = initializeSheet();
+  const data = sheet.getDataRange().getValues();
+
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+  const normalizedPhone = String(phone || '').replace(/\D/g, '');
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const rowEmail = String(row[2] || '').trim().toLowerCase();
+    const rowPhone = String(row[3] || '').replace(/\D/g, '');
+
+    const emailMatches = !!normalizedEmail && rowEmail === normalizedEmail;
+    const phoneMatches = !!normalizedPhone && !!rowPhone && rowPhone.indexOf(normalizedPhone) !== -1;
+
+    if (emailMatches || phoneMatches) {
+      return {
+        exists: true,
+        rowIndex: i + 1,
+        name: row[1],
+        email: row[2],
+        phone: row[3],
+        hasScreenshot: !!row[7],
+      };
+    }
+  }
+
+  return { exists: false };
+}
+
+/**
+ * Attach/replace the payment screenshot on an existing registration row,
+ * without touching any other column. Used by the public form's "already
+ * registered" flow (see checkRegistrationExists above). Re-verifies the
+ * given email/phone actually match the target row before writing, so a
+ * guessed/tampered rowIndex alone isn't enough to overwrite someone else's
+ * screenshot — the caller still needs to know the real email or phone.
+ */
+function attachPaymentScreenshot(data) {
+  console.log('attachPaymentScreenshot called: rowIndex=' + data.rowIndex + ' email=' + data.email + ' phone=' + data.phone);
+  const sheet = initializeSheet();
+  const rowIndex = parseInt(data.rowIndex, 10);
+
+  if (isNaN(rowIndex) || rowIndex < 2) {
+    throw new Error('Invalid row index');
+  }
+
+  const currentRow = sheet.getRange(rowIndex, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const rowEmail = String(currentRow[2] || '').trim().toLowerCase();
+  const rowPhone = String(currentRow[3] || '').replace(/\D/g, '');
+
+  const normalizedEmail = String(data.email || '').trim().toLowerCase();
+  const normalizedPhone = String(data.phone || '').replace(/\D/g, '');
+
+  const emailMatches = !!normalizedEmail && rowEmail === normalizedEmail;
+  const phoneMatches = !!normalizedPhone && !!rowPhone && rowPhone.indexOf(normalizedPhone) !== -1;
+
+  if (!emailMatches && !phoneMatches) {
+    throw new Error('Email/phone do not match the target registration');
+  }
+
+  if (!data.paymentScreenshot) {
+    throw new Error('No screenshot provided');
+  }
+
+  const screenshotUrl = data.paymentScreenshot.startsWith('data:')
+    ? saveScreenshotToDrive(data.paymentScreenshot, currentRow[1] || 'participante')
+    : data.paymentScreenshot;
+
+  if (!screenshotUrl) {
+    console.log('attachPaymentScreenshot: saveScreenshotToDrive returned empty for rowIndex=' + rowIndex);
+    throw new Error('Screenshot could not be saved to Drive');
+  }
+
+  sheet.getRange(rowIndex, 8).setValue(screenshotUrl);
+  console.log('attachPaymentScreenshot: set Screenshot column for rowIndex=' + rowIndex + ' to ' + screenshotUrl);
+
+  return { status: 'success', message: 'Screenshot attached' };
 }
 
 /**
@@ -595,6 +687,8 @@ function doGet(e) {
     } else if (action === 'getStaff') {
       const includeHidden = e.parameter.includeHidden === 'true';
       result = getStaff(includeHidden);
+    } else if (action === REGISTRATION_ACTIONS.CHECK_EXISTS) {
+      result = checkRegistrationExists(e.parameter.email, e.parameter.phone);
     } else if (action === 'login') {
       result = verifyAdmin(e.parameter.email, e.parameter.password);
     } else {
@@ -606,6 +700,8 @@ function doGet(e) {
           'getRegistrations',
           'getStaff',
           'login',
+          'checkRegistrationExists',
+          'attachPaymentScreenshot',
           'addStaff',
           'updateStaff',
           'deleteStaff',
@@ -651,5 +747,5 @@ function testSubmission() {
   };
   
   const result = doPost(testData);
-  Logger.log(result.getContent());
+  console.log(result.getContent());
 }
