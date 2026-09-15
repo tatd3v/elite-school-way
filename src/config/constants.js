@@ -34,6 +34,8 @@ export const REGISTRATION_ACTIONS = {
   UPDATE_STATUS: 'updateRegistrationStatus',
   DELETE: 'deleteRegistration',
   UPDATE_REGISTRATION: 'updateRegistration',
+  CHECK_EXISTS: 'checkRegistrationExists',
+  ATTACH_SCREENSHOT: 'attachPaymentScreenshot',
 };
 
 export const STAFF_CONFIG = {
