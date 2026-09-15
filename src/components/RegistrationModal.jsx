@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
+import { dashboardService } from '../services/dashboardService'
 import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
 import logo from '../assets/logo.png'
@@ -232,31 +233,80 @@ export default function RegistrationModal({ isOpen, onClose }) {
     }
   }, [isOpen])
 
+  const resetForm = () => {
+    setFormData({
+      artistName: '',
+      email: '',
+      countryCode: DEFAULT_COUNTRY_CODE,
+      phone: '',
+      house: '',
+      entryType: '',
+      age: '',
+      paymentScreenshot: '',
+      paymentScreenshotName: '',
+    })
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     setIsSubmitting(true)
     setSubmitStatus(null)
 
+    const phone = `${formData.countryCode} ${formData.phone}`.trim()
+
     try {
+      // Check for an existing registration by email or phone before
+      // creating a new one. If found, don't submit a duplicate row — the
+      // person just uses this same form's own "Pago por QR" field to
+      // (re)attach their payment screenshot to the existing registration
+      // instead of creating a second one.
+      const existing = await dashboardService.checkRegistrationExists(formData.email, phone)
+      if (existing?.exists) {
+        if (existing.hasScreenshot) {
+          setSubmitStatus('duplicate-has-screenshot')
+          return
+        }
+
+        if (!formData.paymentScreenshot) {
+          setSubmitStatus('duplicate-needs-screenshot')
+          return
+        }
+
+        await dashboardService.attachPaymentScreenshot({
+          rowIndex: existing.rowIndex,
+          email: existing.email,
+          phone: existing.phone,
+          paymentScreenshot: formData.paymentScreenshot,
+        })
+
+        // The POST is fire-and-forget (mode: 'no-cors'), so a stale
+        // deployment or a Drive permission error would look like success.
+        // Re-check the row to make sure the screenshot was actually saved.
+        await new Promise((resolve) => setTimeout(resolve, 800))
+        const afterAttach = await dashboardService.checkRegistrationExists(formData.email, phone)
+        if (!afterAttach?.hasScreenshot) {
+          setSubmitStatus('attach-failed')
+          return
+        }
+
+        setSubmitStatus('duplicate-added')
+        setTimeout(() => {
+          resetForm()
+          setSubmitStatus(null)
+          onClose()
+        }, 2500)
+        return
+      }
+
       await submitForm({
         ...formData,
-        phone: `${formData.countryCode} ${formData.phone}`.trim(),
+        phone,
       })
       setSubmitStatus('success')
 
       setTimeout(() => {
-        setFormData({
-          artistName: '',
-          email: '',
-          countryCode: DEFAULT_COUNTRY_CODE,
-          phone: '',
-          house: '',
-          entryType: '',
-          age: '',
-          paymentScreenshot: '',
-          paymentScreenshotName: '',
-        })
+        resetForm()
         setSubmitStatus(null)
         onClose()
       }, 2000)
@@ -449,9 +499,64 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 </div>
               )}
 
+              {submitStatus === 'duplicate-added' && (
+                <div className="mb-4 bg-green-900/20 border border-green-500/50 text-green-400 px-4 py-3 rounded">
+                  ¡Ya estabas registradx! Agregamos tu comprobante de pago a tu inscripción existente.
+                </div>
+              )}
+
+              {submitStatus === 'duplicate-needs-screenshot' && (
+                <div className="mb-4 bg-yellow-900/20 border border-yellow-500/50 text-yellow-400 px-4 py-3 rounded">
+                  Ya estás registradx con este email o teléfono. Sube tu comprobante de pago en la sección &ldquo;Pago por QR&rdquo; y vuelve a confirmar para agregarlo a tu inscripción.
+                </div>
+              )}
+
+              {submitStatus === 'duplicate-has-screenshot' && (
+                <div className="mb-4 bg-blue-900/20 border border-blue-500/50 text-blue-300 px-4 py-4 rounded space-y-3">
+                  <p>Ya estás registradx con este email o teléfono, y ya tenemos tu comprobante de pago registrado.</p>
+                  <p>Si necesitas realizar un cambio, contacta a las personas que administran el sitio web:</p>
+                  <div className="flex flex-col gap-2">
+                    <a
+                      href="https://www.instagram.com/theeliteway_b"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 hover:underline"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 flex-shrink-0">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                      </svg>
+                      <span>Instagram: theeliteway_b</span>
+                    </a>
+                    <a href="tel:+573337380581" className="flex items-center gap-2 hover:underline">
+                      <span className="material-symbols-outlined text-base flex-shrink-0">call</span>
+                      <span>Teléfono: +57 333 738 0581</span>
+                    </a>
+                    <a
+                      href="https://wa.me/573337380581"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 hover:underline"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#25D366" className="w-4 h-4 flex-shrink-0">
+                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2zm5.8 14.05c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.13.11-1.82-.11-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.8-4.18-4.94-4.37-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.81 2 .88 2.15.07.15.12.32.02.52-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"></path>
+                      </svg>
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+
               {submitStatus === 'error' && (
                 <div className="mb-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
                   Error al enviar la inscripción. Por favor, inténtalo de nuevo.
+                </div>
+              )}
+
+              {submitStatus === 'attach-failed' && (
+                <div className="mb-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
+                  No se pudo guardar el comprobante. Asegúrate de que el script de Apps Script esté desplegado y tenga permisos de Google Drive.
                 </div>
               )}
 
