@@ -323,11 +323,16 @@ export default function RegistrationModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-surface">
       <button
-        className="fixed top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center bg-surface-container-high border border-outline-variant text-on-surface hover:text-[#c62828] hover:border-[#c62828] transition-all rounded-full shadow-lg group active:scale-90"
+        className="fixed top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center bg-surface-container-high border border-outline-variant text-on-surface hover:text-[#c62828] hover:border-[#c62828] transition-all rounded-full shadow-lg group active:scale-90 disabled:opacity-70 disabled:cursor-not-allowed"
         onClick={onClose}
-        aria-label="Cerrar"
+        aria-label={isSubmitting ? 'Enviando...' : 'Cerrar'}
+        disabled={isSubmitting}
       >
-        <span className="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">close</span>
+        {isSubmitting ? (
+          <span className="material-symbols-outlined text-3xl animate-spin">progress_activity</span>
+        ) : (
+          <span className="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300">close</span>
+        )}
       </button>
 
       <div className="w-full max-w-3xl mx-auto py-12 md:py-20 px-margin-mobile">
@@ -356,7 +361,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
           <div className="w-16 h-1 bg-[#c62828] mx-auto mt-6"></div>
         </div>
 
-        <form className="bg-surface-container-lowest p-6 md:p-12 border border-outline-variant/30 rounded-lg shadow-[0px_8px_48px_rgba(0,0,0,0.4)]" onSubmit={handleSubmit}>
+        <form className={`bg-surface-container-lowest p-6 md:p-12 border border-outline-variant/30 rounded-lg shadow-[0px_8px_48px_rgba(0,0,0,0.4)] ${isSubmitting ? 'pointer-events-none' : ''}`} onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
             <div className="col-span-1">
               <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
