@@ -409,7 +409,7 @@ function AdminDashboard({ user, onLogout }) {
                                       className="absolute bg-surface-container-high border border-outline-variant/30 rounded-lg shadow-2xl z-[60] min-w-max"
                                       style={{ top: `${menuPosition.top}px`, right: `${menuPosition.right}px` }}
                                     >
-                                      {!isPaid && (
+                                      {!isPaid && participant.screenshot && (
                                         <button
                                           onClick={() => {
                                             handleConfirmPayment(participant.id);
@@ -622,7 +622,7 @@ function AdminDashboard({ user, onLogout }) {
                                 {isAdmin && (
                                   <td className="p-2 text-center">
                                     <div className="flex justify-center gap-1">
-                                      {!isPaid && (
+                                      {!isPaid && participant.screenshot && (
                                         <button
                                           type="button"
                                           onClick={() => handleConfirmPayment(participant.id)}
