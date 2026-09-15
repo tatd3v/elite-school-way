@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import PropTypes from 'prop-types'
+import { logoutAdmin } from '../utils/auth'
 import favicon from '../assets/favicon.png'
 import longLogo from '../assets/long_logo.png'
 import longLogoDarkBg from '../assets/long_logo_dark_bg.png'
 
-function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange, onNewStaff }) {
+function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange, onNewStaff, onLogout }) {
   const MIN_WIDTH = 200
   const MAX_WIDTH = 400
   const DEFAULT_WIDTH = 288 // 72 * 4 (w-72)
@@ -232,6 +233,11 @@ function DesktopNavigation({ activeTab = 'dashboard', onTabChange, onWidthChange
 
         {/* Logout Button */}
         <button
+          type="button"
+          onClick={() => {
+            logoutAdmin();
+            onLogout?.();
+          }}
           className={`w-full flex items-center gap-3 text-on-surface-variant hover:text-error transition-colors ${
             isCollapsed ? 'justify-center px-2' : 'px-4'
           }`}
@@ -261,6 +267,7 @@ DesktopNavigation.propTypes = {
   onTabChange: PropTypes.func,
   onWidthChange: PropTypes.func,
   onNewStaff: PropTypes.func,
+  onLogout: PropTypes.func,
 }
 
 export default DesktopNavigation

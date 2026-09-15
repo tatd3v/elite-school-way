@@ -13,7 +13,7 @@ import ThemeToggle from './ThemeToggle';
 
 const ADMIN_ROLE = 'admin';
 
-function AdminDashboard({ user }) {
+function AdminDashboard({ user, onLogout }) {
   const isAdmin = user?.role === ADMIN_ROLE;
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('participants');
@@ -216,6 +216,7 @@ function AdminDashboard({ user }) {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         onWidthChange={setSidebarWidth}
+        onLogout={onLogout}
         onNewStaff={() => {
           setActiveTab('faculty')
           setPendingAddStaff(true)
@@ -805,6 +806,7 @@ AdminDashboard.propTypes = {
     role: PropTypes.string.isRequired,
     timestamp: PropTypes.number.isRequired,
   }).isRequired,
+  onLogout: PropTypes.func,
 };
 
 export default AdminDashboard;
