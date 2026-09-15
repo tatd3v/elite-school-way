@@ -43,6 +43,29 @@ async function postRegistration(payload) {
   return JSON.parse(text);
 }
 
+// Polls fetchRegistrations() until `matchFn` finds something or we give up.
+// A single fixed `setTimeout` wait before one fetch (the pattern used
+// elsewhere in this file) isn't always enough — Sheets/Apps Script
+// propagation delay can exceed it, which previously caused a cleanup loop to
+// run against a still-stale read (finding 0 rows) and leave an orphaned row
+// behind in the live sheet. Retrying is cheap insurance against that.
+async function fetchWithRetry(matchFn, { attempts = 5, delayMs = 1500 } = {}) {
+  for (let i = 0; i < attempts; i++) {
+    await new Promise((r) => setTimeout(r, delayMs));
+    try {
+      const data = await fetchRegistrations();
+      const match = matchFn(data.registrations);
+      if (match.length > 0) return match;
+    } catch {
+      // Transient network/rate-limit hiccup (e.g. Apps Script returning an
+      // HTML error page instead of JSON) — swallow and retry rather than
+      // aborting the whole test, which would skip cleanup entirely and risk
+      // leaving an orphaned row behind.
+    }
+  }
+  return [];
+}
+
 async function deleteRegistration(rowIndex) {
   const res = await fetch(API_URL, {
     method: 'POST',
@@ -239,6 +262,98 @@ describe.skipIf(!shouldRun)('Registrations Pagination Tests', () => {
       expect(registration.rowIndex).toBeDefined();
     });
   }, { timeout: 15000 });
+});
+
+describe.skipIf(!shouldRun)('Registration required-field validation (reproduces prod data-integrity bug)', () => {
+  // Prod's Registrations sheet has rows with blank Nombre Artístico/Email/
+  // Teléfono and a "12/31/1969 19:00" (Unix epoch, shown in America/Bogota's
+  // UTC-5 offset) Timestamp. These can't come from the real form: `formSubmit.js`
+  // always sends a current `timestamp`, and `RegistrationModal.jsx`'s inputs
+  // have the HTML `required` attribute, which blocks the browser's native
+  // submit event entirely when those fields are empty. That means these rows
+  // were created by something POSTing straight to the public Apps Script Web
+  // App URL (bot/scanner traffic, since "Who has access" is "Anyone") — and
+  // `doPost`'s fallback "else" branch (google-apps-script.md, the only branch
+  // handling `submitRegistration`) has NO server-side validation: it writes
+  // `data.artistName`/`data.email`/`data.phone` and `new Date(data.timestamp)`
+  // straight to the sheet regardless of whether they're empty/missing.
+  // These tests codify the actual requirement ("required fields must be
+  // filled") against the live backend, so they currently FAIL until
+  // server-side validation is added to the `doPost` handler.
+  it('should NOT create a row when required fields (email, phone) are blank', async () => {
+    // IMPORTANT: artistName is deliberately kept non-blank (the marker
+    // itself) even though we're testing "missing required fields". This is
+    // NOT optional — `getRegistrations()` (google-apps-script.md) silently
+    // skips any row whose Name column is blank ("Skip blank/ghost rows"),
+    // so a row created with a blank artistName becomes permanently
+    // invisible to `fetchRegistrations()` and therefore impossible to find
+    // or clean up via `deleteRegistration` through the API. (This actually
+    // happened while writing this test — it left an orphaned, undeletable
+    // row in the live sheet that had to be removed manually from the
+    // Sheets UI.) Leaving email/phone blank is enough to exercise the same
+    // missing-required-field bug without ever risking another
+    // unrecoverable ghost row.
+    const marker = `TEST-VALIDATION-${Date.now()}`;
+
+    const result = await postRegistration({
+      action: 'submitRegistration',
+      // No timestamp either — mirrors a direct/bot POST that bypasses
+      // formSubmit.js, the only place a timestamp is normally generated.
+      artistName: marker,
+      email: '',
+      phone: '',
+      house: marker,
+      entryType: '',
+      age: '',
+      paymentScreenshot: '',
+      paymentScreenshotName: '',
+    });
+
+    const created = await fetchWithRetry((regs) => regs.filter((r) => r.name === marker));
+
+    // Clean up immediately regardless of outcome, so a failing test (i.e.
+    // today's actual buggy behavior) doesn't leave garbage data in the live
+    // sheet on top of the bug it's demonstrating.
+    for (const registration of created) {
+      await deleteRegistration(registration.rowIndex);
+    }
+
+    expect(result.status).not.toBe('success');
+    expect(created.length).toBe(0);
+  }, { timeout: 30000 });
+
+  it('should never write an epoch/1970 Timestamp when "timestamp" is missing from the payload', async () => {
+    const marker = `TEST-TIMESTAMP-${Date.now()}`;
+    const email = `${marker}@example.com`;
+
+    await postRegistration({
+      action: 'submitRegistration',
+      // timestamp intentionally omitted — the rest of the fields are valid
+      // so this test isolates the timestamp bug from the required-field bug above.
+      artistName: `Timestamp Test ${marker}`,
+      email,
+      phone: '3001234567',
+      house: marker,
+      entryType: 20000,
+      age: '25',
+      paymentScreenshot: '',
+      paymentScreenshotName: '',
+    });
+
+    const created = await fetchWithRetry((regs) => regs.filter((r) => r.email === email));
+
+    for (const registration of created) {
+      await deleteRegistration(registration.rowIndex);
+    }
+
+    // Either the backend rejects a request with no timestamp, or (if it's
+    // accepted) it must default to "now" — never silently fall back to
+    // epoch (`new Date(undefined/0)` → 1969/1970).
+    if (created.length > 0) {
+      const year = new Date(created[0].timestamp).getFullYear();
+      expect(year).toBeGreaterThan(2000);
+    }
+  }, { timeout: 30000 });
 });
 
 describe.skipIf(!shouldRun)('Multi-registration / Duplication', () => {
