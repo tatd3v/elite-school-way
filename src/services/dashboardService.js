@@ -179,6 +179,39 @@ class DashboardService {
     }
   }
 
+  async checkRegistrationExists(email, phone) {
+    try {
+      const url = new URL(API_CONFIG.GOOGLE_SCRIPT_URL);
+      url.searchParams.set('action', REGISTRATION_ACTIONS.CHECK_EXISTS);
+      if (email) url.searchParams.set('email', email);
+      if (phone) url.searchParams.set('phone', phone);
+      return await jsonp(url.toString());
+    } catch (error) {
+      console.error('Error checking existing registration:', error);
+      // Fail open: if the lookup itself fails, let the caller fall back to
+      // a normal registration submission instead of blocking the user.
+      return { exists: false };
+    }
+  }
+
+  async attachPaymentScreenshot({ rowIndex, email, phone, paymentScreenshot }) {
+    try {
+      await this.postStaffAction(REGISTRATION_ACTIONS.ATTACH_SCREENSHOT, {
+        rowIndex,
+        email,
+        phone,
+        paymentScreenshot,
+      });
+      // postStaffAction's underlying fetch uses mode: 'no-cors' (same as
+      // formSubmit.js), so the response body can't be read — success is
+      // assumed if no error was thrown, matching the rest of this file.
+      return { success: true };
+    } catch (error) {
+      console.error('Error attaching payment screenshot:', error);
+      throw error;
+    }
+  }
+
   async updateRegistrationStatus(rowIndex, status) {
     try {
       // postStaffAction is a generic { action, ...payload } POST helper
