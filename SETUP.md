@@ -88,6 +88,21 @@ This project has **no traditional server or database** — a single Google Sheet
 3. Check your Google Sheet — a **Registrations** tab should appear with a test entry
 4. If successful, delete the test row
 
+### Google Drive authorization for screenshots and staff photos
+
+`saveScreenshotToDrive` and `saveStaffPhotoToDrive` use `DriveApp.createFile`, which requires the full `https://www.googleapis.com/auth/drive` OAuth scope. The deployment authorization dialog may not request this until a Drive function is actually called.
+
+1. At the bottom of `Code.gs` in the Apps Script editor, paste this temporary function:
+   ```js
+   function forceDriveAuth() {
+     DriveApp.getRootFolder().createFile('elite-way-temp-auth.txt', 'ok');
+   }
+   ```
+2. Select `forceDriveAuth` and click **Run**.
+3. Grant **Google Drive** access in the dialog.
+4. Delete the temp file `elite-way-temp-auth.txt` from your Drive root and remove the `forceDriveAuth` function from `Code.gs`.
+5. If you were not asked for permission (you may have already authorized a narrower scope), remove the app's access at `https://myaccount.google.com/permissions`, then run `forceDriveAuth` again.
+
 ### Step 5: Configure Environment Variable
 
 1. In your project folder, create a `.env` file:
@@ -150,8 +165,15 @@ Unlike a typical database, sheets/tabs in this project are created **lazily** �
 | 5 | House/007 | Optional. Same apostrophe trick, preserves leading zeros like `007` |
 | 6 | Entrada | Numeric price (`20000` or `15000`) extracted from the selected entry type label by `formSubmit.js` — **not** the label text itself (e.g. `General — $20.000` becomes `20000`). Falls back to `N/A` if no digits are found. |
 | 7 | Edad | |
-| 8 | Screenshot | Google Drive link to the uploaded payment proof (saved under `elite-way-school-data/PAGOS_QR`) |
+| 8 | Screenshot | Google Drive link to the uploaded payment proof (saved under `elite-way-school-data/PAGOS_QR`). Can be filled in later even after the row exists — see "Duplicate registrations" below |
 | 9 | Status | `Registrado` (default) or `Pagado` — editable from the admin dashboard |
+
+### Duplicate registrations
+
+Before writing a new row, the public form calls `checkRegistrationExists` (matches by email or phone, case-insensitive/digits-only) to avoid creating a second row for someone who already registered. There's no separate modal for this — the same registration form (and its existing "Pago por QR" screenshot field) is reused, with an inline message replacing the usual success/error notice:
+- **No screenshot on file yet, and the user already attached a file** → it's sent immediately via `attachPaymentScreenshot`, which only ever writes the Screenshot column (column 8) — it never touches name/email/phone/house/entry/age.
+- **No screenshot on file yet, but nothing was attached** → the user sees a message asking them to use the "Pago por QR" field and submit again.
+- **Already has a screenshot** → no upload is offered; the user just sees a "you're already registered" message with contact info (Instagram/phone/WhatsApp) to reach the site admins if they need a change made manually.
 
 ---
 
@@ -227,6 +249,14 @@ All registrations save automatically to the **Registrations** tab (see column li
 ### `TypeError: ... setHeader is not a function`
 
 This means the deployed Apps Script code doesn't match `google-apps-script.md` (an older/broken version is live). `ContentService` has no `setHeader`/`addHeader` API — never add one. Copy the current code from `google-apps-script.md` again and redeploy a new version.
+
+### "No cuentas con el permiso para llamar a DriveApp..." / Screenshot not saving to Google Drive
+
+The Apps Script needs the full `https://www.googleapis.com/auth/drive` OAuth scope to create and share files. This is not always requested during the initial web app deployment because the deployment dialog only asks for scopes that are triggered by the functions it runs at that moment.
+
+1. Run the one-time `forceDriveAuth` function from the setup steps to force the Drive permission prompt.
+2. If it does not ask for permission, remove the project's access at `https://myaccount.google.com/permissions` and run `forceDriveAuth` again.
+3. Redeploy the web app as a **New version** after authorizing.
 
 ### Blank Entries / Ghost Rows in Staff or Registrations
 

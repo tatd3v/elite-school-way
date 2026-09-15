@@ -158,6 +158,7 @@ Once logged in, administrators can:
 
 - [ ] `google-apps-script.md` code copied and deployed
 - [ ] New deployment version published
+- [ ] Full Google Drive scope authorized (see `SETUP.md` "Google Drive authorization for screenshots and staff photos" if payment screenshots or staff photos are used)
 - [ ] `Users` tab created with the default user
 - [ ] Login tested with default credentials
 - [ ] Default password changed

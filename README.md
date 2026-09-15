@@ -8,6 +8,8 @@ Modern SPA for the Elite Way School Kiki Ball event. Includes a public landing p
 - **Responsive design** — Mobile-first, dark mode by default.
 - **Registration via Google Sheets** — Form that saves to Google Sheets through Apps Script.
 - **QR payment** — Shows a payment QR code and lets users upload proof (screenshot).
+- **Duplicate detection** — If the email or phone entered already has a registration, no duplicate row is created; the same form's own payment screenshot field is reused to attach it to the existing registration instead, or (if one is already on file) the user sees contact info for the site admins (Instagram/phone/WhatsApp).
+- **Section share links** — Each public section has a share button that copies/shares a direct link to that part of the page.
 - **Country code selector** — With search and Colombia as a featured option.
 - **Code of conduct** — Spanish section with the event rules.
 - **Staff directory** — Loads visible staff from Google Sheets with photos, roles and socials.
@@ -204,6 +206,8 @@ Registrations are saved to the `Registrations` sheet with the columns:
 9. Status (`Registrado` or `Pagado`)
 
 The payment proof (screenshot) is saved to the `elite-way-school-data/PAGOS_QR` Drive folder and only its link is written to the sheet.
+
+Before creating a new row, the form checks whether the email or phone already has a registration (`checkRegistrationExists`). If it does, the row is left untouched — the same form's own screenshot field is reused to attach a file to it via `attachPaymentScreenshot`, which only ever updates the Screenshot column.
 
 ## Event information
 
