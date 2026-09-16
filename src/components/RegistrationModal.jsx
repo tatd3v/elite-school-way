@@ -208,6 +208,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
     countryCode: DEFAULT_COUNTRY_CODE,
     phone: '',
     house: '',
+    instagram: '',
     entryType: '',
     age: '',
     paymentScreenshot: '',
@@ -240,6 +241,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
       countryCode: DEFAULT_COUNTRY_CODE,
       phone: '',
       house: '',
+      instagram: '',
       entryType: '',
       age: '',
       paymentScreenshot: '',
@@ -424,6 +426,20 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 type="text"
                 name="house"
                 value={formData.house}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="col-span-1 mt-6">
+              <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
+                Instagram
+              </label>
+              <input
+                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                placeholder="@tu_usuario"
+                type="text"
+                name="instagram"
+                value={formData.instagram}
                 onChange={handleInputChange}
               />
             </div>
