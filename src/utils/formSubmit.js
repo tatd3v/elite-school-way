@@ -21,6 +21,7 @@ export async function submitForm(formData) {
     email: formData.email,
     phone: formData.phone,
     house: formData.house || 'N/A',
+    instagram: formData.instagram || '',
     entryType: amount ? Number(amount) : 'N/A',
     age: formData.age || 'N/A',
     qrImageUrl: PAYMENT_QR_IMAGE_URL,
