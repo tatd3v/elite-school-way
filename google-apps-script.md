@@ -132,11 +132,22 @@ function initializeSheet() {
       'Entrada',
       'Edad',
       'Screenshot',
-      'Status'
+      'Status',
+      'Instagram'
     ];
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
     sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
     sheet.setFrozenRows(1);
+  } else {
+    // Migration for sheets created before the Instagram field existed:
+    // append it as a new trailing column instead of inserting it in the
+    // middle, so none of the existing columns' positions (and therefore
+    // none of the hardcoded row[n] indices elsewhere in this file) shift.
+    const lastCol = Math.max(sheet.getLastColumn(), 1);
+    const headerRow = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+    if (headerRow.indexOf('Instagram') === -1) {
+      sheet.getRange(1, lastCol + 1).setValue('Instagram').setFontWeight('bold');
+    }
   }
 
   // Always force the Teléfono (column D) and House/007 (column E) to TEXT
@@ -286,11 +297,12 @@ function doPost(e) {
       const sheet = initializeSheet();
 
       // Prepare row data
-      // Phone and House/007 are prefixed with an apostrophe so Google Sheets
-      // treats them as literal text instead of trying to parse them as a
-      // formula (a leading "+" like "+57 300..." would otherwise trigger
-      // Sheets' formula parser and show #ERROR!) or a number that drops
-      // leading zeros (e.g. 007 becoming 7).
+      // Phone, House/007 and Instagram are prefixed with an apostrophe so
+      // Google Sheets treats them as literal text instead of trying to parse
+      // them as a formula (a leading "+" like "+57 300..." would otherwise
+      // trigger Sheets' formula parser and show #ERROR!), a number that drops
+      // leading zeros (e.g. 007 becoming 7), or — for a leading "@" like an
+      // Instagram handle — a smart chip reference.
       const rawEntry = data.entryType || '';
       const entryDigits = String(rawEntry).replace(/\D/g, '');
       const entryType = entryDigits ? Number(entryDigits) : 'N/A';
@@ -304,7 +316,8 @@ function doPost(e) {
         entryType,
         data.age,
         saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
-        REGISTRATION_STATUS.REGISTERED
+        REGISTRATION_STATUS.REGISTERED,
+        data.instagram ? "'" + data.instagram : ''
       ];
 
       // Append the data to the sheet
@@ -518,7 +531,8 @@ function getRegistrations() {
         entryType: row[5],
         age: row[6],
         screenshot: row[7],
-        status: row[8] || REGISTRATION_STATUS.REGISTERED
+        status: row[8] || REGISTRATION_STATUS.REGISTERED,
+        instagram: row[9] || ''
       });
     }
     
@@ -740,6 +754,7 @@ function testSubmission() {
         email: 'test@example.com',
         phone: '3001234567',
         house: 'House of Testing',
+        instagram: '@test_artist',
         age: '25',
         comments: 'This is a test submission'
       })
