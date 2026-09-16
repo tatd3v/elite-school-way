@@ -2,6 +2,10 @@ export const AUTH_CONFIG = {
   STORAGE_KEY: 'adminAuth',
   SESSION_DURATION_MS: 24 * 60 * 60 * 1000,
   LOGIN_ACTION: 'login',
+  // Dedicated timeout for the login request specifically — separate from
+  // jsonp.js's generic 30s timeout — so a slow/unresponsive Apps Script
+  // deployment surfaces a clear notification well before that.
+  LOGIN_TIMEOUT_MS: 15000,
 };
 
 export const API_CONFIG = {
@@ -9,10 +13,11 @@ export const API_CONFIG = {
 };
 
 export const ERROR_MESSAGES = {
-  INVALID_CREDENTIALS: 'Invalid credentials',
-  CONNECTION_ERROR: 'Connection error. Please try again.',
-  SESSION_EXPIRED: 'Session expired. Please login again.',
-  MISSING_CREDENTIALS: 'Email and password are required',
+  INVALID_CREDENTIALS: 'Email o contraseña incorrectos.',
+  CONNECTION_ERROR: 'Error de conexión. Por favor, inténtalo de nuevo.',
+  SESSION_EXPIRED: 'Tu sesión expiró. Por favor, inicia sesión de nuevo.',
+  MISSING_CREDENTIALS: 'El email y la contraseña son obligatorios.',
+  LOGIN_TIMEOUT: 'La solicitud está tardando más de lo esperado (más de 15 segundos). Verifica tu conexión a internet e inténtalo de nuevo.',
 };
 
 export const DEFAULT_ADMIN = {
