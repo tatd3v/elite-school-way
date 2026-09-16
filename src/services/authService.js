@@ -21,14 +21,24 @@ class AuthService {
   async authenticate(email, password) {
     this.validateCredentials(email, password);
 
-    try {
-      const url = new URL(this.apiUrl);
-      url.searchParams.set('action', AUTH_CONFIG.LOGIN_ACTION);
-      url.searchParams.set('email', email);
-      url.searchParams.set('password', password);
+    const url = new URL(this.apiUrl);
+    url.searchParams.set('action', AUTH_CONFIG.LOGIN_ACTION);
+    url.searchParams.set('email', email);
+    url.searchParams.set('password', password);
 
-      return await jsonp(url.toString());
-    } catch {
+    // Race against a dedicated 15s timeout so a slow/unresponsive deployment
+    // shows a specific "this is taking too long" notification well before
+    // jsonp.js's own generic 30s timeout would otherwise fire.
+    const timeout = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error(ERROR_MESSAGES.LOGIN_TIMEOUT)), AUTH_CONFIG.LOGIN_TIMEOUT_MS);
+    });
+
+    try {
+      return await Promise.race([jsonp(url.toString()), timeout]);
+    } catch (error) {
+      if (error.message === ERROR_MESSAGES.LOGIN_TIMEOUT) {
+        throw error;
+      }
       throw new Error(ERROR_MESSAGES.CONNECTION_ERROR);
     }
   }
