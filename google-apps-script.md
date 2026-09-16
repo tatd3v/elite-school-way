@@ -258,7 +258,7 @@ function verifyAdmin(email, password) {
       }
     }
     
-    return { success: false, message: 'Invalid credentials' };
+    return { success: false, message: 'Email o contraseña incorrectos.' };
   } catch (error) {
     return { success: false, message: error.toString() };
   }
@@ -294,7 +294,37 @@ function doPost(e) {
       result = deleteRegistration(data);
     } else {
       // Handle registration submission
+
+      // Required-field validation. Without this, any POST to the public Web
+      // App URL missing these fields — e.g. bot/scanner traffic hitting the
+      // endpoint directly, bypassing the real form's client-side `required`
+      // inputs entirely — silently created a row with blank cells. The real
+      // form (RegistrationModal.jsx + formSubmit.js) always sends all three,
+      // so this only ever rejects malformed/direct requests, never a real
+      // submission. See registrations.integration.test.js's "Registration
+      // required-field validation" tests, written to reproduce this bug.
+      const artistName = String(data.artistName || '').trim();
+      const email = String(data.email || '').trim();
+      const phone = String(data.phone || '').trim();
+
+      if (!artistName || !email || !phone) {
+        result = {
+          status: 'error',
+          message: 'Missing required fields: artistName, email and phone are required'
+        };
+        return createJsonResponse(result);
+      }
+
       const sheet = initializeSheet();
+
+      // A missing/invalid timestamp used to silently become
+      // `new Date(undefined)` → epoch (shown as "12/31/1969 19:00" in
+      // America/Bogota's UTC-5 offset). Falling back to "now" instead means
+      // a request with no timestamp still gets a real, useful one.
+      const parsedTimestamp = data.timestamp ? new Date(data.timestamp) : null;
+      const timestamp = parsedTimestamp && !isNaN(parsedTimestamp.getTime())
+        ? parsedTimestamp
+        : new Date();
 
       // Prepare row data
       // Phone, House/007 and Instagram are prefixed with an apostrophe so
@@ -308,14 +338,14 @@ function doPost(e) {
       const entryType = entryDigits ? Number(entryDigits) : 'N/A';
 
       const rowData = [
-        new Date(data.timestamp),
-        data.artistName,
-        data.email,
-        data.phone ? "'" + data.phone : '',
+        timestamp,
+        artistName,
+        email,
+        "'" + phone,
         data.house ? "'" + data.house : 'N/A',
         entryType,
         data.age,
-        saveScreenshotToDrive(data.paymentScreenshot, data.artistName),
+        saveScreenshotToDrive(data.paymentScreenshot, artistName),
         REGISTRATION_STATUS.REGISTERED,
         data.instagram ? "'" + data.instagram : ''
       ];
