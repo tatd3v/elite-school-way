@@ -252,6 +252,17 @@ export default function RegistrationModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Belt-and-suspenders check on top of the inputs' own `required`
+    // attribute: shows a styled, Spanish notification consistent with the
+    // rest of this form instead of relying only on the browser's native
+    // (inconsistently styled, English-in-some-browsers) validation tooltip.
+    const requiredFields = [formData.artistName, formData.email, formData.phone, formData.age]
+    const hasMissingField = requiredFields.some((value) => !String(value || '').trim())
+    if (hasMissingField) {
+      setSubmitStatus('missing-fields')
+      return
+    }
+
     setIsSubmitting(true)
     setSubmitStatus(null)
 
@@ -566,6 +577,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
                       <span>WhatsApp</span>
                     </a>
                   </div>
+                </div>
+              )}
+
+              {submitStatus === 'missing-fields' && (
+                <div className="mb-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
+                  Por favor completa todos los campos requeridos (marcados con *) antes de continuar.
                 </div>
               )}
 
