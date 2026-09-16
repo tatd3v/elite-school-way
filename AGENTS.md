@@ -127,7 +127,7 @@ elite-school-way/
 This file is the **source of truth** for the backend script — it must be manually copy-pasted into the Google Apps Script editor (Extensions > Apps Script on the Google Sheet) and does not deploy automatically.
 
 Key sheets (auto-created lazily on first use, not up front):
-- **Registrations** — form submissions (`initializeSheet`)
+- **Registrations** — form submissions (`initializeSheet`), columns: Timestamp, Nombre Artístico, Email, Teléfono, House/007, Entrada, Edad, Screenshot, Status, Instagram (optional; added later as a *trailing* column — `initializeSheet()` self-migrates any existing sheet that's missing it by appending the header to the next empty column rather than inserting it between existing ones, so column indices/`row[n]` positions used throughout this file never shift for already-live sheets)
 - **Users** (formerly "Admins") — admin/viewer accounts (`initializeAdminsSheet`), columns: Email, Password Hash (SHA-256), Role, Name
 - **Staff** — staff/faculty directory (`initializeStaffSheet`), columns: Name, Role, Bio, Photo URL, Social Links, Display Order, Is Visible
 

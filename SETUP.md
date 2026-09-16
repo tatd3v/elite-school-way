@@ -167,6 +167,7 @@ Unlike a typical database, sheets/tabs in this project are created **lazily** �
 | 7 | Edad | |
 | 8 | Screenshot | Google Drive link to the uploaded payment proof (saved under `elite-way-school-data/PAGOS_QR`). Can be filled in later even after the row exists — see "Duplicate registrations" below |
 | 9 | Status | `Registrado` (default) or `Pagado` — editable from the admin dashboard |
+| 10 | Instagram | Optional. Same apostrophe trick as Teléfono/House — a leading "@" (e.g. `@handle`) would otherwise trigger a Sheets smart chip. Added as a *trailing* column (not inserted between existing ones) so no other column's position/index changes; `initializeSheet()` auto-adds this header to sheets created before this field existed, the next time it runs |
 
 ### Duplicate registrations
 

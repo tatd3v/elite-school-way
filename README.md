@@ -204,6 +204,7 @@ Registrations are saved to the `Registrations` sheet with the columns:
 7. Edad (age)
 8. Screenshot
 9. Status (`Registrado` or `Pagado`)
+10. Instagram (optional)
 
 The payment proof (screenshot) is saved to the `elite-way-school-data/PAGOS_QR` Drive folder and only its link is written to the sheet.
 
