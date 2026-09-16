@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { loginAdmin } from '../utils/auth'
-import { DEFAULT_ADMIN } from '../config/constants'
+import { DEFAULT_ADMIN, ERROR_MESSAGES } from '../config/constants'
 import logo from '../assets/logo.png'
 import logoDark from '../assets/logo_dark_bg.png'
 
@@ -17,15 +17,26 @@ function AdminLogin({ onLoginSuccess }) {
     setError('')
     setIsLoading(true)
 
-    const result = await loginAdmin(email, password)
+    try {
+      const result = await loginAdmin(email, password)
 
-    if (result.success) {
-      onLoginSuccess(result.user)
-    } else {
-      setError(result.message)
+      if (result.success) {
+        onLoginSuccess(result.user)
+      } else {
+        // Covers both "Google Sheets didn't find that email/password" and
+        // any other error message the backend returns.
+        setError(result.message || ERROR_MESSAGES.INVALID_CREDENTIALS)
+      }
+    } catch (err) {
+      // authService.authenticate() throws here for both a dedicated 15s
+      // login timeout and any other connection failure — each with its own
+      // distinct, Spanish message (see ERROR_MESSAGES). Without this
+      // try/catch, either case would leave the button stuck on
+      // "VERIFICANDO..." forever with no notification shown at all.
+      setError(err.message || ERROR_MESSAGES.CONNECTION_ERROR)
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   const togglePasswordVisibility = () => {
