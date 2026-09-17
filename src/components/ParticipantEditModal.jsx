@@ -20,32 +20,36 @@ function splitPhone(phone) {
 }
 
 const inputClass =
-  'w-full px-3.5 py-2.5 rounded-xl text-sm bg-[#0c1030] border border-[#232a63] text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[#fba592] focus:ring-1 focus:ring-[#fba592] transition-all';
+  'w-full bg-[#070a2b] border border-[#232a63] focus:border-[#ff8a80] focus:ring-1 focus:ring-[#ff8a80] rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 font-medium transition-all shadow-inner focus:outline-none';
 
-function FieldLabel({ htmlFor, icon, children, badge }) {
+function FieldLabel({ htmlFor, children, required }) {
   return (
-    <div className="flex items-center justify-between">
-      <label
-        htmlFor={htmlFor}
-        className="flex items-center space-x-1.5 text-[11px] font-bold tracking-wider text-amber-200/90 uppercase"
-      >
-        {typeof icon === 'string' ? (
-          <span className="material-symbols-outlined text-[15px] text-[#ff8a80]">{icon}</span>
-        ) : (
-          icon
-        )}
-        <span>{children}</span>
-      </label>
-      {badge}
-    </div>
+    <label
+      htmlFor={htmlFor}
+      className="block text-xs font-bold uppercase tracking-wider text-slate-300"
+    >
+      {children}
+      {required && <span className="text-[#ff8a80]"> *</span>}
+    </label>
   );
 }
 
 FieldLabel.propTypes = {
   htmlFor: PropTypes.string.isRequired,
-  icon: PropTypes.node,
   children: PropTypes.node,
-  badge: PropTypes.node,
+  required: PropTypes.bool,
+};
+
+function InputIcon({ children }) {
+  return (
+    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+      {children}
+    </div>
+  );
+}
+
+InputIcon.propTypes = {
+  children: PropTypes.node,
 };
 
 function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
@@ -111,6 +115,14 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
   const isDataUrlScreenshot = formData.paymentScreenshot.startsWith('data:');
   const isPaid = participant?.status === REGISTRATION_STATUS.PAID;
 
+  // Full-screen takeover (like RegistrationModal) — lock body scroll while open.
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -128,274 +140,283 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/50"
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onCancel();
-      }}
-    >
-      <div
-        className="w-full max-w-md h-full sm:h-auto sm:max-h-[90vh] bg-[#0c1030] sm:rounded-2xl shadow-2xl border-0 sm:border sm:border-[#232a63] flex flex-col overflow-hidden"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="participant-edit-title"
+    <div className="fixed inset-0 z-[100] flex flex-col overflow-y-auto bg-[#070a2b]">
+      <button
+        className="fixed top-6 right-6 z-[110] w-12 h-12 flex items-center justify-center bg-[#141a4a] border border-[#2a3674] text-slate-300 hover:text-white hover:border-[#ff8a80] transition-all rounded-full shadow-lg active:scale-90 disabled:opacity-70 disabled:cursor-not-allowed"
+        onClick={onCancel}
+        aria-label={isSubmitting ? 'Guardando...' : 'Cerrar'}
+        disabled={isSubmitting}
       >
-        <header className="bg-[#0b102b]/95 backdrop-blur-md px-4 py-3.5 flex items-center justify-between shrink-0 border-b border-[#232d66] shadow-xl select-none">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c62828] to-[#600200] border border-[#ff5c45]/40 flex items-center justify-center shadow-md shadow-[#c62828]/20">
-              <span className="material-symbols-outlined text-[18px] text-amber-200">military_tech</span>
-            </div>
-            <h3 id="participant-edit-title" className="font-extrabold text-base tracking-wide text-slate-100">
-              Editar Participante
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#141b44] hover:bg-[#1f2963] border border-[#2a3674] active:scale-95 transition-all text-slate-300 hover:text-white"
-            aria-label="Cerrar formulario"
-          >
-            <span className="material-symbols-outlined text-lg font-bold">close</span>
-          </button>
-        </header>
+        {isSubmitting ? (
+          <span className="material-symbols-outlined text-3xl animate-spin">progress_activity</span>
+        ) : (
+          <span className="material-symbols-outlined text-3xl">close</span>
+        )}
+      </button>
 
-        <form onSubmit={handleSubmit} className="flex-1 p-4 sm:p-5 flex flex-col space-y-4 overflow-y-auto">
-          <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-[#12183c] via-[#161f4d] to-[#12183c] border border-[#2b3874] shadow-inner mb-1">
-            <div className="flex items-center space-x-2">
-              <span className="flex h-2 w-2 relative">
-                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${isPaid ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-                <span className={`relative inline-flex rounded-full h-2 w-2 ${isPaid ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-              </span>
-              <span className="text-xs font-semibold text-slate-200 uppercase tracking-wider">Estado de Registro</span>
+      <div className="w-full max-w-3xl mx-auto py-10 md:py-14 px-margin-mobile flex-1 flex flex-col">
+        <div
+          className="rounded-2xl border border-[#232a63] bg-[#0c1030]/90 shadow-xl overflow-hidden flex flex-col"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="participant-edit-title"
+        >
+          <header className="bg-[#0c1030]/90 px-4 py-3.5 sm:px-6 flex items-center justify-between shrink-0 border-b border-[#232a63] select-none">
+            <div className="flex items-center space-x-2.5">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c62828] to-[#600200] border border-[#ffd54f]/40 flex items-center justify-center shadow-md shadow-[#c62828]/20">
+                <span className="material-symbols-outlined text-[18px] text-[#ffd54f]">shield</span>
+              </div>
+              <h3 id="participant-edit-title" className="font-extrabold text-base tracking-wide text-slate-100">
+                Editar Participante
+              </h3>
             </div>
             {isPaid ? (
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[13px]">verified</span>
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 {REGISTRATION_STATUS.PAID}
               </span>
             ) : (
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-amber-950/80 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                <span className="material-symbols-outlined text-[13px]">schedule</span>
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-amber-950/80 text-amber-300 border border-amber-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
                 {REGISTRATION_STATUS.REGISTERED}
               </span>
             )}
-          </div>
+          </header>
 
-          <div className="space-y-1.5">
-            <FieldLabel
-              htmlFor="participant-edit-name"
-              icon="person"
-              badge={<span className="text-[10px] text-slate-400 font-mono">Requerido</span>}
-            >
-              Nombre Completo o AKA de Ballroom
-            </FieldLabel>
-            <input
-              id="participant-edit-name"
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              placeholder="Ej. Tats"
-              className={`${inputClass} font-semibold tracking-wide`}
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
+            <div className="p-4 sm:p-6 space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-name" required>
+                  Nombre Completo o AKA de Ballroom
+                </FieldLabel>
+                <div className="relative">
+                  <InputIcon>
+                    <span className="material-symbols-outlined text-lg text-amber-400/80">badge</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-name"
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    placeholder="Ej. Tats"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-1.5">
-            <FieldLabel
-              htmlFor="participant-edit-email"
-              icon="mail"
-              badge={<span className="text-[10px] text-slate-400 font-mono">Requerido</span>}
-            >
-              Correo Electrónico
-            </FieldLabel>
-            <input
-              id="participant-edit-email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
-              placeholder="usuario@dominio.com"
-              className={inputClass}
-              required
-            />
-          </div>
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-email" required>
+                  Correo Electrónico
+                </FieldLabel>
+                <div className="relative">
+                  <InputIcon>
+                    <span className="material-symbols-outlined text-lg text-amber-400/80">mail</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleChange('email', e.target.value)}
+                    placeholder="correo@ejemplo.com"
+                    className={inputClass}
+                    required
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-1.5">
-            <FieldLabel
-              htmlFor="participant-edit-phone"
-              icon="call"
-              badge={<span className="text-[10px] text-slate-400 font-mono">Requerido</span>}
-            >
-              Teléfono / WhatsApp
-            </FieldLabel>
-            <div className="flex gap-2">
-              <CountryCodeSelect
-                dark
-                value={formData.countryCode}
-                onChange={(code) => handleChange('countryCode', code)}
-              />
-              <input
-                id="participant-edit-phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleChange('phone', e.target.value)}
-                placeholder="300 000 0000"
-                className={`${inputClass} font-medium tracking-wide flex-1 min-w-0`}
-                required
-              />
-            </div>
-          </div>
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-phone" required>
+                  Teléfono / WhatsApp
+                </FieldLabel>
+                <div className="flex gap-2">
+                  <CountryCodeSelect
+                    dark
+                    value={formData.countryCode}
+                    onChange={(code) => handleChange('countryCode', code)}
+                  />
+                  <div className="relative flex-1 min-w-0">
+                    <InputIcon>
+                      <span className="material-symbols-outlined text-lg text-amber-400/80">phone_iphone</span>
+                    </InputIcon>
+                    <input
+                      id="participant-edit-phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      placeholder="300 000 0000"
+                      className={`${inputClass} font-mono`}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
 
-          <div className="space-y-1.5">
-            <FieldLabel htmlFor="participant-edit-house" icon="shield">
-              House / 007
-            </FieldLabel>
-            <input
-              id="participant-edit-house"
-              type="text"
-              value={formData.house}
-              onChange={(e) => handleChange('house', e.target.value)}
-              placeholder="Nombre de linaje o casa"
-              className={`${inputClass} font-bold tracking-wider`}
-            />
-          </div>
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-house">
+                  House / 007
+                </FieldLabel>
+                <div className="relative">
+                  <InputIcon>
+                    <span className="material-symbols-outlined text-lg text-amber-400/80">castle</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-house"
+                    type="text"
+                    value={formData.house}
+                    onChange={(e) => handleChange('house', e.target.value)}
+                    placeholder="Ej. 007 / House of Miyake Mugler"
+                    className={`${inputClass} text-amber-200 font-semibold`}
+                  />
+                </div>
+              </div>
 
-          <div className="space-y-1.5">
-            <FieldLabel htmlFor="participant-edit-entry-type" icon="confirmation_number">
-              Tipo de Entrada
-            </FieldLabel>
-            <div className="relative">
-              <select
-                id="participant-edit-entry-type"
-                value={formData.entryType}
-                onChange={(e) => handleChange('entryType', e.target.value)}
-                // Tailwind's appearance-none only emits unprefixed
-                // `appearance: none` — older WebViews need -webkit- to
-                // actually hide the native arrow (it renders on top of the
-                // custom expand_more icon otherwise).
-                style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-                className={`${inputClass} font-medium appearance-none pr-10 cursor-pointer`}
-              >
-                <option value="" className="bg-[#0c1030] text-slate-100">Ninguna</option>
-                {ENTRY_TYPES.map(({ label, value }) => (
-                  <option key={value} value={String(value)} className="bg-[#0c1030] text-slate-100">
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
-            </div>
-          </div>
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-instagram">
+                  Instagram
+                </FieldLabel>
+                <div className="relative">
+                  <InputIcon>
+                    <span className="text-sm font-bold text-amber-400/80">@</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-instagram"
+                    type="text"
+                    value={formData.instagram}
+                    onChange={(e) => handleChange('instagram', normalizeInstagramHandle(e.target.value))}
+                    placeholder="usuario"
+                    className={inputClass}
+                  />
+                </div>
+              </div>
 
-          <div className="grid grid-cols-5 gap-3">
-            <div className="col-span-3 space-y-1.5">
-              <FieldLabel
-                htmlFor="participant-edit-instagram"
-                icon={
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[15px] h-[15px] text-[#ff8a80]">
-                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                  </svg>
-                }
-              >
-                Instagram
-              </FieldLabel>
-              <div className="relative flex items-center">
-                <span className="absolute left-3.5 text-sm text-slate-400 font-semibold pointer-events-none select-none">@</span>
-                <input
-                  id="participant-edit-instagram"
-                  type="text"
-                  value={formData.instagram}
-                  onChange={(e) => handleChange('instagram', normalizeInstagramHandle(e.target.value))}
-                  placeholder="usuario"
-                  className={`${inputClass} pl-8 font-medium`}
-                />
+              <div className="space-y-2">
+                <FieldLabel htmlFor="participant-edit-age" required>
+                  Edad
+                </FieldLabel>
+                <div className="relative">
+                  <InputIcon>
+                    <span className="material-symbols-outlined text-lg text-amber-400/80">cake</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-age"
+                    type="number"
+                    min="10"
+                    max="99"
+                    value={formData.age}
+                    onChange={(e) => handleChange('age', e.target.value)}
+                    placeholder="24"
+                    className={inputClass}
+                    required
+                  />
+                </div>
               </div>
             </div>
-            <div className="col-span-2 space-y-1.5">
-              <FieldLabel
-                htmlFor="participant-edit-age"
-                icon="cake"
-                badge={<span className="text-[10px] text-slate-400 font-mono">Requerido</span>}
-              >
-                Edad
+
+            <div className="space-y-2">
+              <FieldLabel htmlFor="participant-edit-entry-type">
+                Tipo de Entrada
               </FieldLabel>
-              <input
-                id="participant-edit-age"
-                type="number"
-                min="10"
-                max="99"
-                value={formData.age}
-                onChange={(e) => handleChange('age', e.target.value)}
-                placeholder="24"
-                className={`${inputClass} font-semibold text-center`}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <FieldLabel
-              htmlFor="participant-edit-screenshot"
-              icon="receipt_long"
-              badge={formData.paymentScreenshot && (
-                <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-0.5">
-                  <span className="material-symbols-outlined text-[12px]">check_circle</span>
-                  Confirmado
-                </span>
-              )}
-            >
-              Comprobante de Pago
-            </FieldLabel>
-            <div className="flex items-center space-x-2">
-              <div className="relative flex-1 flex items-center min-w-0">
-                <span className="absolute left-3 material-symbols-outlined text-slate-400 text-[18px] pointer-events-none">attach_file</span>
-                <input
-                  id="participant-edit-screenshot"
-                  type="text"
-                  value={isDataUrlScreenshot ? (formData.paymentScreenshotName || 'Archivo adjunto') : formData.paymentScreenshot}
-                  onChange={handleScreenshotUrlChange}
-                  placeholder="URL del comprobante o archivo..."
-                  className={`${inputClass} pl-9 pr-3 font-mono text-xs sm:text-sm truncate`}
-                />
+              <div className="relative">
+                <InputIcon>
+                  <span className="material-symbols-outlined text-lg text-amber-400/80">confirmation_number</span>
+                </InputIcon>
+                <select
+                  id="participant-edit-entry-type"
+                  value={formData.entryType}
+                  onChange={(e) => handleChange('entryType', e.target.value)}
+                  // Tailwind's appearance-none only emits unprefixed
+                  // `appearance: none` — older WebViews need -webkit- to
+                  // actually hide the native arrow (it renders on top of the
+                  // custom expand_more icon otherwise).
+                  style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
+                  className={`${inputClass} appearance-none cursor-pointer`}
+                >
+                  <option value="" className="bg-[#070a2b] text-slate-100">Ninguna</option>
+                  {ENTRY_TYPES.map(({ label, value }) => (
+                    <option key={value} value={String(value)} className="bg-[#070a2b] text-slate-100">
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
+                  <span className="material-symbols-outlined text-base">expand_more</span>
+                </div>
               </div>
-              <label
-                className="h-10 px-3 flex-shrink-0 flex items-center justify-center space-x-1.5 rounded-xl bg-[#18214f] hover:bg-[#222e6b] border border-[#2e3e86] text-amber-200 hover:text-white transition-all duration-150 active:scale-95 shadow-sm text-xs font-semibold cursor-pointer"
-                title="Actualizar archivo"
-              >
-                <span className="material-symbols-outlined text-[18px]">upload_file</span>
-                <span className="hidden sm:inline">Subir</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-              </label>
+            </div>
+
+            <div className="space-y-2">
+              <FieldLabel htmlFor="participant-edit-screenshot">
+                Comprobante de Pago
+              </FieldLabel>
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div className="relative flex-1 min-w-0">
+                  <InputIcon>
+                    <span className="material-symbols-outlined text-lg text-[#ffd54f]">link</span>
+                  </InputIcon>
+                  <input
+                    id="participant-edit-screenshot"
+                    type="text"
+                    value={isDataUrlScreenshot ? (formData.paymentScreenshotName || 'Archivo adjunto') : formData.paymentScreenshot}
+                    onChange={handleScreenshotUrlChange}
+                    placeholder="URL del comprobante o archivo..."
+                    className={`${inputClass} font-mono text-slate-200 truncate`}
+                  />
+                </div>
+                <label
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#141a4a] hover:bg-[#1c235e] border border-[#c62828]/30 hover:border-[#ff8a80] rounded-xl text-xs font-semibold text-slate-200 cursor-pointer transition-all shrink-0 active:scale-95 shadow-sm"
+                  title="Actualizar archivo"
+                >
+                  <span className="material-symbols-outlined text-base text-[#ff8a80]">upload_file</span>
+                  <span>Reemplazar</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </label>
+                {formData.paymentScreenshot && !isDataUrlScreenshot && (
+                  <a
+                    href={formData.paymentScreenshot}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Abrir comprobante en nueva pestaña"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#141a4a] hover:bg-[#1c235e] border border-[#ffd54f]/40 hover:border-amber-300 rounded-xl text-xs font-semibold text-amber-300 hover:text-white transition-all shrink-0 active:scale-95 shadow-sm"
+                  >
+                    <span className="material-symbols-outlined text-base text-[#ffd54f]">open_in_new</span>
+                    <span>Previsualizar</span>
+                  </a>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-1">
+                <span className="material-symbols-outlined text-xs text-slate-500">shield</span>
+                <span>Acepta archivos JPG, PNG o vínculos de Google Drive.</span>
+              </p>
             </div>
           </div>
 
-          <div className="pt-3 pb-1 flex flex-col gap-2.5">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3 px-4 bg-gradient-to-r from-[#c62828] via-[#d32f2f] to-[#b71c1c] hover:brightness-110 active:scale-[0.99] text-white font-extrabold text-sm tracking-wide rounded-xl shadow-lg shadow-[#c62828]/40 border border-[#ff7961]/40 transition-all duration-150 flex items-center justify-center space-x-2 group disabled:opacity-50"
-            >
-              <span className="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">save</span>
-              <span>{isSubmitting ? 'Guardando...' : 'Guardar Cambios'}</span>
-            </button>
+          <div className="px-4 sm:px-6 py-4 bg-[#070a2b]/90 border-t border-[#232a63] flex flex-col-reverse sm:flex-row items-center justify-between gap-3 shrink-0">
             <button
               type="button"
               onClick={onCancel}
               disabled={isSubmitting}
-              className="w-full py-2.5 px-4 bg-[#101638]/80 hover:bg-[#18204e] border border-[#27336e] active:scale-[0.99] text-slate-300 hover:text-white font-semibold text-sm tracking-wide rounded-xl transition-all duration-150 flex items-center justify-center space-x-1.5 disabled:opacity-50"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl border border-[#232a63] bg-[#141a4a] hover:bg-[#1c235e] text-slate-300 hover:text-white text-xs font-bold uppercase tracking-wider transition-all text-center active:scale-95 shadow-sm disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-base text-slate-400">close</span>
-              <span>Cancelar</span>
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#c62828] hover:bg-[#b71c1c] text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-lg shadow-[#c62828]/40 transition-all duration-150 active:scale-95 border border-[#ff7961]/40 disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-base">save</span>
+              <span>{isSubmitting ? 'Guardando...' : 'Guardar Cambios'}</span>
             </button>
           </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
