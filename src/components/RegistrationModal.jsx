@@ -4,6 +4,7 @@ import { submitForm } from '../utils/formSubmit'
 import { normalizeInstagramHandle } from '../utils/instagram'
 import { dashboardService } from '../services/dashboardService'
 import { DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
+import { ENTRY_TYPES } from '../data/entryTypes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
 import CountryCodeSelect from './CountryCodeSelect'
 import logo from '../assets/logo.png'
@@ -408,7 +409,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 Entrada del Evento
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {['General — $20.000', 'Personas negrxs y marronxs — $15.000'].map((option) => {
+                {ENTRY_TYPES.map(({ label: option }) => {
                   const isSelected = formData.entryType === option
                   return (
                     <label
