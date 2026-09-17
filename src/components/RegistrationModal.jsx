@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
+import { normalizeInstagramHandle } from '../utils/instagram'
 import { dashboardService } from '../services/dashboardService'
 import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
@@ -219,7 +220,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    // The instagram field renders a fixed "@" prefix, so state holds only
+    // the bare handle — a typed "@" or a pasted profile URL is normalized away.
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'instagram' ? normalizeInstagramHandle(value) : value,
+    }))
   }
 
   useEffect(() => {
@@ -445,14 +451,22 @@ export default function RegistrationModal({ isOpen, onClose }) {
               <label className="block font-label-sm text-label-sm text-on-surface-variant mb-2 uppercase tracking-wider">
                 Instagram
               </label>
-              <input
-                className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="@tu_usuario"
-                type="text"
-                name="instagram"
-                value={formData.instagram}
-                onChange={handleInputChange}
-              />
+              <div className="relative">
+                <span
+                  className="absolute left-4 top-1/2 -translate-y-1/2 font-body-md text-on-surface-variant pointer-events-none"
+                  aria-hidden="true"
+                >
+                  @
+                </span>
+                <input
+                  className="w-full bg-surface-container-low border border-outline-variant pl-8 pr-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                  placeholder="tu_usuario"
+                  type="text"
+                  name="instagram"
+                  value={formData.instagram}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
 
             <div className="col-span-1 mt-6">
