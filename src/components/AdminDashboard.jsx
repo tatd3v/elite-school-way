@@ -214,6 +214,16 @@ function AdminDashboard({ user, onLogout }) {
 
   const getInstagramHandle = (instagram) => formatInstagramHandle(instagram);
 
+  // The sheet stores the numeric price (20000/15000) or 'N/A' — show it as
+  // a Colombian-formatted price, e.g. $20.000.
+  const formatEntryType = (entryType) => {
+    const amount = Number(entryType);
+    if (!entryType || isNaN(amount)) return '—';
+    return `$${amount.toLocaleString('es-CO')}`;
+  };
+
+  const hasEntryType = (entryType) => !isNaN(Number(entryType)) && Number(entryType) > 0;
+
   return (
     <div className="h-screen bg-background text-on-background flex flex-col overflow-hidden">
       {(activeTab !== 'participants' && activeTab !== 'faculty') && <DashboardHeader />}
@@ -452,7 +462,7 @@ function AdminDashboard({ user, onLogout }) {
                                 )}
                             </div>
                           </div>
-                          {(participant.screenshot || getInstagramUrl(participant.instagram)) && (
+                          {(participant.screenshot || getInstagramUrl(participant.instagram) || hasEntryType(participant.entryType)) && (
                             <div className="flex items-center justify-between pt-1 border-t border-outline-variant/10">
                               {participant.screenshot ? (
                                 <a
@@ -467,17 +477,25 @@ function AdminDashboard({ user, onLogout }) {
                               ) : (
                                 <span />
                               )}
-                              {getInstagramUrl(participant.instagram) && (
-                                <a
-                                  href={getInstagramUrl(participant.instagram)}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-1 text-primary font-body-md text-[13px] hover:opacity-80 transition-opacity"
-                                >
-                                  <span className="material-symbols-outlined text-[15px] leading-none">alternate_email</span>
-                                  <span className="font-medium leading-none">{normalizeInstagramHandle(participant.instagram)}</span>
-                                </a>
-                              )}
+                              <div className="flex items-center gap-3">
+                                {hasEntryType(participant.entryType) && (
+                                  <span className="flex items-center gap-1 text-secondary font-body-md text-[13px] font-semibold">
+                                    <span className="material-symbols-outlined text-[15px] leading-none">confirmation_number</span>
+                                    {formatEntryType(participant.entryType)}
+                                  </span>
+                                )}
+                                {getInstagramUrl(participant.instagram) && (
+                                  <a
+                                    href={getInstagramUrl(participant.instagram)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-1 text-primary font-body-md text-[13px] hover:opacity-80 transition-opacity"
+                                  >
+                                    <span className="material-symbols-outlined text-[15px] leading-none">alternate_email</span>
+                                    <span className="font-medium leading-none">{normalizeInstagramHandle(participant.instagram)}</span>
+                                  </a>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
@@ -589,6 +607,7 @@ function AdminDashboard({ user, onLogout }) {
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Email</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Teléfono</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">House</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Entrada</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Instagram</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Edad</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Screenshot</th>
@@ -622,6 +641,7 @@ function AdminDashboard({ user, onLogout }) {
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.email || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.phone || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{getCleanHouse(participant.house)}</td>
+                                <td className="p-2 font-label-sm text-secondary text-xs font-semibold">{formatEntryType(participant.entryType)}</td>
                                 <td className="p-2 font-label-sm text-xs">
                                   {getInstagramUrl(participant.instagram) ? (
                                     <a
@@ -689,7 +709,7 @@ function AdminDashboard({ user, onLogout }) {
                           })
                         ) : (
                           <tr>
-                            <td colSpan={isAdmin ? 11 : 10} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
+                            <td colSpan={isAdmin ? 12 : 11} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
                               No se encontraron participantes
                             </td>
                           </tr>
