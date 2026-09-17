@@ -1,5 +1,6 @@
 import { API_CONFIG, STAFF_CONFIG, REGISTRATION_ACTIONS } from '../config/constants';
 import { jsonp } from '../utils/jsonp';
+import { getInstagramProfileUrl } from '../utils/instagram';
 
 class DashboardService {
   async fetchRegistrations() {
@@ -168,6 +169,7 @@ class DashboardService {
         email: participant.email,
         phone: participant.phone,
         house: participant.house,
+        instagram: getInstagramProfileUrl(participant.instagram),
         entryType: participant.entryType,
         age: participant.age,
         paymentScreenshot: participant.paymentScreenshot || '',
