@@ -263,6 +263,8 @@ The Apps Script needs the full `https://www.googleapis.com/auth/drive` OAuth sco
 
 Google Sheets can retain formatting on rows after their content is deleted, making them appear as empty entries. The backend already skips rows with an empty Name/Nombre Artístico column, but you can also select and delete the stray rows directly in the sheet for tidiness.
 
+`doPost`'s registration-submission handler validates `artistName`/`email`/`phone` and rejects the request (`status: 'error'`) if any are blank, and falls back to the server's current time if `timestamp` is missing/invalid — so a direct/bot POST to the public Web App URL (bypassing the real form's `required` inputs) can no longer create a blank row with a "12/31/1969" epoch Timestamp. This only affects **new** submissions after you redeploy; it doesn't retroactively clean up rows created before the fix.
+
 ### Phone or House shows `#ERROR!`
 
 Google Sheets tries to parse values starting with `+`, `-`, or `=` as formulas. The backend prefixes these fields with a literal apostrophe to prevent this — if you see `#ERROR!` on an old row from before this fix, manually retype it with a leading apostrophe (e.g. `'+57 300 1234567`).
