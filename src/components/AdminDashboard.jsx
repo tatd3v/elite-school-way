@@ -364,18 +364,6 @@ function AdminDashboard({ user, onLogout }) {
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex items-center gap-3.5 min-w-0 flex-1">
-                              {/* Registrations have no photo field — an initials
-                                  avatar fills the design's avatar slot. */}
-                              <div className="h-12 w-12 rounded-full overflow-hidden border border-outline-variant/30 shrink-0 bg-surface-container-high flex items-center justify-center">
-                                <span className="font-headline-md text-[15px] text-on-surface-variant">
-                                  {(participant.name || '')
-                                    .split(/\s+/)
-                                    .filter(Boolean)
-                                    .slice(0, 2)
-                                    .map((word) => word[0].toUpperCase())
-                                    .join('')}
-                                </span>
-                              </div>
                               <div className="min-w-0 flex-1">
                                 <h3 className="font-headline-md text-[17px] leading-tight text-on-surface font-semibold truncate">
                                   {participant.name}
@@ -486,8 +474,8 @@ function AdminDashboard({ user, onLogout }) {
                                   rel="noopener noreferrer"
                                   className="flex items-center gap-1 text-primary font-body-md text-[13px] hover:opacity-80 transition-opacity"
                                 >
-                                  <span className="material-symbols-outlined text-[15px]">alternate_email</span>
-                                  <span className="font-medium">{normalizeInstagramHandle(participant.instagram)}</span>
+                                  <span className="material-symbols-outlined text-[15px] leading-none">alternate_email</span>
+                                  <span className="font-medium leading-none">{normalizeInstagramHandle(participant.instagram)}</span>
                                 </a>
                               )}
                             </div>
