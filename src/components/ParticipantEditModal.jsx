@@ -248,7 +248,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
 
           <div className="space-y-1.5">
             <FieldLabel htmlFor="participant-edit-house" icon="shield">
-              House / Linaje
+              House / 007
             </FieldLabel>
             <input
               id="participant-edit-house"
@@ -271,7 +271,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                 onChange={(e) => handleChange('entryType', e.target.value)}
                 className={`${inputClass} font-medium appearance-none pr-10 cursor-pointer`}
               >
-                <option value="" disabled>Seleccionar entrada</option>
+                <option value="" className="bg-[#0c1030] text-slate-100">Ninguna</option>
                 {ENTRY_TYPES.map(({ label, value }) => (
                   <option key={value} value={String(value)} className="bg-[#0c1030] text-slate-100">
                     {label}
