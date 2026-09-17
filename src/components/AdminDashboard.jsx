@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
-import { formatInstagramHandle, getInstagramProfileUrl } from '../utils/instagram';
+import { formatInstagramHandle, getInstagramProfileUrl, normalizeInstagramHandle } from '../utils/instagram';
 import { REGISTRATION_STATUS } from '../config/constants';
 import DashboardHeader from './DashboardHeader';
 import SearchBar from './SearchBar';
@@ -470,10 +470,10 @@ function AdminDashboard({ user, onLogout }) {
                                   href={getInstagramUrl(participant.instagram)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-primary font-label-md hover:opacity-80 transition-opacity"
+                                  className="flex items-center gap-0.5 text-primary font-label-md hover:opacity-80 transition-opacity"
                                 >
                                   <span className="material-symbols-outlined text-sm">alternate_email</span>
-                                  {getInstagramHandle(participant.instagram)}
+                                  {normalizeInstagramHandle(participant.instagram)}
                                 </a>
                               )}
                             </div>
