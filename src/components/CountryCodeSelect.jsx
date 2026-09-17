@@ -22,11 +22,7 @@ export default function CountryCodeSelect({ value, onChange, dark = false }) {
       return normalize(country).includes(query) || normalize(code).includes(query)
     })
     : countryCodes
-  ).slice().sort((a, b) => {
-    if (a.country === 'Colombia') return -1
-    if (b.country === 'Colombia') return 1
-    return parseInt(a.code.replace('+', ''), 10) - parseInt(b.code.replace('+', ''), 10)
-  })
+  ).slice().sort((a, b) => normalize(a.country).localeCompare(normalize(b.country)))
 
   useEffect(() => {
     if (!isOpen) return
