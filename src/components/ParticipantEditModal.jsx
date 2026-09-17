@@ -262,13 +262,18 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
 
           <div className="space-y-1.5">
             <FieldLabel htmlFor="participant-edit-entry-type" icon="confirmation_number">
-              Entrada del Evento
+              Tipo de Entrada
             </FieldLabel>
             <div className="relative">
               <select
                 id="participant-edit-entry-type"
                 value={formData.entryType}
                 onChange={(e) => handleChange('entryType', e.target.value)}
+                // Tailwind's appearance-none only emits unprefixed
+                // `appearance: none` — older WebViews need -webkit- to
+                // actually hide the native arrow (it renders on top of the
+                // custom expand_more icon otherwise).
+                style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
                 className={`${inputClass} font-medium appearance-none pr-10 cursor-pointer`}
               >
                 <option value="" className="bg-[#0c1030] text-slate-100">Ninguna</option>
