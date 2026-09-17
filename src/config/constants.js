@@ -14,6 +14,7 @@ export const API_CONFIG = {
 
 export const ERROR_MESSAGES = {
   INVALID_CREDENTIALS: 'Email o contraseña incorrectos.',
+  INVALID_EMAIL: 'El formato del email no es válido.',
   CONNECTION_ERROR: 'Error de conexión. Por favor, inténtalo de nuevo.',
   SESSION_EXPIRED: 'Tu sesión expiró. Por favor, inicia sesión de nuevo.',
   MISSING_CREDENTIALS: 'El email y la contraseña son obligatorios.',
