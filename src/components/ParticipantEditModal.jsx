@@ -266,7 +266,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                     type="text"
                     value={formData.house}
                     onChange={(e) => handleChange('house', e.target.value)}
-                    placeholder="Ej. 007 / House of Miyake Mugler"
+                    placeholder="Ej. 007 / Unbothered Cartier"
                     className={`${inputClass} text-amber-200 font-semibold`}
                   />
                 </div>
@@ -306,7 +306,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                     max="99"
                     value={formData.age}
                     onChange={(e) => handleChange('age', e.target.value)}
-                    placeholder="24"
+                    placeholder="+18"
                     className={inputClass}
                     required
                   />
