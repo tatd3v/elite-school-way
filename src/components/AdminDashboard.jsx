@@ -355,53 +355,62 @@ function AdminDashboard({ user, onLogout }) {
                         : 'bg-amber-500 dark:bg-secondary';
                       const statusClass = isPaid
                         ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-green-900/30 dark:border-green-500/20 dark:text-green-300'
-                        : 'bg-amber-100 border-amber-200 text-amber-800 dark:bg-secondary/20 dark:border-secondary/20 dark:text-secondary';
+                        : 'bg-amber-100 border-amber-200 text-amber-800 dark:bg-secondary-container/30 dark:border-secondary/20 dark:text-secondary';
 
                       return (
                         <div
                           key={participant.id}
-                          className="glass-panel rounded-xl p-5 flex flex-col gap-4 relative overflow-visible border border-outline-variant/20"
+                          className="glass-panel rounded-xl p-4 flex flex-col gap-3.5 border border-outline-variant/20 shadow-lg"
                         >
-                          <div className="absolute top-0 right-0 w-24 h-24 bg-primary-container/5 rounded-bl-full blur-xl pointer-events-none"></div>
-
-                          <div className="flex items-center justify-between relative z-10 gap-3">
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
-                              <div className="flex-1 min-w-0">
-                                <h3 className="font-headline-md text-[18px] leading-tight text-on-surface truncate">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                              {/* Registrations have no photo field — an initials
+                                  avatar fills the design's avatar slot. */}
+                              <div className="h-12 w-12 rounded-full overflow-hidden border border-outline-variant/30 shrink-0 bg-surface-container-high flex items-center justify-center">
+                                <span className="font-headline-md text-[15px] text-on-surface-variant">
+                                  {(participant.name || '')
+                                    .split(/\s+/)
+                                    .filter(Boolean)
+                                    .slice(0, 2)
+                                    .map((word) => word[0].toUpperCase())
+                                    .join('')}
+                                </span>
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h3 className="font-headline-md text-[17px] leading-tight text-on-surface font-semibold truncate">
                                   {participant.name}
                                 </h3>
-                                <p className="font-body-md text-[14px] text-on-surface-variant truncate">
+                                <p className="font-body-md text-[13px] text-on-surface-variant truncate mt-0.5">
                                   {getCleanHouse(participant.house)}
                                 </p>
                               </div>
                             </div>
-                            <div className="flex flex-col items-end gap-2 shrink-0">
-                              <div className="flex items-center gap-2 relative">
-                                <div className={`flex items-center gap-1 px-2 py-1 rounded-full border flex-shrink-0 ${statusClass}`}>
-                                  <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></div>
-                                  <span className="font-label-sm text-label-sm">{statusLabel}</span>
-                                </div>
-                                <button
-                                  onClick={(e) => {
-                                    if (openMenuId === participant.id) {
-                                      setOpenMenuId(null);
-                                      setMenuPosition(null);
-                                    } else {
-                                      const rect = e.currentTarget.getBoundingClientRect();
-                                      setMenuPosition({
-                                        top: rect.bottom + window.scrollY + 4,
-                                        right: window.innerWidth - rect.right - window.scrollX,
-                                      });
-                                      setOpenMenuId(participant.id);
-                                    }
-                                  }}
-                                  className="text-on-surface-variant hover:text-secondary transition-colors"
-                                  aria-label="Menú de opciones"
-                                >
-                                  <span className="material-symbols-outlined">more_vert</span>
-                                </button>
+                            <div className="flex items-center gap-2 shrink-0 relative">
+                              <div className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border flex-shrink-0 ${statusClass}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`}></div>
+                                <span className="font-label-sm text-[12px] font-medium">{statusLabel}</span>
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  if (openMenuId === participant.id) {
+                                    setOpenMenuId(null);
+                                    setMenuPosition(null);
+                                  } else {
+                                    const rect = e.currentTarget.getBoundingClientRect();
+                                    setMenuPosition({
+                                      top: rect.bottom + window.scrollY + 4,
+                                      right: window.innerWidth - rect.right - window.scrollX,
+                                    });
+                                    setOpenMenuId(participant.id);
+                                  }
+                                }}
+                                className="text-on-surface-variant hover:text-secondary transition-colors p-0.5"
+                                aria-label="Menú de opciones"
+                              >
+                                <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                              </button>
 
-                                {openMenuId === participant.id && menuPosition && createPortal(
+                              {openMenuId === participant.id && menuPosition && createPortal(
                                   <>
                                     <div
                                       className="fixed inset-0 z-40"
@@ -453,31 +462,36 @@ function AdminDashboard({ user, onLogout }) {
                                   </>,
                                   document.body
                                 )}
-                              </div>
-                              {participant.screenshot && (
+                            </div>
+                          </div>
+                          {(participant.screenshot || getInstagramUrl(participant.instagram)) && (
+                            <div className="flex items-center justify-between pt-1 border-t border-outline-variant/10">
+                              {participant.screenshot ? (
                                 <a
                                   href={participant.screenshot}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-2 text-secondary font-label-md hover:opacity-80 transition-opacity"
+                                  className="flex items-center gap-1.5 text-secondary font-label-md hover:opacity-80 transition-opacity text-[13px] px-2 py-1 rounded bg-secondary/10 border border-secondary/20"
                                 >
-                                  <span className="material-symbols-outlined text-sm">qr_code_2</span>
+                                  <span className="material-symbols-outlined text-[16px]">qr_code_2</span>
                                   QR
                                 </a>
+                              ) : (
+                                <span />
                               )}
                               {getInstagramUrl(participant.instagram) && (
                                 <a
                                   href={getInstagramUrl(participant.instagram)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-0.5 text-primary font-label-md hover:opacity-80 transition-opacity"
+                                  className="flex items-center gap-1 text-primary font-body-md text-[13px] hover:opacity-80 transition-opacity"
                                 >
-                                  <span className="material-symbols-outlined text-sm">alternate_email</span>
-                                  {normalizeInstagramHandle(participant.instagram)}
+                                  <span className="material-symbols-outlined text-[15px]">alternate_email</span>
+                                  <span className="font-medium">{normalizeInstagramHandle(participant.instagram)}</span>
                                 </a>
                               )}
                             </div>
-                          </div>
+                          )}
                         </div>
                       );
                     })
