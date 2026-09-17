@@ -331,8 +331,11 @@ function doPost(e) {
       // Google Sheets treats them as literal text instead of trying to parse
       // them as a formula (a leading "+" like "+57 300..." would otherwise
       // trigger Sheets' formula parser and show #ERROR!), a number that drops
-      // leading zeros (e.g. 007 becoming 7), or — for a leading "@" like an
-      // Instagram handle — a smart chip reference.
+      // leading zeros (e.g. 007 becoming 7), or — for a leading "@" like a
+      // legacy Instagram handle — a smart chip reference. The frontend now
+      // sends the full profile URL (https://instagram.com/<handle>) for
+      // instagram; the apostrophe is kept anyway so the cell stays plain
+      // text and any old "@" values sent directly remain safe.
       const rawEntry = data.entryType || '';
       const entryDigits = String(rawEntry).replace(/\D/g, '');
       const entryType = entryDigits ? Number(entryDigits) : 'N/A';
@@ -436,6 +439,15 @@ function updateRegistration(data) {
       ? saveScreenshotToDrive(data.paymentScreenshot, data.name || ' participante')
       : data.paymentScreenshot;
     sheet.getRange(rowIndex, 8).setValue(screenshotUrl);
+  }
+
+  // Instagram lives in column 10 (a trailing column added after this sheet's
+  // original 9 columns — see initializeSheet()), outside the contiguous
+  // B-G range written above, so it's updated separately here. Checked with
+  // `!== undefined` (not truthy) so the admin can explicitly clear it by
+  // saving an empty value, while omitting the field entirely leaves it untouched.
+  if (data.instagram !== undefined) {
+    sheet.getRange(rowIndex, 10).setValue(data.instagram ? "'" + data.instagram : '');
   }
 
   return { status: 'success', message: 'Registration updated' };
@@ -784,7 +796,7 @@ function testSubmission() {
         email: 'test@example.com',
         phone: '3001234567',
         house: 'House of Testing',
-        instagram: '@test_artist',
+        instagram: 'https://instagram.com/test_artist',
         age: '25',
         comments: 'This is a test submission'
       })
