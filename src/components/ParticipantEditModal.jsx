@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
+import { normalizeInstagramHandle } from '../utils/instagram';
 
 function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
     email: '',
     phone: '',
     house: '',
+    instagram: '',
     age: '',
     comments: '',
     paymentScreenshot: '',
@@ -20,6 +22,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
         email: participant.email || '',
         phone: participant.phone || '',
         house: participant.house || '',
+        instagram: normalizeInstagramHandle(participant.instagram),
         age: participant.age || '',
         comments: participant.comments || '',
         paymentScreenshot: participant.screenshot || '',
@@ -153,6 +156,28 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
           </div>
 
           <div>
+            <label htmlFor="participant-edit-instagram" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
+              Instagram
+            </label>
+            <div className="relative">
+              <span
+                className="absolute left-3 top-1/2 -translate-y-1/2 font-body-md text-outline pointer-events-none"
+                aria-hidden="true"
+              >
+                @
+              </span>
+              <input
+                id="participant-edit-instagram"
+                type="text"
+                value={formData.instagram}
+                onChange={(e) => handleChange('instagram', normalizeInstagramHandle(e.target.value))}
+                placeholder="usuario"
+                className="w-full p-3 pl-8 rounded border border-outline-variant bg-surface focus:ring-1 focus:ring-primary outline-none font-body-md"
+              />
+            </div>
+          </div>
+
+          <div>
             <label htmlFor="participant-edit-age" className="block font-label-sm text-label-sm text-outline mb-1 uppercase tracking-tighter">
               Edad
             </label>
@@ -235,6 +260,7 @@ ParticipantEditModal.propTypes = {
     email: PropTypes.string,
     phone: PropTypes.string,
     house: PropTypes.string,
+    instagram: PropTypes.string,
     age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     comments: PropTypes.string,
     screenshot: PropTypes.string,
