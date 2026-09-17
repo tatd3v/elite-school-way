@@ -14,7 +14,7 @@ class AuthService {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      throw new Error('Invalid email format');
+      throw new Error(ERROR_MESSAGES.INVALID_EMAIL);
     }
   }
 
@@ -61,9 +61,15 @@ class AuthService {
       return { success: true, user: authData };
     }
 
+    // The backend replies 'Invalid credentials' in English — translate it so
+    // the login notification is always in Spanish. Any other message is a
+    // technical backend exception, surfaced as-is for debugging.
     return {
       success: false,
-      message: result.message || ERROR_MESSAGES.INVALID_CREDENTIALS,
+      message:
+        !result.message || result.message === 'Invalid credentials'
+          ? ERROR_MESSAGES.INVALID_CREDENTIALS
+          : result.message,
     };
   }
 
