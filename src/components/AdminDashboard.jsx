@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
 import PropTypes from 'prop-types';
 import { dashboardService } from '../services/dashboardService';
+import { formatInstagramHandle, getInstagramProfileUrl } from '../utils/instagram';
 import { REGISTRATION_STATUS } from '../config/constants';
 import DashboardHeader from './DashboardHeader';
 import SearchBar from './SearchBar';
@@ -208,6 +209,10 @@ function AdminDashboard({ user, onLogout }) {
     if (!house) return '—';
     return String(house).replace(/^'/, '');
   };
+
+  const getInstagramUrl = (instagram) => getInstagramProfileUrl(instagram) || null;
+
+  const getInstagramHandle = (instagram) => formatInstagramHandle(instagram);
 
   return (
     <div className="h-screen bg-background text-on-background flex flex-col overflow-hidden">
@@ -460,6 +465,17 @@ function AdminDashboard({ user, onLogout }) {
                                   QR
                                 </a>
                               )}
+                              {getInstagramUrl(participant.instagram) && (
+                                <a
+                                  href={getInstagramUrl(participant.instagram)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 text-primary font-label-md hover:opacity-80 transition-opacity"
+                                >
+                                  <span className="material-symbols-outlined text-sm">alternate_email</span>
+                                  {getInstagramHandle(participant.instagram)}
+                                </a>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -571,6 +587,7 @@ function AdminDashboard({ user, onLogout }) {
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Email</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Teléfono</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">House</th>
+                          <th className="p-2 font-label-sm text-on-background font-medium text-xs">Instagram</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Edad</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs">Screenshot</th>
                           <th className="p-2 font-label-sm text-on-background font-medium text-xs text-center">Status</th>
@@ -603,6 +620,20 @@ function AdminDashboard({ user, onLogout }) {
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.email || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{participant.phone || '—'}</td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs">{getCleanHouse(participant.house)}</td>
+                                <td className="p-2 font-label-sm text-xs">
+                                  {getInstagramUrl(participant.instagram) ? (
+                                    <a
+                                      href={getInstagramUrl(participant.instagram)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-primary hover:text-secondary transition-colors"
+                                    >
+                                      {getInstagramHandle(participant.instagram)}
+                                    </a>
+                                  ) : (
+                                    <span className="text-on-surface-variant">—</span>
+                                  )}
+                                </td>
                                 <td className="p-2 font-label-sm text-on-surface-variant text-xs text-center">{participant.age || '—'}</td>
                                 <td className="p-2 text-center">
                                   {participant.screenshot ? (
@@ -656,7 +687,7 @@ function AdminDashboard({ user, onLogout }) {
                           })
                         ) : (
                           <tr>
-                            <td colSpan={isAdmin ? 10 : 9} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
+                            <td colSpan={isAdmin ? 11 : 10} className="px-6 py-12 text-center font-body-md text-on-surface-variant">
                               No se encontraron participantes
                             </td>
                           </tr>
