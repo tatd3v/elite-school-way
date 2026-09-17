@@ -187,6 +187,11 @@ export default function RegistrationModal({ isOpen, onClose }) {
       return
     }
 
+    if (Number(formData.age) < 18) {
+      setSubmitStatus('underage')
+      return
+    }
+
     setIsSubmitting(true)
     setSubmitStatus(null)
 
@@ -515,6 +520,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
               {submitStatus === 'missing-fields' && (
                 <div className="mb-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
                   Por favor completa todos los campos requeridos (marcados con *) antes de continuar.
+                </div>
+              )}
+
+              {submitStatus === 'underage' && (
+                <div className="mb-4 bg-red-900/20 border border-red-500/50 text-red-400 px-4 py-3 rounded">
+                  Debes ser mayor de edad (18+) para registrarte al evento.
                 </div>
               )}
 

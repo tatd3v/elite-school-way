@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { normalizeInstagramHandle } from '../utils/instagram';
 import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes';
@@ -114,6 +114,22 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
 
   const isDataUrlScreenshot = formData.paymentScreenshot.startsWith('data:');
   const isPaid = participant?.status === REGISTRATION_STATUS.PAID;
+  const [entryTypeOpen, setEntryTypeOpen] = useState(false);
+  const entryTypeRef = useRef(null);
+
+  // Click-outside for the custom Tipo de Entrada dropdown (a native <select>
+  // can't be restyled reliably — some browsers keep drawing the built-in
+  // arrow on top of the custom chevron even with appearance: none).
+  useEffect(() => {
+    if (!entryTypeOpen) return;
+    const handleClickOutside = (e) => {
+      if (entryTypeRef.current && !entryTypeRef.current.contains(e.target)) {
+        setEntryTypeOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [entryTypeOpen]);
 
   // Full-screen takeover (like RegistrationModal) — lock body scroll while open.
   useEffect(() => {
@@ -127,7 +143,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
     e.preventDefault();
 
     const requiredFields = [formData.name, formData.email, formData.phone, formData.age];
-    if (requiredFields.some((value) => !String(value || '').trim())) {
+    if (requiredFields.some((value) => !String(value || '').trim()) || Number(formData.age) < 18) {
       return;
     }
 
@@ -199,7 +215,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    placeholder="Ej. Tats"
+                    placeholder="Nombre completo o AKA de Ballroom"
                     className={inputClass}
                     required
                   />
@@ -266,7 +282,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                     type="text"
                     value={formData.house}
                     onChange={(e) => handleChange('house', e.target.value)}
-                    placeholder="Ej. 007 / Unbothered Cartier"
+                    placeholder="007 / House of Miyake Mugler"
                     className={`${inputClass} text-amber-200 font-semibold`}
                   />
                 </div>
@@ -285,7 +301,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                     type="text"
                     value={formData.instagram}
                     onChange={(e) => handleChange('instagram', normalizeInstagramHandle(e.target.value))}
-                    placeholder="usuario"
+                    placeholder="Usuario de Instagram"
                     className={inputClass}
                   />
                 </div>
@@ -302,11 +318,11 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
                   <input
                     id="participant-edit-age"
                     type="number"
-                    min="10"
+                    min="18"
                     max="99"
                     value={formData.age}
                     onChange={(e) => handleChange('age', e.target.value)}
-                    placeholder="+18"
+                    placeholder="18+"
                     className={inputClass}
                     required
                   />
@@ -318,31 +334,49 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
               <FieldLabel htmlFor="participant-edit-entry-type">
                 Tipo de Entrada
               </FieldLabel>
-              <div className="relative">
+              <div className="relative" ref={entryTypeRef}>
                 <InputIcon>
                   <span className="material-symbols-outlined text-lg text-amber-400/80">confirmation_number</span>
                 </InputIcon>
-                <select
+                <button
                   id="participant-edit-entry-type"
-                  value={formData.entryType}
-                  onChange={(e) => handleChange('entryType', e.target.value)}
-                  // Tailwind's appearance-none only emits unprefixed
-                  // `appearance: none` — older WebViews need -webkit- to
-                  // actually hide the native arrow (it renders on top of the
-                  // custom expand_more icon otherwise).
-                  style={{ WebkitAppearance: 'none', MozAppearance: 'none' }}
-                  className={`${inputClass} appearance-none cursor-pointer`}
+                  type="button"
+                  onClick={() => setEntryTypeOpen((prev) => !prev)}
+                  aria-haspopup="listbox"
+                  aria-expanded={entryTypeOpen}
+                  className={`${inputClass} cursor-pointer text-left`}
                 >
-                  <option value="" className="bg-[#070a2b] text-slate-100">Ninguna</option>
-                  {ENTRY_TYPES.map(({ label, value }) => (
-                    <option key={value} value={String(value)} className="bg-[#070a2b] text-slate-100">
-                      {label}
-                    </option>
-                  ))}
-                </select>
+                  {ENTRY_TYPES.find((o) => String(o.value) === formData.entryType)?.label || 'Ninguna'}
+                </button>
                 <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
                   <span className="material-symbols-outlined text-base">expand_more</span>
                 </div>
+                {entryTypeOpen && (
+                  <div
+                    role="listbox"
+                    className="absolute left-0 right-0 top-full mt-1 bg-[#151939] border border-[#232a63] rounded-xl shadow-lg overflow-hidden z-50"
+                  >
+                    {[{ label: 'Ninguna', value: '' }, ...ENTRY_TYPES.map((o) => ({ label: o.label, value: String(o.value) }))].map((option) => (
+                      <button
+                        key={option.value || 'none'}
+                        type="button"
+                        role="option"
+                        aria-selected={formData.entryType === option.value}
+                        onClick={() => {
+                          handleChange('entryType', option.value);
+                          setEntryTypeOpen(false);
+                        }}
+                        className={`w-full px-4 py-2.5 text-left text-sm transition-all hover:bg-[#1e2450] ${
+                          formData.entryType === option.value
+                            ? 'text-amber-200 font-semibold bg-[#1c235e]/60'
+                            : 'text-slate-100'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
