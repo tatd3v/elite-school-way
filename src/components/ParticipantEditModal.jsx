@@ -2,6 +2,7 @@ import { useEffect, useState } from 'preact/hooks';
 import PropTypes from 'prop-types';
 import { normalizeInstagramHandle } from '../utils/instagram';
 import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes';
+import { ENTRY_TYPES } from '../data/entryTypes';
 import { REGISTRATION_STATUS } from '../config/constants';
 import CountryCodeSelect from './CountryCodeSelect';
 
@@ -55,6 +56,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
     phone: '',
     house: '',
     instagram: '',
+    entryType: '',
     age: '',
     paymentScreenshot: '',
     paymentScreenshotName: '',
@@ -68,6 +70,11 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
         ...splitPhone(participant.phone),
         house: participant.house || '',
         instagram: normalizeInstagramHandle(participant.instagram),
+        // The sheet stores the numeric price (or 'N/A'); map it back to the
+        // matching option's value so the select shows the current entry.
+        entryType: ENTRY_TYPES.some((o) => String(o.value) === String(participant.entryType))
+          ? String(participant.entryType)
+          : '',
         age: participant.age || '',
         paymentScreenshot: participant.screenshot || '',
         paymentScreenshotName: participant.screenshotName || '',
@@ -116,6 +123,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
       ...participant,
       ...formData,
       phone: `${formData.countryCode} ${formData.phone}`.trim(),
+      entryType: formData.entryType ? Number(formData.entryType) : 'N/A',
     });
   };
 
@@ -252,6 +260,28 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
             />
           </div>
 
+          <div className="space-y-1.5">
+            <FieldLabel htmlFor="participant-edit-entry-type" icon="confirmation_number">
+              Entrada del Evento
+            </FieldLabel>
+            <div className="relative">
+              <select
+                id="participant-edit-entry-type"
+                value={formData.entryType}
+                onChange={(e) => handleChange('entryType', e.target.value)}
+                className={`${inputClass} font-medium appearance-none pr-10 cursor-pointer`}
+              >
+                <option value="" disabled>Seleccionar entrada</option>
+                {ENTRY_TYPES.map(({ label, value }) => (
+                  <option key={value} value={String(value)} className="bg-[#0c1030] text-slate-100">
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+            </div>
+          </div>
+
           <div className="grid grid-cols-5 gap-3">
             <div className="col-span-3 space-y-1.5">
               <FieldLabel
@@ -374,6 +404,7 @@ ParticipantEditModal.propTypes = {
     phone: PropTypes.string,
     house: PropTypes.string,
     instagram: PropTypes.string,
+    entryType: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     status: PropTypes.string,
     comments: PropTypes.string,
