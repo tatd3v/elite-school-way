@@ -26,6 +26,7 @@ elite-school-way/
 │   │   ├── Categories.jsx
 │   │   ├── CategoryCard.jsx
 │   │   ├── CodeOfConduct.jsx
+│   │   ├── CountryCodeSelect.jsx
 │   │   ├── DashboardHeader.jsx
 │   │   ├── DesktopNavigation.jsx
 │   │   ├── DressCode.jsx
@@ -59,7 +60,8 @@ elite-school-way/
 │   │   ├── categories.js
 │   │   ├── countryCodes.js
 │   │   ├── conductRules.js
-│   │   └── dressCodes.js
+│   │   ├── dressCodes.js
+│   │   └── entryTypes.js
 │   ├── config/              # Configuration files (.js)
 │   │   └── constants.js
 │   ├── assets/              # Images, logos, etc.
