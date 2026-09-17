@@ -1,4 +1,5 @@
 import { PAYMENT_QR_IMAGE_URL } from '../config/constants';
+import { getInstagramProfileUrl } from './instagram';
 
 /**
  * Submit form data to Google Sheets via Google Apps Script
@@ -21,7 +22,7 @@ export async function submitForm(formData) {
     email: formData.email,
     phone: formData.phone,
     house: formData.house || 'N/A',
-    instagram: formData.instagram || '',
+    instagram: getInstagramProfileUrl(formData.instagram),
     entryType: amount ? Number(amount) : 'N/A',
     age: formData.age || 'N/A',
     qrImageUrl: PAYMENT_QR_IMAGE_URL,
