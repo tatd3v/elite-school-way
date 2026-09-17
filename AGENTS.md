@@ -52,6 +52,7 @@ elite-school-way/
 │   │   ├── auth.js
 │   │   ├── driveImage.js
 │   │   ├── formSubmit.js
+│   │   ├── instagram.js
 │   │   ├── jsonp.js
 │   │   └── theme.js
 │   ├── data/                # Static data files (.js)
@@ -127,7 +128,7 @@ elite-school-way/
 This file is the **source of truth** for the backend script — it must be manually copy-pasted into the Google Apps Script editor (Extensions > Apps Script on the Google Sheet) and does not deploy automatically.
 
 Key sheets (auto-created lazily on first use, not up front):
-- **Registrations** — form submissions (`initializeSheet`), columns: Timestamp, Nombre Artístico, Email, Teléfono, House/007, Entrada, Edad, Screenshot, Status, Instagram (optional; added later as a *trailing* column — `initializeSheet()` self-migrates any existing sheet that's missing it by appending the header to the next empty column rather than inserting it between existing ones, so column indices/`row[n]` positions used throughout this file never shift for already-live sheets)
+- **Registrations** — form submissions (`initializeSheet`), columns: Timestamp, Nombre Artístico, Email, Teléfono, House/007, Entrada, Edad, Screenshot, Status, Instagram (optional; added later as a *trailing* column — `initializeSheet()` self-migrates any existing sheet that's missing it by appending the header to the next empty column rather than inserting it between existing ones, so column indices/`row[n]` positions used throughout this file never shift for already-live sheets). `updateRegistration()` writes it separately from the contiguous B-G range (column 10, checked with `!== undefined` so an explicit empty value clears it but an omitted field leaves it untouched) — viewable/editable from `AdminDashboard.jsx`'s participants table/cards and `ParticipantEditModal.jsx`. The stored value is the full profile URL (`https://instagram.com/<handle>`) — the form inputs collect only the bare handle behind a fixed `@` prefix and `src/utils/instagram.js` (`normalizeInstagramHandle`/`getInstagramProfileUrl`/`formatInstagramHandle`) converts between the two shapes on both write paths (`formSubmit.js`, `dashboardService.updateRegistration`) and display. Older rows may still hold a bare `@handle` — the helpers tolerate both.
 - **Users** (formerly "Admins") — admin/viewer accounts (`initializeAdminsSheet`), columns: Email, Password Hash (SHA-256), Role, Name
 - **Staff** — staff/faculty directory (`initializeStaffSheet`), columns: Name, Role, Bio, Photo URL, Social Links, Display Order, Is Visible
 
