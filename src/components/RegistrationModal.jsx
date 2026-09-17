@@ -1,96 +1,13 @@
-import { useState, useEffect, useRef } from 'preact/hooks'
+import { useState, useEffect } from 'preact/hooks'
 import PropTypes from 'prop-types'
 import { submitForm } from '../utils/formSubmit'
 import { normalizeInstagramHandle } from '../utils/instagram'
 import { dashboardService } from '../services/dashboardService'
-import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
+import { DEFAULT_COUNTRY_CODE } from '../data/countryCodes'
 import { PAYMENT_QR_IMAGE_URL, PAYMENT_SCREENSHOT_LABEL } from '../config/constants'
+import CountryCodeSelect from './CountryCodeSelect'
 import logo from '../assets/logo.png'
 import logoDark from '../assets/logo_dark_bg.png'
-
-function CountryCodeSelect({ value, onChange }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const selectRef = useRef(null)
-
-  const normalize = (str) =>
-    str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\+/g, '')
-
-  const filtered = (search
-    ? countryCodes.filter(({ country, code }) => {
-      const query = normalize(search)
-      return normalize(country).includes(query) || normalize(code).includes(query)
-    })
-    : countryCodes
-  ).slice().sort((a, b) => {
-    if (a.country === 'Colombia') return -1
-    if (b.country === 'Colombia') return 1
-    return parseInt(a.code.replace('+', ''), 10) - parseInt(b.code.replace('+', ''), 10)
-  })
-
-  useEffect(() => {
-    if (!isOpen) return
-    const handleClickOutside = (e) => {
-      if (selectRef.current && !selectRef.current.contains(e.target)) {
-        setIsOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isOpen])
-
-  return (
-    <div ref={selectRef} className="relative flex-shrink-0">
-      <button
-        type="button"
-        className="w-[4.75rem] sm:w-24 h-full bg-surface-container-low border border-outline-variant pl-3 pr-1 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all text-left"
-        onClick={() => setIsOpen(prev => !prev)}
-        aria-label="Código de país"
-        aria-expanded={isOpen}
-      >
-        {value}
-      </button>
-      {isOpen && (
-        <div className="absolute left-0 top-full mt-1 w-64 max-h-72 bg-surface-container-low border border-outline-variant rounded-md shadow-lg overflow-hidden z-50 flex flex-col">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar país o código"
-            className="w-full bg-surface-container-high border-b border-outline-variant px-4 py-2 font-body-md text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none"
-            aria-label="Buscar país"
-          />
-          <div className="overflow-y-auto">
-            {filtered.map(({ code, country, flag }) => (
-              <button
-                key={code}
-                type="button"
-                onClick={() => {
-                  onChange(code)
-                  setSearch('')
-                  setIsOpen(false)
-                }}
-                className="w-full flex items-center gap-2 px-4 py-2 text-left font-body-md text-on-surface hover:bg-surface-container-high transition-all"
-              >
-                <span className="text-base" aria-hidden="true">{flag}</span>
-                <span className="flex-1 truncate">{country}</span>
-                <span className="text-on-surface-variant">{code}</span>
-              </button>
-            ))}
-            {filtered.length === 0 && (
-              <p className="px-4 py-2 text-sm text-on-surface-variant">No se encontraron resultados</p>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-CountryCodeSelect.propTypes = {
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-}
 
 function QrPayment({ screenshotName, onScreenshotChange, qrImageUrl }) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
