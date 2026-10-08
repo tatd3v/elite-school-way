@@ -3,5 +3,5 @@
 // price actually stored in the sheet's Entrada column.
 export const ENTRY_TYPES = [
   { label: 'General — $20.000', value: 20000 },
-  { label: 'Personas negrxs y marronxs — $15.000', value: 15000 },
+  { label: 'Personas negrxs, trans y marronxs — $15.000', value: 15000 },
 ];
