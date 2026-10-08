@@ -80,7 +80,7 @@ export default function EventDetails() {
                 </li>
               </ul>
             </div>
-            <div className="sm:border-l sm:border-outline-variant/30 sm:pl-6">
+            <div className="border-t border-outline-variant/30 pt-6 sm:border-t-0 sm:pt-0 sm:border-l sm:pl-6">
               <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider block">
                 Taquilla
               </span>
