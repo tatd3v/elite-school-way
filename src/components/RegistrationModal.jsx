@@ -398,7 +398,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               </label>
               <input
                 className="w-full bg-surface-container-low border border-outline-variant px-4 py-3 font-body-md text-on-surface rounded-md focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
-                placeholder="18+"
+                placeholder="14+"
                 type="number"
                 required
                 min="14"
