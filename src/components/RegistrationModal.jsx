@@ -401,7 +401,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 placeholder="18+"
                 type="number"
                 required
-                min="18"
+                min="14"
                 name="age"
                 value={formData.age}
                 onChange={handleInputChange}
@@ -409,9 +409,12 @@ export default function RegistrationModal({ isOpen, onClose }) {
             </div>
 
             <div className="col-span-1 md:col-span-2 mt-8">
-              <h3 className="font-headline-md text-headline-md text-on-surface mb-2 flex items-center gap-2">
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-2 flex items-center gap-2 flex-wrap">
                 <span className="material-symbols-outlined text-[#c62828]">confirmation_number</span>
                 Entrada del Evento
+                <span className="px-2 py-0.5 rounded-full border border-secondary/50 bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase tracking-widest">
+                  Preventa
+                </span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {ENTRY_TYPES.map(({ label: option }) => {
