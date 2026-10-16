@@ -413,7 +413,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
                 <span className="material-symbols-outlined text-[#c62828]">confirmation_number</span>
                 Entrada del Evento
                 <span className="px-2 py-0.5 rounded-full border border-secondary/50 bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase tracking-widest">
-                  Preventa
+                  Precio de Taquilla
                 </span>
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -449,7 +449,7 @@ export default function RegistrationModal({ isOpen, onClose }) {
               <div className="flex items-start gap-2 text-on-surface-variant opacity-80">
                 <span className="material-symbols-outlined text-label-sm">info</span>
                 <p className="text-sm font-bold leading-relaxed">
-                  Si no se confirma el pago con el comprobante antes del 15 de Octubre, no se podra pagar el precio de preventa en taquilla. <span className="text-[#c62828]">El día del evento el costo de la entrada será de $5,000 adicionales.</span>
+                  Precios de taquilla: <span className="text-[#c62828]">General 25.000 COP, Personas Trans 20.000 COP y personas negrxs y Marronxs 15.000 COP.</span>
                 </p>
               </div>
             </div>
