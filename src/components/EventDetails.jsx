@@ -65,18 +65,19 @@ export default function EventDetails() {
             Precio de Entradas
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-on-surface-variant font-body-md text-body-md">
-            <div>
+            <div className="relative opacity-50 grayscale">
               <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider block">
                 Preventa
+                <span className="ml-2 px-2 py-0.5 bg-[#c62828] text-white text-xs font-bold uppercase rounded-full">AGOTADO</span>
               </span>
               <ul className="mt-1 space-y-1 font-body-md">
                 <li className="flex items-start gap-1.5">
                   <span className="text-secondary font-bold">•</span>
-                  <span><strong className="text-on-surface">$15.000</strong> personas negrxs, trans y marronxs.</span>
+                  <span><strong className="text-on-surface line-through">$15.000</strong> personas negrxs, trans y marronxs.</span>
                 </li>
                 <li className="flex items-start gap-1.5">
                   <span className="text-secondary font-bold">•</span>
-                  <span><strong className="text-on-surface">$20.000</strong> general</span>
+                  <span><strong className="text-on-surface line-through">$20.000</strong> general</span>
                 </li>
               </ul>
             </div>
@@ -87,11 +88,15 @@ export default function EventDetails() {
               <ul className="mt-1 space-y-1 font-body-md">
                 <li className="flex items-start gap-1.5">
                   <span className="text-secondary font-bold">•</span>
-                  <span><strong className="text-on-surface">$20.000</strong> personas negrxs, trans y marronxs.</span>
+                  <span><strong className="text-on-surface">$25.000</strong> general</span>
                 </li>
                 <li className="flex items-start gap-1.5">
                   <span className="text-secondary font-bold">•</span>
-                  <span><strong className="text-on-surface">$25.000</strong> general</span>
+                  <span><strong className="text-on-surface">$20.000</strong> personas trans</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <span className="text-secondary font-bold">•</span>
+                  <span><strong className="text-on-surface">$15.000</strong> personas negrxs y marronxs.</span>
                 </li>
               </ul>
             </div>
