@@ -6,6 +6,10 @@ export const AUTH_CONFIG = {
   // jsonp.js's generic 30s timeout — so a slow/unresponsive Apps Script
   // deployment surfaces a clear notification well before that.
   LOGIN_TIMEOUT_MS: 15000,
+  // Version number to force logout when app structure changes significantly
+  // Increment this when you need all users to re-authenticate (e.g., after
+  // major changes to registration status fields, permissions, etc.)
+  VERSION: 2,
 };
 
 export const API_CONFIG = {

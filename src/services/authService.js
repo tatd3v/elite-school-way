@@ -49,6 +49,7 @@ class AuthService {
       role: userInfo.role,
       name: userInfo.name,
       timestamp: Date.now(),
+      version: AUTH_CONFIG.VERSION,
     };
   }
 
@@ -105,7 +106,13 @@ class AuthService {
     if (!user || !user.timestamp) return false;
 
     const sessionAge = Date.now() - user.timestamp;
-    return sessionAge < AUTH_CONFIG.SESSION_DURATION_MS;
+    const isExpired = sessionAge >= AUTH_CONFIG.SESSION_DURATION_MS;
+
+    // Check if the session version matches the current app version
+    // If not, the session is invalid and user must re-authenticate
+    const isVersionValid = user.version === AUTH_CONFIG.VERSION;
+
+    return !isExpired && isVersionValid;
   }
 
   getCurrentUser() {
@@ -114,7 +121,12 @@ class AuthService {
     if (!user) return null;
 
     if (!this.isSessionValid(user)) {
-      this.clearSession();
+      // If the version doesn't match, clear all data to ensure fresh state
+      if (user.version !== AUTH_CONFIG.VERSION) {
+        this.clearAllData();
+      } else {
+        this.clearSession();
+      }
       return null;
     }
 
@@ -127,6 +139,16 @@ class AuthService {
 
   logout() {
     this.clearSession();
+  }
+
+  // Clear all localStorage data when version changes
+  // This ensures any cached data is reset after major updates
+  clearAllData() {
+    try {
+      localStorage.clear();
+    } catch (error) {
+      console.error('Failed to clear all localStorage data:', error);
+    }
   }
 }
 
