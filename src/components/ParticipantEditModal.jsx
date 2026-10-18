@@ -114,6 +114,7 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
 
   const isDataUrlScreenshot = formData.paymentScreenshot.startsWith('data:');
   const isPaid = participant?.status === REGISTRATION_STATUS.PAID;
+  const isCortesia = participant?.status === REGISTRATION_STATUS.CORTESIA;
   const [entryTypeOpen, setEntryTypeOpen] = useState(false);
   const entryTypeRef = useRef(null);
 
@@ -190,6 +191,11 @@ function ParticipantEditModal({ participant, onSave, onCancel, isSubmitting }) {
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 {REGISTRATION_STATUS.PAID}
+              </span>
+            ) : isCortesia ? (
+              <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-purple-950/80 text-purple-300 border border-purple-500/30">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse"></span>
+                {REGISTRATION_STATUS.CORTESIA}
               </span>
             ) : (
               <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide uppercase bg-amber-950/80 text-amber-300 border border-amber-500/30">

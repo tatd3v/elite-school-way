@@ -132,6 +132,36 @@ function AdminDashboard({ user, onLogout }) {
     }
   };
 
+  const handleMarkAsCortesia = async (participantId) => {
+    if (!isAdmin) return;
+
+    const participant = participants.find((p) => p.id === participantId);
+    if (!participant) return;
+
+    // Optimistic update for instant feedback
+    setParticipants((prev) =>
+      prev.map((p) =>
+        p.id === participantId ? { ...p, status: REGISTRATION_STATUS.CORTESIA } : p
+      )
+    );
+
+    try {
+      const result = await dashboardService.updateRegistrationStatus(
+        participant.rowIndex,
+        REGISTRATION_STATUS.CORTESIA
+      );
+      if (!result.success) {
+        throw new Error('Update failed');
+      }
+    } catch (err) {
+      console.error('Error marking as cortesia:', err);
+      // Revert on failure
+      setParticipants((prev) =>
+        prev.map((p) => (p.id === participantId ? participant : p))
+      );
+    }
+  };
+
   const handleEditClick = (participant) => {
     if (!isAdmin) return;
     setEditingParticipant(participant);
@@ -191,7 +221,8 @@ function AdminDashboard({ user, onLogout }) {
     const matchesStatus =
       statusFilter === 'all' ||
       (statusFilter === 'paid' && p.status === REGISTRATION_STATUS.PAID) ||
-      (statusFilter === 'registered' && p.status !== REGISTRATION_STATUS.PAID);
+      (statusFilter === 'cortesia' && p.status === REGISTRATION_STATUS.CORTESIA) ||
+      (statusFilter === 'registered' && p.status !== REGISTRATION_STATUS.PAID && p.status !== REGISTRATION_STATUS.CORTESIA);
 
     return matchesSearch && matchesStatus;
   });
@@ -325,6 +356,7 @@ function AdminDashboard({ user, onLogout }) {
                               { id: 'all', label: 'Todos' },
                               { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
                               { id: 'paid', label: REGISTRATION_STATUS.PAID },
+                              { id: 'cortesia', label: REGISTRATION_STATUS.CORTESIA },
                             ].map((option) => (
                               <button
                                 key={option.id}
@@ -359,12 +391,17 @@ function AdminDashboard({ user, onLogout }) {
                   {mobileVisibleParticipants.length > 0 ? (
                     mobileVisibleParticipants.map((participant) => {
                       const isPaid = participant.status === REGISTRATION_STATUS.PAID;
-                      const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
+                      const isCortesia = participant.status === REGISTRATION_STATUS.CORTESIA;
+                      const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : isCortesia ? REGISTRATION_STATUS.CORTESIA : REGISTRATION_STATUS.REGISTERED;
                       const statusDot = isPaid
                         ? 'bg-emerald-500 dark:bg-green-400 dark:animate-pulse'
+                        : isCortesia
+                        ? 'bg-purple-500 dark:bg-purple-400 dark:animate-pulse'
                         : 'bg-amber-500 dark:bg-secondary';
                       const statusClass = isPaid
                         ? 'bg-emerald-100 border-emerald-200 text-emerald-800 dark:bg-green-900/30 dark:border-green-500/20 dark:text-green-300'
+                        : isCortesia
+                        ? 'bg-purple-100 border-purple-200 text-purple-800 dark:bg-purple-900/30 dark:border-purple-500/20 dark:text-purple-300'
                         : 'bg-amber-100 border-amber-200 text-amber-800 dark:bg-secondary-container/30 dark:border-secondary/20 dark:text-secondary';
 
                       return (
@@ -432,6 +469,19 @@ function AdminDashboard({ user, onLogout }) {
                                         >
                                           <span className="material-symbols-outlined text-sm">paid</span>
                                           Confirmar Pago
+                                        </button>
+                                      )}
+                                      {participant.status !== REGISTRATION_STATUS.CORTESIA && (
+                                        <button
+                                          onClick={() => {
+                                            handleMarkAsCortesia(participant.id);
+                                            setOpenMenuId(null);
+                                            setMenuPosition(null);
+                                          }}
+                                          className="w-full text-left px-4 py-2 text-on-surface hover:bg-surface-container-highest transition-colors flex items-center gap-2 text-sm"
+                                        >
+                                          <span className="material-symbols-outlined text-sm">card_giftcard</span>
+                                          Cortesia
                                         </button>
                                       )}
                                       <button
@@ -570,6 +620,7 @@ function AdminDashboard({ user, onLogout }) {
                               { id: 'all', label: 'Todos' },
                               { id: 'registered', label: REGISTRATION_STATUS.REGISTERED },
                               { id: 'paid', label: REGISTRATION_STATUS.PAID },
+                              { id: 'cortesia', label: REGISTRATION_STATUS.CORTESIA },
                             ].map((option) => (
                               <button
                                 key={option.id}
@@ -621,10 +672,13 @@ function AdminDashboard({ user, onLogout }) {
                         {desktopVisibleParticipants.length > 0 ? (
                           desktopVisibleParticipants.map((participant, idx) => {
                             const isPaid = participant.status === REGISTRATION_STATUS.PAID;
-                            const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : REGISTRATION_STATUS.REGISTERED;
-                            const statusDot = isPaid ? 'bg-green-400 animate-pulse' : 'bg-secondary';
+                            const isCortesia = participant.status === REGISTRATION_STATUS.CORTESIA;
+                            const statusLabel = isPaid ? REGISTRATION_STATUS.PAID : isCortesia ? REGISTRATION_STATUS.CORTESIA : REGISTRATION_STATUS.REGISTERED;
+                            const statusDot = isPaid ? 'bg-green-400 animate-pulse' : isCortesia ? 'bg-purple-400 animate-pulse' : 'bg-secondary';
                             const statusClass = isPaid
                               ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                              : isCortesia
+                              ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                               : 'bg-secondary/10 text-secondary border-secondary/20';
                             const rowBg = idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest/50';
 
@@ -683,6 +737,16 @@ function AdminDashboard({ user, onLogout }) {
                                           aria-label="Confirmar pago"
                                         >
                                           <span className="material-symbols-outlined text-2xl">paid</span>
+                                        </button>
+                                      )}
+                                      {participant.status !== REGISTRATION_STATUS.CORTESIA && (
+                                        <button
+                                          type="button"
+                                          onClick={() => handleMarkAsCortesia(participant.id)}
+                                          className="text-on-surface-variant hover:text-primary transition-colors"
+                                          aria-label="Marcar como cortesia"
+                                        >
+                                          <span className="material-symbols-outlined text-2xl">card_giftcard</span>
                                         </button>
                                       )}
                                       <button

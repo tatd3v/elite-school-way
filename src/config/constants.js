@@ -34,6 +34,7 @@ export const PAYMENT_SCREENSHOT_LABEL = 'Comprobante de pago';
 export const REGISTRATION_STATUS = {
   REGISTERED: 'Registrado',
   PAID: 'Pagado',
+  CORTESIA: 'Cortesia',
 };
 
 export const REGISTRATION_ACTIONS = {

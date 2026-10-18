@@ -28,6 +28,7 @@ const STAFF_ACTIONS = {
 const REGISTRATION_STATUS = {
   REGISTERED: 'Registrado',
   PAID: 'Pagado',
+  CORTESIA: 'Cortesia',
 };
 
 const REGISTRATION_ACTIONS = {
@@ -385,6 +386,8 @@ function updateRegistrationStatus(data) {
 
   const status = data.status === REGISTRATION_STATUS.PAID
     ? REGISTRATION_STATUS.PAID
+    : data.status === REGISTRATION_STATUS.CORTESIA
+    ? REGISTRATION_STATUS.CORTESIA
     : REGISTRATION_STATUS.REGISTERED;
 
   sheet.getRange(rowIndex, 9).setValue(status);
